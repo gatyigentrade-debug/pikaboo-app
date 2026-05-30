@@ -1,11 +1,24 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck } from "lucide-react";
+import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const QUICK_REPLIES = ["😍 Lekker!", "🔥 Howzit?", "Let's braai! 🥩", "Tell me more 👀", "You're funny 😂"];
 
 const EMOJI_REACTIONS = ["❤️", "😂", "😮", "😢", "👏", "🔥"];
+
+const SA_ICEBREAKERS = [
+  "What is your go-to braai side dish?",
+  "Pap or rice? 🤔",
+  "What's your favorite kota spot?",
+  "Bunny chow or gatsby? 🥪",
+  "What's your spirit animal?",
+  "Tell me about your sports team loyalty 🏉",
+  "What's the one thing you can't live without?",
+  "Dream date location?",
+  "Best South African experience you've had?",
+  "If you could have any braai role, what would it be?",
+];
 
 const makeTime = (offsetMins = 0) => {
   const d = new Date(Date.now() - offsetMins * 60000);
@@ -24,6 +37,7 @@ export default function ChatView({ match, onBack }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState(() => buildSample(match.matched_name));
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showIcebreakers, setShowIcebreakers] = useState(messages.length === 0);
   const [reactionTarget, setReactionTarget] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const bottomRef = useRef(null);
@@ -53,6 +67,7 @@ export default function ChatView({ match, onBack }) {
     setMessages((prev) => [...prev, newMsg]);
     setMessage("");
     setShowEmoji(false);
+    setShowIcebreakers(false);
     // Simulate read after 1.5s
     setTimeout(() => {
       setMessages((prev) =>
@@ -246,6 +261,42 @@ export default function ChatView({ match, onBack }) {
 
         <div ref={bottomRef} />
       </div>
+
+      {/* ── Icebreakers (first message only) ── */}
+      <AnimatePresence>
+        {showIcebreakers && messages.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 py-3 border-t border-border/40 bg-secondary/30 space-y-3">
+              <div className="flex items-center gap-2">
+                <Lightbulb className="w-4 h-4 text-amber" />
+                <span className="text-xs font-heading font-semibold text-foreground">Icebreaker ideas</span>
+                <button
+                  onClick={() => setShowIcebreakers(false)}
+                  className="text-[10px] text-muted-foreground hover:text-foreground ml-auto"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {SA_ICEBREAKERS.map((ice) => (
+                  <button
+                    key={ice}
+                    onClick={() => handleSend(ice)}
+                    className="text-xs font-body px-2.5 py-1.5 rounded-full border border-amber/30 text-amber bg-amber/5 hover:bg-amber/15 transition-colors text-left"
+                  >
+                    {ice}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Quick Replies ── */}
       <div className="flex gap-2 px-4 py-2 overflow-x-auto scrollbar-hide">
