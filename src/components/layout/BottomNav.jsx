@@ -9,7 +9,7 @@ const navItems = [
   { path: "/profile", icon: User, label: "Profile" },
 ];
 
-export default function BottomNav() {
+export default function BottomNav({ unreadMatches = 0 }) {
   const location = useLocation();
 
   return (
@@ -18,6 +18,7 @@ export default function BottomNav() {
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
+          const showBadge = item.path === "/matches" && unreadMatches > 0;
           return (
             <Link
               key={item.path}
@@ -31,11 +32,18 @@ export default function BottomNav() {
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <Icon
-                className={`w-5 h-5 transition-colors ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-              />
+              <div className="relative">
+                <Icon
+                  className={`w-5 h-5 transition-colors ${
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  }`}
+                />
+                {showBadge && (
+                  <div className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center glow-orange">
+                    {unreadMatches > 9 ? "9+" : unreadMatches}
+                  </div>
+                )}
+              </div>
               <span
                 className={`text-[10px] font-body transition-colors ${
                   isActive
