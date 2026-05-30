@@ -1,88 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+
+    --background: 220 15% 8%;
+    --foreground: 40 20% 95%;
+    --card: 220 12% 12%;
+    --card-foreground: 40 20% 95%;
+    --popover: 220 12% 12%;
+    --popover-foreground: 40 20% 95%;
+    --primary: 25 95% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 12% 18%;
+    --secondary-foreground: 40 20% 90%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 270 60% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 18%;
+    --input: 220 10% 20%;
+    --ring: 25 95% 55%;
+    --chart-1: 25 95% 55%;
+    --chart-2: 270 60% 55%;
+    --chart-3: 40 90% 55%;
+    --chart-4: 340 70% 55%;
+    --chart-5: 180 50% 45%;
+    --radius: 1rem;
+
+    --gold: 40 70% 50%;
+    --amber: 35 90% 55%;
+    --violet: 270 60% 55%;
+    --sunset: 15 85% 50%;
+
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 40 20% 95%;
+    --sidebar-primary: 25 95% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 12% 18%;
+    --sidebar-accent-foreground: 40 20% 90%;
+    --sidebar-border: 220 10% 18%;
+    --sidebar-ring: 25 95% 55%;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --background: 220 15% 8%;
+    --foreground: 40 20% 95%;
+    --card: 220 12% 12%;
+    --card-foreground: 40 20% 95%;
+    --popover: 220 12% 12%;
+    --popover-foreground: 40 20% 95%;
+    --primary: 25 95% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 12% 18%;
+    --secondary-foreground: 40 20% 90%;
+    --muted: 220 10% 16%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 270 60% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 18%;
+    --input: 220 10% 20%;
+    --ring: 25 95% 55%;
+    --chart-1: 25 95% 55%;
+    --chart-2: 270 60% 55%;
+    --chart-3: 40 90% 55%;
+    --chart-4: 340 70% 55%;
+    --chart-5: 180 50% 45%;
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 40 20% 95%;
+    --sidebar-primary: 25 95% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 12% 18%;
+    --sidebar-accent-foreground: 40 20% 90%;
+    --sidebar-border: 220 10% 18%;
+    --sidebar-ring: 25 95% 55%;
   }
 }
-
-
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(220, 15%, 8%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(220, 10%, 25%);
+  border-radius: 4px;
+}
+
+/* Glow effects */
+.glow-orange {
+  box-shadow: 0 0 20px hsla(25, 95%, 55%, 0.3), 0 0 60px hsla(25, 95%, 55%, 0.1);
+}
+.glow-violet {
+  box-shadow: 0 0 20px hsla(270, 60%, 55%, 0.3), 0 0 60px hsla(270, 60%, 55%, 0.1);
+}
+.glow-gold {
+  box-shadow: 0 0 20px hsla(40, 70%, 50%, 0.3), 0 0 60px hsla(40, 70%, 50%, 0.1);
+}
+.glow-text-orange {
+  text-shadow: 0 0 20px hsla(25, 95%, 55%, 0.5);
+}
+
+/* Campfire ambient */
+.campfire-glow {
+  background: radial-gradient(ellipse at bottom, hsla(25, 95%, 55%, 0.08) 0%, transparent 60%);
+}
+
+/* Swipe card animations */
+@keyframes cardSlideIn {
+  from { transform: scale(0.95) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+.card-enter {
+  animation: cardSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes dust {
+  0% { opacity: 0.6; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(80px) scale(0.3); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
 }

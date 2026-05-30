@@ -1,0 +1,25 @@
+{
+  "name": "SwipeAction",
+  "type": "object",
+  "properties": {
+    "swiper_id": {
+      "type": "string"
+    },
+    "swiped_id": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "like",
+        "dislike",
+        "super_like"
+      ]
+    }
+  },
+  "required": [
+    "swiper_id",
+    "swiped_id",
+    "action"
+  ]
+}

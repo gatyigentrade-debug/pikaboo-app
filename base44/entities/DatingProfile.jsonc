@@ -1,0 +1,117 @@
+{
+  "name": "DatingProfile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "First name"
+    },
+    "age": {
+      "type": "number"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female",
+        "non-binary"
+      ]
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photo URLs"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short bio"
+    },
+    "braai_starter": {
+      "type": "string",
+      "description": "One-line braai starter conversation piece"
+    },
+    "home_language": {
+      "type": "string",
+      "enum": [
+        "English",
+        "isiZulu",
+        "Afrikaans",
+        "isiXhosa",
+        "Sesotho",
+        "Setswana",
+        "Sepedi",
+        "Xitsonga",
+        "siSwati",
+        "Tshivenda",
+        "isiNdebele"
+      ]
+    },
+    "city": {
+      "type": "string"
+    },
+    "favorite_kota_spot": {
+      "type": "string"
+    },
+    "sports_team": {
+      "type": "string"
+    },
+    "braai_role": {
+      "type": "string",
+      "enum": [
+        "Fire Maker",
+        "Salady",
+        "Grill Master",
+        "Braai Boss"
+      ]
+    },
+    "dream_date_location": {
+      "type": "string"
+    },
+    "cant_live_without": {
+      "type": "string"
+    },
+    "spirit_animal": {
+      "type": "string",
+      "enum": [
+        "Springbok",
+        "Dassie",
+        "Hadeda",
+        "Honey Badger",
+        "Pangolin"
+      ]
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "is_online": {
+      "type": "boolean",
+      "default": false
+    },
+    "looking_for": {
+      "type": "string",
+      "enum": [
+        "relationship",
+        "friendship",
+        "casual",
+        "not_sure"
+      ]
+    },
+    "distance_km": {
+      "type": "number",
+      "default": 50
+    }
+  },
+  "required": [
+    "name",
+    "age"
+  ]
+}

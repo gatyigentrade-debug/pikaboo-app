@@ -1,0 +1,49 @@
+{
+  "name": "Match",
+  "type": "object",
+  "properties": {
+    "user_profile_id": {
+      "type": "string",
+      "description": "Current user's profile ID"
+    },
+    "matched_profile_id": {
+      "type": "string",
+      "description": "Matched user's profile ID"
+    },
+    "matched_name": {
+      "type": "string"
+    },
+    "matched_photo": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "matched",
+        "expired",
+        "unmatched"
+      ],
+      "default": "matched"
+    },
+    "first_move_deadline": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_message": {
+      "type": "string"
+    },
+    "last_message_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "unread_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "user_profile_id",
+    "matched_profile_id"
+  ]
+}
