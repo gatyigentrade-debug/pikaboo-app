@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb } from "lucide-react";
+import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import ReportBlockSheet from "@/components/matches/ReportBlockSheet";
 
 const QUICK_REPLIES = ["😍 Lekker!", "🔥 Howzit?", "Let's braai! 🥩", "Tell me more 👀", "You're funny 😂"];
 
@@ -40,6 +41,8 @@ export default function ChatView({ match, onBack }) {
   const [showIcebreakers, setShowIcebreakers] = useState(messages.length === 0);
   const [reactionTarget, setReactionTarget] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showReportSheet, setShowReportSheet] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -117,9 +120,32 @@ export default function ChatView({ match, onBack }) {
           <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <Video className="w-4 h-4" />
           </button>
-          <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-            <MoreVertical className="w-4 h-4" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowMoreMenu((v) => !v)}
+              className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            <AnimatePresence>
+              {showMoreMenu && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -4 }}
+                  className="absolute right-0 top-10 bg-card border border-border/60 rounded-2xl shadow-xl z-20 overflow-hidden min-w-[180px]"
+                >
+                  <button
+                    onClick={() => { setShowMoreMenu(false); setShowReportSheet(true); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-body text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    <Flag className="w-4 h-4" />
+                    Report / Block
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
@@ -146,7 +172,7 @@ export default function ChatView({ match, onBack }) {
       {/* ── Messages ── */}
       <div
         className="flex-1 overflow-y-auto px-4 space-y-1 pb-2"
-        onClick={() => { setReactionTarget(null); setShowEmoji(false); }}
+        onClick={() => { setReactionTarget(null); setShowEmoji(false); setShowMoreMenu(false); }}
       >
         {/* Watermark */}
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none opacity-[0.025]">
@@ -373,6 +399,14 @@ export default function ChatView({ match, onBack }) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Report / Block Sheet */}
+      {showReportSheet && (
+        <ReportBlockSheet
+          matchName={match.matched_name}
+          onClose={() => setShowReportSheet(false)}
+        />
+      )}
     </motion.div>
   );
 }
