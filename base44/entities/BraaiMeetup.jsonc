@@ -1,0 +1,73 @@
+{
+  "name": "BraaiMeetup",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Meetup title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What to expect"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Venue or area name"
+    },
+    "city": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "max_attendees": {
+      "type": "number",
+      "default": 20
+    },
+    "attendee_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of profile IDs attending"
+    },
+    "attendee_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "attendee_photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "vibe": {
+      "type": "string",
+      "enum": [
+        "chill",
+        "social",
+        "singles_only",
+        "family_friendly"
+      ],
+      "default": "social"
+    },
+    "bring": {
+      "type": "string",
+      "description": "What to bring (meat, drinks, etc.)"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "host_photo": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "location_name",
+    "date"
+  ]
+}

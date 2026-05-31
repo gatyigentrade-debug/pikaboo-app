@@ -16,6 +16,7 @@ import Discover from '@/pages/Discover';
 import Matches from '@/pages/Matches';
 import Profile from '@/pages/Profile';
 import Explore from '@/pages/Explore';
+import Meetups from '@/pages/Meetups';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -56,6 +57,7 @@ const AuthenticatedApp = () => {
           <Route path="/matches" element={<Matches />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/meetups" element={<Meetups />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
