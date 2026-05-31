@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Compass, MessageCircle, User } from "lucide-react";
+import { Home, Compass, MessageCircle, User, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
   { path: "/", icon: Home, label: "Home" },
   { path: "/discover", icon: Compass, label: "Discover" },
+  { path: "/explore", icon: Sparkles, label: "Explore" },
   { path: "/matches", icon: MessageCircle, label: "Matches" },
   { path: "/profile", icon: User, label: "Profile" },
 ];
