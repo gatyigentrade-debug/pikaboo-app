@@ -139,7 +139,52 @@ export default function SwipeCard({ profile, onSwipe, isTop }) {
                 {profile.spirit_animal}
               </Badge>
             )}
+            {profile.sports_team && (
+              <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-xs">
+                ⚽ {profile.sports_team}
+              </Badge>
+            )}
+            {profile.looking_for && (
+              <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-xs">
+                {profile.looking_for === "relationship" ? "💍 Relationship" :
+                 profile.looking_for === "friendship" ? "🤝 Friendship" :
+                 profile.looking_for === "casual" ? "✌️ Casual" : "🤔 Not Sure"}
+              </Badge>
+            )}
           </div>
+
+          {/* Hangout spot & talking points */}
+          {(profile.favorite_kota_spot || profile.dream_date_location || profile.cant_live_without) && (
+            <div className="mt-3 space-y-1.5">
+              {profile.favorite_kota_spot && (
+                <div className="flex items-center gap-2 bg-white/8 backdrop-blur-sm rounded-xl px-3 py-2">
+                  <span className="text-base flex-shrink-0">📍</span>
+                  <div className="min-w-0">
+                    <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
+                    <p className="text-white/90 text-xs font-body truncate">{profile.favorite_kota_spot}</p>
+                  </div>
+                </div>
+              )}
+              {profile.cant_live_without && (
+                <div className="flex items-center gap-2 bg-white/8 backdrop-blur-sm rounded-xl px-3 py-2">
+                  <span className="text-base flex-shrink-0">❤️</span>
+                  <div className="min-w-0">
+                    <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
+                    <p className="text-white/90 text-xs font-body truncate">{profile.cant_live_without}</p>
+                  </div>
+                </div>
+              )}
+              {profile.dream_date_location && (
+                <div className="flex items-center gap-2 bg-white/8 backdrop-blur-sm rounded-xl px-3 py-2">
+                  <span className="text-base flex-shrink-0">🌅</span>
+                  <div className="min-w-0">
+                    <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
+                    <p className="text-white/90 text-xs font-body truncate">{profile.dream_date_location}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Expand details */}
           <button
@@ -160,21 +205,6 @@ export default function SwipeCard({ profile, onSwipe, isTop }) {
               className="mt-3 space-y-2 text-sm text-white/80"
             >
               {profile.bio && <p className="font-body">{profile.bio}</p>}
-              {profile.dream_date_location && (
-                <p className="text-white/60">
-                  <span className="text-primary">Dream date:</span> {profile.dream_date_location}
-                </p>
-              )}
-              {profile.cant_live_without && (
-                <p className="text-white/60">
-                  <span className="text-primary">Can't live without:</span> {profile.cant_live_without}
-                </p>
-              )}
-              {profile.sports_team && (
-                <p className="text-white/60">
-                  <span className="text-primary">Team:</span> {profile.sports_team}
-                </p>
-              )}
             </motion.div>
           )}
         </div>
