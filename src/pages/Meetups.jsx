@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Flame, Search, Map, List } from "lucide-react";
+import { Plus, Flame, Search, Map, List, SlidersHorizontal, X } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import MeetupCard from "@/components/meetups/MeetupCard";
 import CreateMeetupSheet from "@/components/meetups/CreateMeetupSheet";
@@ -9,6 +9,17 @@ import MeetupsMap from "@/components/meetups/MeetupsMap";
 
 const FILTERS = ["All", "Singles Only", "Social", "Chill", "Family"];
 const VIBE_MAP = { "Singles Only": "singles_only", Social: "social", Chill: "chill", Family: "family_friendly" };
+const SORT_OPTIONS = [
+  { label: "Upcoming", value: "upcoming" },
+  { label: "This Week", value: "this_week" },
+  { label: "This Weekend", value: "weekend" },
+];
+const DISTANCE_OPTIONS = [
+  { label: "Any Distance", value: 0 },
+  { label: "< 10 km", value: 10 },
+  { label: "< 25 km", value: 25 },
+  { label: "< 50 km", value: 50 },
+];
 
 export default function Meetups() {
   const [showCreate, setShowCreate] = useState(false);
@@ -16,6 +27,9 @@ export default function Meetups() {
   const [search, setSearch] = useState("");
   const [joinedIds, setJoinedIds] = useState([]);
   const [viewMode, setViewMode] = useState("list"); // "list" | "map"
+  const [sortBy, setSortBy] = useState("upcoming");
+  const [maxDistance, setMaxDistance] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: meetups = [], isLoading } = useQuery({
@@ -37,11 +51,36 @@ export default function Meetups() {
     queryClient.invalidateQueries({ queryKey: ["meetups"] });
   };
 
-  const filtered = meetups.filter((m) => {
-    const matchesFilter = activeFilter === "All" || m.vibe === VIBE_MAP[activeFilter];
-    const matchesSearch = !search || m.title?.toLowerCase().includes(search.toLowerCase()) || m.location_name?.toLowerCase().includes(search.toLowerCase()) || m.city?.toLowerCase().includes(search.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  const now = new Date();
+  const endOfWeek = new Date(now);
+  endOfWeek.setDate(now.getDate() + (7 - now.getDay()));
+  endOfWeek.setHours(23, 59, 59, 999);
+  const nextSaturday = new Date(now);
+  nextSaturday.setDate(now.getDate() + ((6 - now.getDay() + 7) % 7 || 7));
+  nextSaturday.setHours(0, 0, 0, 0);
+  const nextSunday = new Date(nextSaturday);
+  nextSunday.setDate(nextSaturday.getDate() + 1);
+  nextSunday.setHours(23, 59, 59, 999);
+
+  const filtered = meetups
+    .filter((m) => {
+      const matchesVibe = activeFilter === "All" || m.vibe === VIBE_MAP[activeFilter];
+      const matchesSearch = !search || m.title?.toLowerCase().includes(search.toLowerCase()) || m.location_name?.toLowerCase().includes(search.toLowerCase()) || m.city?.toLowerCase().includes(search.toLowerCase());
+      const meetupDate = m.date ? new Date(m.date) : null;
+      const matchesDate =
+        sortBy === "this_week" ? meetupDate && meetupDate >= now && meetupDate <= endOfWeek :
+        sortBy === "weekend" ? meetupDate && meetupDate >= nextSaturday && meetupDate <= nextSunday :
+        meetupDate ? meetupDate >= now : true;
+      const matchesDistance = maxDistance === 0 || !m.distance_km || m.distance_km <= maxDistance;
+      return matchesVibe && matchesSearch && matchesDate && matchesDistance;
+    })
+    .sort((a, b) => {
+      const da = a.date ? new Date(a.date) : Infinity;
+      const db = b.date ? new Date(b.date) : Infinity;
+      return da - db;
+    });
+
+  const activeFilterCount = (sortBy !== "upcoming" ? 1 : 0) + (maxDistance > 0 ? 1 : 0);
 
   return (
     <div className="px-4 pt-4 pb-8 space-y-5">
@@ -93,22 +132,103 @@ export default function Meetups() {
         />
       </div>
 
-      {/* Filter chips */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => setActiveFilter(f)}
-            className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-heading font-semibold border transition-colors ${
-              activeFilter === f
-                ? "bg-primary text-primary-foreground border-primary"
-                : "border-border/40 text-muted-foreground bg-secondary hover:bg-secondary/80"
-            }`}
-          >
-            {f}
-          </button>
-        ))}
+      {/* Filter chips + sort toggle row */}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide flex-1">
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-heading font-semibold border transition-colors ${
+                activeFilter === f
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "border-border/40 text-muted-foreground bg-secondary hover:bg-secondary/80"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setShowFilters((v) => !v)}
+          className={`flex-shrink-0 relative flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-heading font-semibold transition-colors ${
+            showFilters || activeFilterCount > 0
+              ? "bg-primary text-primary-foreground border-primary"
+              : "border-border/40 text-muted-foreground bg-secondary"
+          }`}
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          {activeFilterCount > 0 && (
+            <span className="w-4 h-4 rounded-full bg-primary-foreground text-primary text-[10px] font-bold flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
       </div>
+
+      {/* Expanded filter panel */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-secondary/50 border border-border/40 rounded-2xl p-4 space-y-4">
+              {/* Date filter */}
+              <div>
+                <p className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-wide mb-2">Date</p>
+                <div className="flex gap-2 flex-wrap">
+                  {SORT_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setSortBy(opt.value)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-heading font-semibold border transition-colors ${
+                        sortBy === opt.value
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border/40 text-muted-foreground bg-secondary hover:bg-secondary/80"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Distance filter */}
+              <div>
+                <p className="text-[11px] font-heading font-semibold text-muted-foreground uppercase tracking-wide mb-2">Distance</p>
+                <div className="flex gap-2 flex-wrap">
+                  {DISTANCE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setMaxDistance(opt.value)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-heading font-semibold border transition-colors ${
+                        maxDistance === opt.value
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border/40 text-muted-foreground bg-secondary hover:bg-secondary/80"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Reset */}
+              {activeFilterCount > 0 && (
+                <button
+                  onClick={() => { setSortBy("upcoming"); setMaxDistance(0); }}
+                  className="flex items-center gap-1 text-xs text-destructive font-heading font-semibold"
+                >
+                  <X className="w-3.5 h-3.5" /> Reset filters
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Map View */}
       {viewMode === "map" && !isLoading && (
