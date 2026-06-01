@@ -1,0 +1,14 @@
+{
+  "name": "braai_reminder",
+  "entry": "entry.ts",
+  "automations": [
+    {
+      "type": "scheduled",
+      "name": "braai_24h_reminder",
+      "schedule_mode": "recurring",
+      "schedule_type": "simple",
+      "repeat_unit": "hours",
+      "repeat_interval": 1
+    }
+  ]
+}
