@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { MapPin, Flame, Shield, ChevronDown } from "lucide-react";
+import { MapPin, Flame, ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function SwipeCard({ profile, onSwipe, isTop }) {
@@ -100,8 +100,10 @@ export default function SwipeCard({ profile, onSwipe, isTop }) {
               {profile.age}
             </span>
             {profile.is_verified && (
-              <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                <Shield className="w-3.5 h-3.5 text-green-400" />
+              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg" style={{boxShadow: '0 0 8px rgba(59,130,246,0.6)'}}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
             )}
           </div>
