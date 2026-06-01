@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Flame, Search } from "lucide-react";
+import { Plus, Flame, Search, Map, List } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import MeetupCard from "@/components/meetups/MeetupCard";
 import CreateMeetupSheet from "@/components/meetups/CreateMeetupSheet";
+import MeetupsMap from "@/components/meetups/MeetupsMap";
 
 const FILTERS = ["All", "Singles Only", "Social", "Chill", "Family"];
 const VIBE_MAP = { "Singles Only": "singles_only", Social: "social", Chill: "chill", Family: "family_friendly" };
@@ -14,6 +15,7 @@ export default function Meetups() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [joinedIds, setJoinedIds] = useState([]);
+  const [viewMode, setViewMode] = useState("list"); // "list" | "map"
   const queryClient = useQueryClient();
 
   const { data: meetups = [], isLoading } = useQuery({
@@ -49,13 +51,30 @@ export default function Meetups() {
           <Flame className="w-6 h-6 text-primary" />
           <h1 className="text-2xl font-heading font-bold text-foreground">Braai Meetups</h1>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold glow-orange hover:opacity-90 transition-opacity"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Host One
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Map / List toggle */}
+          <div className="flex bg-secondary rounded-full p-0.5">
+            <button
+              onClick={() => setViewMode("list")}
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-heading font-semibold transition-colors ${viewMode === "list" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            >
+              <List className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setViewMode("map")}
+              className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-heading font-semibold transition-colors ${viewMode === "map" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}
+            >
+              <Map className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold glow-orange hover:opacity-90 transition-opacity"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Host One
+          </button>
+        </div>
       </div>
 
       {/* Tagline */}
@@ -91,8 +110,17 @@ export default function Meetups() {
         ))}
       </div>
 
+      {/* Map View */}
+      {viewMode === "map" && !isLoading && (
+        <MeetupsMap
+          meetups={filtered}
+          joinedIds={joinedIds}
+          onJoin={handleJoin}
+        />
+      )}
+
       {/* Content */}
-      {isLoading ? (
+      {viewMode === "list" && isLoading ? (
         <div className="flex justify-center py-16">
           <motion.div
             animate={{ rotate: 360 }}
@@ -100,7 +128,7 @@ export default function Meetups() {
             className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full"
           />
         </div>
-      ) : filtered.length === 0 ? (
+      ) : viewMode === "list" && filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
           <div className="text-5xl">🔥</div>
           <h3 className="font-heading font-bold text-foreground">No braais yet!</h3>
@@ -112,7 +140,7 @@ export default function Meetups() {
             🔥 Host a Braai
           </button>
         </div>
-      ) : (
+      ) : viewMode === "list" ? (
         <div className="space-y-4 pb-20">
           <AnimatePresence>
             {filtered.map((meetup) => (
@@ -126,7 +154,7 @@ export default function Meetups() {
             ))}
           </AnimatePresence>
         </div>
-      )}
+      ) : null}
 
       <AnimatePresence>
         {showCreate && (
