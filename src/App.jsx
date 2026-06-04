@@ -28,6 +28,7 @@ const AuthenticatedApp = () => {
           src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
           alt="PikaBoo"
           className="w-16 h-16 object-contain animate-float"
+          style={{ filter: "drop-shadow(0 0 12px rgba(251, 191, 36, 0.8)) brightness(1.2) hue-rotate(25deg)" }}
         />
         <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
         <p className="text-muted-foreground font-body text-sm">Finding your vibes...</p>

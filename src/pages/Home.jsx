@@ -70,6 +70,7 @@ export default function Home() {
              src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
              alt="PikaBoo"
              className="w-9 h-9 object-contain"
+             style={{ filter: "drop-shadow(0 0 6px rgba(251, 191, 36, 0.8)) brightness(1.2) hue-rotate(25deg)" }}
            />
           <h1 className="text-xl font-heading font-bold bg-gradient-to-r from-primary via-amber to-gold bg-clip-text text-transparent">
             PikaBoo
