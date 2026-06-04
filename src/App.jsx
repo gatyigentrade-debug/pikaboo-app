@@ -25,9 +25,9 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background gap-4">
         <img
-          src="https://media.base44.com/images/public/user_698083ce166a5e66f68629c1/983c96078_IMG_3395.png"
+          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
           alt="PikaBoo"
-          className="w-16 h-16 rounded-2xl animate-float"
+          className="w-16 h-16 object-contain animate-float"
         />
         <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
         <p className="text-muted-foreground font-body text-sm">Finding your vibes...</p>

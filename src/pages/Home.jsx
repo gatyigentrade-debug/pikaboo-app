@@ -66,11 +66,11 @@ export default function Home() {
       {/* Header */}
       <header className="flex items-center justify-between px-5 pt-4 pb-2 z-20">
         <div className="flex items-center gap-2">
-          <img
-            src="https://media.base44.com/images/public/user_698083ce166a5e66f68629c1/983c96078_IMG_3395.png"
-            alt="PikaBoo"
-            className="w-9 h-9 rounded-full object-cover"
-          />
+           <img
+             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
+             alt="PikaBoo"
+             className="w-9 h-9 object-contain"
+           />
           <h1 className="text-xl font-heading font-bold bg-gradient-to-r from-primary via-amber to-gold bg-clip-text text-transparent">
             PikaBoo
           </h1>
