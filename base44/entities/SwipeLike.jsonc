@@ -1,0 +1,28 @@
+{
+  "name": "SwipeLike",
+  "type": "object",
+  "properties": {
+    "liker_profile_id": {
+      "type": "string",
+      "description": "Profile ID of the user who liked"
+    },
+    "liked_profile_id": {
+      "type": "string",
+      "description": "Profile ID of the user who was liked"
+    },
+    "liker_name": {
+      "type": "string"
+    },
+    "liker_photo": {
+      "type": "string"
+    },
+    "is_super_like": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "liker_profile_id",
+    "liked_profile_id"
+  ]
+}
