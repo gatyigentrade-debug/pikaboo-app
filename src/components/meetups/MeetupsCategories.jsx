@@ -64,6 +64,13 @@ const CATEGORIES = [
     gradient: "from-green-500 via-emerald-500 to-teal-600",
     description: "Adventure awaits",
   },
+  {
+    id: "one_night_only",
+    label: "One Night Only",
+    emoji: "🌙",
+    gradient: "from-slate-800 via-indigo-900 to-purple-900",
+    description: "No strings attached",
+  },
 ];
 
 export { CATEGORIES };

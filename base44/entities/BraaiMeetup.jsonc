@@ -65,7 +65,8 @@
         "shebeen",
         "braai_buddies",
         "game_night",
-        "outdoors"
+        "outdoors",
+        "one_night_only"
       ],
       "default": "braai_buddies",
       "description": "Meetup category"
