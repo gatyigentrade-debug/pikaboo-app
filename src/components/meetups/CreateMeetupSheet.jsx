@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { CATEGORIES } from "@/components/meetups/MeetupsCategories";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
@@ -21,6 +22,7 @@ export default function CreateMeetupSheet({ onClose, onCreated }) {
     date: "",
     max_attendees: 20,
     vibe: "singles_only",
+    category: "braai_buddies",
     bring: "",
   });
   const [loading, setLoading] = useState(false);
@@ -153,6 +155,25 @@ export default function CreateMeetupSheet({ onClose, onCreated }) {
                   }`}
                 >
                   {v.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wide mb-1.5 block">Category</label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.filter(c => c.id !== "all").map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => set("category", cat.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-heading font-semibold border transition-colors ${
+                    form.category === cat.id
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border/40 text-muted-foreground bg-secondary"
+                  }`}
+                >
+                  {cat.emoji} {cat.label}
                 </button>
               ))}
             </div>

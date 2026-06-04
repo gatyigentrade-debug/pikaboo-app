@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Flame, Search, Map, List, SlidersHorizontal, X } from "lucide-react";
+import MeetupsCategories, { CATEGORIES } from "@/components/meetups/MeetupsCategories";
 import { base44 } from "@/api/base44Client";
 import MeetupCard from "@/components/meetups/MeetupCard";
 import CreateMeetupSheet from "@/components/meetups/CreateMeetupSheet";
@@ -24,6 +25,7 @@ const DISTANCE_OPTIONS = [
 export default function Meetups() {
   const [showCreate, setShowCreate] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [joinedIds, setJoinedIds] = useState([]);
   const [viewMode, setViewMode] = useState("list"); // "list" | "map"
@@ -72,7 +74,8 @@ export default function Meetups() {
         sortBy === "weekend" ? meetupDate && meetupDate >= nextSaturday && meetupDate <= nextSunday :
         meetupDate ? meetupDate >= now : true;
       const matchesDistance = maxDistance === 0 || !m.distance_km || m.distance_km <= maxDistance;
-      return matchesVibe && matchesSearch && matchesDate && matchesDistance;
+      const matchesCategory = activeCategory === "all" || m.category === activeCategory;
+      return matchesVibe && matchesSearch && matchesDate && matchesDistance && matchesCategory;
     })
     .sort((a, b) => {
       const da = a.date ? new Date(a.date) : Infinity;
@@ -131,6 +134,9 @@ export default function Meetups() {
           className="w-full bg-secondary border-none rounded-full pl-9 pr-4 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
         />
       </div>
+
+      {/* Tinder-style Categories */}
+      <MeetupsCategories activeCategory={activeCategory} onSelect={setActiveCategory} />
 
       {/* Filter chips + sort toggle row */}
       <div className="flex items-center gap-2">

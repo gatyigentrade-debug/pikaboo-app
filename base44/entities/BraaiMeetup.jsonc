@@ -54,6 +54,22 @@
       ],
       "default": "social"
     },
+    "category": {
+      "type": "string",
+      "enum": [
+        "all",
+        "long_term",
+        "new_friends",
+        "short_term",
+        "sports_bar",
+        "shebeen",
+        "braai_buddies",
+        "game_night",
+        "outdoors"
+      ],
+      "default": "braai_buddies",
+      "description": "Meetup category"
+    },
     "bring": {
       "type": "string",
       "description": "What to bring (meat, drinks, etc.)"
