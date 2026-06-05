@@ -4,6 +4,7 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfilePrompts from "@/components/profile/ProfilePrompts";
 import PremiumSection from "@/components/profile/PremiumSection";
 import SafetySection from "@/components/profile/SafetySection";
+import VideoIntro from "@/components/profile/VideoIntro";
 
 const myProfile = {
   name: "You",
@@ -68,6 +69,9 @@ export default function Profile() {
             </div>
           </div>
         </div>
+
+        {/* Intro Video */}
+        <VideoIntro />
 
         {/* SA Prompts */}
         <ProfilePrompts profile={myProfile} />

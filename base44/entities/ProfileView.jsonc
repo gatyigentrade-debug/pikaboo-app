@@ -1,0 +1,28 @@
+{
+  "name": "ProfileView",
+  "type": "object",
+  "properties": {
+    "viewer_profile_id": {
+      "type": "string"
+    },
+    "viewed_profile_id": {
+      "type": "string"
+    },
+    "viewer_name": {
+      "type": "string"
+    },
+    "viewer_photo": {
+      "type": "string"
+    },
+    "viewer_age": {
+      "type": "number"
+    },
+    "viewer_city": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "viewer_profile_id",
+    "viewed_profile_id"
+  ]
+}
