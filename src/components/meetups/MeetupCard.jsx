@@ -1,6 +1,8 @@
-import { motion } from "framer-motion";
-import { MapPin, Calendar, Users, Flame } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Calendar, Users, Flame, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
+import MeetupChat from "@/components/meetups/MeetupChat";
 
 const VIBE_LABELS = {
   chill: { label: "Chill Vibes", color: "text-blue-400 bg-blue-400/10" },
@@ -10,11 +12,13 @@ const VIBE_LABELS = {
 };
 
 export default function MeetupCard({ meetup, onJoin, onView, hasJoined }) {
+  const [showChat, setShowChat] = useState(false);
   const attendees = meetup.attendee_ids?.length || 0;
   const isFull = attendees >= (meetup.max_attendees || 20);
   const vibe = VIBE_LABELS[meetup.vibe] || VIBE_LABELS.social;
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -87,20 +91,36 @@ export default function MeetupCard({ meetup, onJoin, onView, hasJoined }) {
           </div>
         )}
 
-        <button
-          onClick={hasJoined ? onView : onJoin}
-          disabled={isFull && !hasJoined}
-          className={`w-full py-2.5 rounded-full text-sm font-heading font-bold transition-all ${
-            hasJoined
-              ? "bg-secondary text-foreground border border-primary/40"
-              : isFull
-              ? "bg-secondary text-muted-foreground cursor-not-allowed"
-              : "bg-primary text-primary-foreground glow-orange hover:opacity-90"
-          }`}
-        >
-          {hasJoined ? "✓ You're going!" : isFull ? "Full — Join Waitlist" : "🔥 Join Braai"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={hasJoined ? onView : onJoin}
+            disabled={isFull && !hasJoined}
+            className={`flex-1 py-2.5 rounded-full text-sm font-heading font-bold transition-all ${
+              hasJoined
+                ? "bg-secondary text-foreground border border-primary/40"
+                : isFull
+                ? "bg-secondary text-muted-foreground cursor-not-allowed"
+                : "bg-primary text-primary-foreground glow-orange hover:opacity-90"
+            }`}
+          >
+            {hasJoined ? "✓ You're going!" : isFull ? "Full" : "🔥 Join Braai"}
+          </button>
+          {hasJoined && (
+            <button
+              onClick={() => setShowChat(true)}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-primary/15 text-primary border border-primary/30 text-sm font-heading font-bold hover:bg-primary/25 transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Chat
+            </button>
+          )}
+        </div>
       </div>
     </motion.div>
+
+    <AnimatePresence>
+      {showChat && <MeetupChat meetup={meetup} onClose={() => setShowChat(false)} />}
+    </AnimatePresence>
+    </>
   );
 }
