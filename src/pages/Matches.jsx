@@ -3,6 +3,7 @@ import { MessageCircle, Heart } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import MatchCard from "@/components/matches/MatchCard";
 import ChatView from "@/components/matches/ChatView";
+import OpeningMoveComposer from "@/components/swipe/OpeningMoveComposer";
 
 const demoMatches = [
   {
@@ -34,8 +35,29 @@ const demoMatches = [
   },
 ];
 
+// Demo profile data to power the AI composer
+const demoProfiles = {
+  m2: {
+    name: "Thabo",
+    photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop"],
+    city: "Johannesburg",
+    braai_role: "Grill Master",
+    spirit_animal: "Honey Badger",
+    home_language: "isiZulu",
+    sports_team: "Kaizer Chiefs",
+    looking_for: "relationship",
+    braai_starter: "What would you braai for a first date? 🥩",
+    bio: "Joburg boy who loves a good shisa nyama and Sunday drives to Magaliesberg.",
+    favorite_kota_spot: "Soweto corner spot, you'll know when you see it",
+    cant_live_without: "Good music and boerewors rolls",
+    dream_date_location: "Cradle of Humankind at sunset",
+    is_verified: true,
+  },
+};
+
 export default function Matches() {
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [openingMoveMatch, setOpeningMoveMatch] = useState(null);
 
   const newMatches = demoMatches.filter((m) => m.status === "pending");
   const conversations = demoMatches.filter((m) => m.status === "matched");
@@ -58,7 +80,7 @@ export default function Matches() {
             {newMatches.map((match) => (
               <button
                 key={match.id}
-                onClick={() => setSelectedMatch(match)}
+                onClick={() => setOpeningMoveMatch(match)}
                 className="flex flex-col items-center gap-1.5 flex-shrink-0"
               >
                 <div className="w-16 h-16 rounded-full border-2 border-primary p-0.5 glow-orange">
@@ -111,6 +133,27 @@ export default function Matches() {
           <ChatView
             match={selectedMatch}
             onBack={() => setSelectedMatch(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Opening Move Composer for new/pending matches */}
+      <AnimatePresence>
+        {openingMoveMatch && (
+          <OpeningMoveComposer
+            matchedProfile={demoProfiles[openingMoveMatch.id] || {
+              name: openingMoveMatch.matched_name,
+              photos: [openingMoveMatch.matched_photo],
+              is_verified: true,
+            }}
+            isVerified={true}
+            onSend={(message) => {
+              // Promote to conversation
+              const updated = { ...openingMoveMatch, status: "matched", last_message: message, last_message_time: new Date().toISOString() };
+              setOpeningMoveMatch(null);
+              setSelectedMatch(updated);
+            }}
+            onClose={() => setOpeningMoveMatch(null)}
           />
         )}
       </AnimatePresence>
