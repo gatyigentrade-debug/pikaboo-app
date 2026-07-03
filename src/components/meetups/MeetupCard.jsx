@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Calendar, Users, Flame, MessageCircle } from "lucide-react";
+import { MapPin, Calendar, Users, Flame, MessageCircle, CalendarPlus, Check } from "lucide-react";
 import { format } from "date-fns";
 import MeetupChat from "@/components/meetups/MeetupChat";
+import { addToCalendar } from "@/utils/addToCalendar";
 
 const VIBE_LABELS = {
   chill: { label: "Chill Vibes", color: "text-blue-400 bg-blue-400/10" },
@@ -13,6 +14,13 @@ const VIBE_LABELS = {
 
 export default function MeetupCard({ meetup, onJoin, onView, hasJoined }) {
   const [showChat, setShowChat] = useState(false);
+  const [calAdded, setCalAdded] = useState(false);
+
+  const handleAddToCalendar = () => {
+    addToCalendar(meetup);
+    setCalAdded(true);
+    setTimeout(() => setCalAdded(false), 3000);
+  };
   const attendees = meetup.attendee_ids?.length || 0;
   const isFull = attendees >= (meetup.max_attendees || 20);
   const vibe = VIBE_LABELS[meetup.vibe] || VIBE_LABELS.social;
@@ -106,13 +114,26 @@ export default function MeetupCard({ meetup, onJoin, onView, hasJoined }) {
             {hasJoined ? "✓ You're going!" : isFull ? "Full" : "🔥 Join Braai"}
           </button>
           {hasJoined && (
-            <button
-              onClick={() => setShowChat(true)}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-primary/15 text-primary border border-primary/30 text-sm font-heading font-bold hover:bg-primary/25 transition-colors"
-            >
-              <MessageCircle className="w-4 h-4" />
-              Chat
-            </button>
+            <>
+              <button
+                onClick={handleAddToCalendar}
+                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full border text-sm font-heading font-bold transition-all ${
+                  calAdded
+                    ? "bg-green-500/15 text-green-400 border-green-500/30"
+                    : "bg-amber/10 text-amber border-amber/30 hover:bg-amber/20"
+                }`}
+                title="Add to Calendar"
+              >
+                {calAdded ? <Check className="w-4 h-4" /> : <CalendarPlus className="w-4 h-4" />}
+              </button>
+              <button
+                onClick={() => setShowChat(true)}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-primary/15 text-primary border border-primary/30 text-sm font-heading font-bold hover:bg-primary/25 transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Chat
+              </button>
+            </>
           )}
         </div>
       </div>
