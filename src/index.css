@@ -92,6 +92,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+  }
+  button, a, [role="button"], .nav-item {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
   }
 }
 

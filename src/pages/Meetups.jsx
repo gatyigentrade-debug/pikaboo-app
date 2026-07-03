@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Flame, Search, Map, List, SlidersHorizontal, X } from "lucide-react";
 import MeetupsCategories, { CATEGORIES } from "@/components/meetups/MeetupsCategories";
@@ -85,7 +86,10 @@ export default function Meetups() {
 
   const activeFilterCount = (sortBy !== "upcoming" ? 1 : 0) + (maxDistance > 0 ? 1 : 0);
 
+  const handleRefresh = () => queryClient.invalidateQueries({ queryKey: ["meetups"] });
+
   return (
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
     <div className="px-4 pt-4 pb-8 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -291,5 +295,6 @@ export default function Meetups() {
         )}
       </AnimatePresence>
     </div>
+    </PullToRefreshWrapper>
   );
 }

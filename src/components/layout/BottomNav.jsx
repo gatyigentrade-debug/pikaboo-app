@@ -40,13 +40,13 @@ export default function BottomNav({ unreadMatches = 0 }) {
                   }`}
                 />
                 {showBadge && (
-                  <div className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center glow-orange">
+                  <div className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[11px] font-bold flex items-center justify-center glow-orange">
                     {unreadMatches > 9 ? "9+" : unreadMatches}
                   </div>
                 )}
               </div>
               <span
-                className={`text-[10px] font-body transition-colors ${
+                className={`text-[11px] font-body transition-colors ${
                   isActive
                     ? "text-primary font-semibold"
                     : "text-muted-foreground"

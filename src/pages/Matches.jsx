@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MessageCircle, Heart } from "lucide-react";
+import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { AnimatePresence } from "framer-motion";
 import MatchCard from "@/components/matches/MatchCard";
 import ChatView from "@/components/matches/ChatView";
@@ -62,8 +63,11 @@ export default function Matches() {
   const newMatches = demoMatches.filter((m) => m.status === "pending");
   const conversations = demoMatches.filter((m) => m.status === "matched");
 
+  const handleRefresh = () => new Promise((res) => setTimeout(res, 1000));
+
   return (
-    <div className="px-4 pt-4 space-y-6">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-4">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
         <MessageCircle className="w-6 h-6 text-primary" />
@@ -137,7 +141,8 @@ export default function Matches() {
         )}
       </AnimatePresence>
 
-      {/* Opening Move Composer for new/pending matches */}
+    </div>
+    {/* Opening Move Composer for new/pending matches */}
       <AnimatePresence>
         {openingMoveMatch && (
           <OpeningMoveComposer
@@ -157,6 +162,6 @@ export default function Matches() {
           />
         )}
       </AnimatePresence>
-    </div>
+    </PullToRefreshWrapper>
   );
 }

@@ -11,12 +11,7 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import AppLayout from '@/components/layout/AppLayout';
-import Home from '@/pages/Home';
-import Discover from '@/pages/Discover';
-import Matches from '@/pages/Matches';
-import Profile from '@/pages/Profile';
 import Explore from '@/pages/Explore';
-import Meetups from '@/pages/Meetups';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -52,14 +47,12 @@ const AuthenticatedApp = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/matches" element={<Matches />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/meetups" element={<Meetups />} />
-        </Route>
+        <Route path="/" element={<AppLayout />} />
+        <Route path="/discover" element={<AppLayout />} />
+        <Route path="/matches" element={<AppLayout />} />
+        <Route path="/profile" element={<AppLayout />} />
+        <Route path="/meetups" element={<AppLayout />} />
+        <Route path="/explore" element={<Explore />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
