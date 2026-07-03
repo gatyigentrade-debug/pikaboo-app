@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
@@ -23,6 +23,7 @@ export default function Home() {
   const [swipeCount, setSwipeCount] = useState(0);
   const navigate = useNavigate();
   const { isGold, activateGold } = useGold();
+  const topCardRef = useRef(null);
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ["profiles"],
@@ -60,7 +61,11 @@ export default function Home() {
 
   const handleAction = useCallback((actionId) => {
     if (actionId === "boost") return;
-    handleSwipe(actionId);
+    if ((actionId === "like" || actionId === "dislike") && topCardRef.current) {
+      topCardRef.current.flyOff(actionId);
+    } else {
+      handleSwipe(actionId);
+    }
   }, [handleSwipe]);
 
   const handleUpgrade = async (plan) => {
@@ -193,7 +198,7 @@ export default function Home() {
                 <SwipeCard key={nextProfile.id + "-bg"} profile={nextProfile} onSwipe={() => {}} isTop={false} />
               )}
               {currentProfile && (
-                <SwipeCard key={currentProfile.id} profile={currentProfile} onSwipe={handleSwipe} isTop={true} />
+                <SwipeCard key={currentProfile.id} ref={topCardRef} profile={currentProfile} onSwipe={handleSwipe} isTop={true} />
               )}
             </AnimatePresence>
           </div>

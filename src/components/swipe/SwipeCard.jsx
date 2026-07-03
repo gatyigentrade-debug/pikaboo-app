@@ -1,25 +1,41 @@
-import { useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { useState, useImperativeHandle, forwardRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useAnimation } from "framer-motion";
 import { MapPin, Flame, ChevronDown, MessageCircle, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ReportUserSheet from "@/components/common/ReportUserSheet";
 
-export default function SwipeCard({ profile, onSwipe, isTop, onMessage }) {
+const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMessage }, ref) {
   const [imgIdx, setImgIdx] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-15, 15]);
-  const likeOpacity = useTransform(x, [0, 100], [0, 1]);
-  const nopeOpacity = useTransform(x, [-100, 0], [1, 0]);
+  const controls = useAnimation();
+  const rotate = useTransform(x, [-250, 250], [-20, 20]);
+  const likeOpacity = useTransform(x, [20, 120], [0, 1]);
+  const nopeOpacity = useTransform(x, [-120, -20], [1, 0]);
+  const cardOpacity = useTransform(x, [-300, -200, 0, 200, 300], [0, 1, 1, 1, 0]);
 
   const photos = profile.photos || [];
   const photo = photos[imgIdx] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop";
 
+  const flyOff = async (direction) => {
+    await controls.start({
+      x: direction === "like" ? 600 : -600,
+      opacity: 0,
+      transition: { duration: 0.3, ease: "easeOut" },
+    });
+    onSwipe(direction === "like" ? "like" : "dislike");
+  };
+
+  useImperativeHandle(ref, () => ({ flyOff }));
+
   const handleDragEnd = (_, info) => {
-    const threshold = 120;
-    if (info.offset.x > threshold) onSwipe("like");
-    else if (info.offset.x < -threshold) onSwipe("dislike");
+    const swipeThreshold = 80;
+    const velocityThreshold = 500;
+    const { offset, velocity } = info;
+    if (offset.x > swipeThreshold || velocity.x > velocityThreshold) flyOff("like");
+    else if (offset.x < -swipeThreshold || velocity.x < -velocityThreshold) flyOff("dislike");
+    else controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 25 } });
   };
 
   const handleTapPhoto = (e) => {
@@ -41,12 +57,15 @@ export default function SwipeCard({ profile, onSwipe, isTop, onMessage }) {
   return (
     <>
       <motion.div
-        className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter"
-        style={{ x, rotate }}
+        className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter touch-none"
+        style={{ x, rotate, opacity: cardOpacity }}
+        animate={controls}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.9}
+        dragElastic={0.7}
+        dragMomentum={false}
         onDragEnd={handleDragEnd}
+        whileDrag={{ scale: 1.02 }}
       >
         {/* Photo */}
         <div className="relative w-full h-full" onClick={handleTapPhoto}>
@@ -188,4 +207,6 @@ export default function SwipeCard({ profile, onSwipe, isTop, onMessage }) {
       </AnimatePresence>
     </>
   );
-}
+});
+
+export default SwipeCard;
