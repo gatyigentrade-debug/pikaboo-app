@@ -1,7 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useAppNotifications } from "@/hooks/useAppNotifications";
 import Home from "@/pages/Home";
 import Discover from "@/pages/Discover";
 import Meetups from "@/pages/Meetups";
@@ -18,6 +19,7 @@ const TABS = [
 ];
 
 export default function AppLayout() {
+  useAppNotifications();
   const [unreadMatches, setUnreadMatches] = useState(0);
   const location = useLocation();
   // Track which tabs have been visited so we only mount them on first visit
