@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Heart, ArrowRight, Mail, Lock, Loader2, Apple, Phone } from "lucide-react";
 import GoogleIcon from "@/components/GoogleIcon";
 
-const LOGO_URL = "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png";
+const LOGO_URL = "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/c376ec1bd_AppIcon.png";
 
 export default function Login() {
   const [showForm, setShowForm] = useState(false);
@@ -63,18 +63,11 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
         {/* Gold emblem */}
         <div className="relative mb-6">
-          <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-300 via-gold to-yellow-600 p-[3px] glow-gold">
-            <div className="w-full h-full rounded-full bg-gradient-to-br from-yellow-200 via-gold to-yellow-700 p-[2px]">
-              <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
-                <img
-                  src={LOGO_URL}
-                  alt="PikaBoo"
-                  className="w-20 h-20 object-contain"
-                  style={{ filter: "brightness(1.3) sepia(0.4) saturate(2) hue-rotate(5deg)" }}
-                />
-              </div>
-            </div>
-          </div>
+          <img
+            src={LOGO_URL}
+            alt="PikaBoo"
+            className="w-36 h-36 object-contain glow-gold animate-float"
+          />
         </div>
 
         {/* Brand name */}
@@ -93,6 +86,11 @@ export default function Login() {
             Real people. <span className="text-gold">Real connections.</span>
           </p>
           <p className="text-sm text-muted-foreground font-body mt-1">Find your perfect Boo today.</p>
+          <div className="flex items-center gap-2 mt-3">
+            <div className="w-12 h-px bg-gold/30" />
+            <Heart className="w-3 h-3 text-gold/50" fill="currentColor" />
+            <div className="w-12 h-px bg-gold/30" />
+          </div>
         </div>
 
         {/* Form (toggle) */}
