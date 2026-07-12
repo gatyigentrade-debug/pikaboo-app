@@ -7,6 +7,8 @@ import Home from "@/pages/Home";
 import Discover from "@/pages/Discover";
 import Meetups from "@/pages/Meetups";
 import Matches from "@/pages/Matches";
+import Chat from "@/pages/Chat";
+import Likes from "@/pages/Likes";
 import Profile from "@/pages/Profile";
 
 // Tabs that get keep-alive (visibility toggle instead of unmount)
@@ -15,6 +17,8 @@ const TABS = [
   { path: "/discover", Component: Discover },
   { path: "/meetups",  Component: Meetups },
   { path: "/matches",  Component: Matches },
+  { path: "/chat",     Component: Chat },
+  { path: "/likes",    Component: Likes },
   { path: "/profile",  Component: Profile },
 ];
 
