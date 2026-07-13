@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, ArrowRight, Mail, Lock, Loader2, Apple, Phone } from "lucide-react";
-import GoogleIcon from "@/components/GoogleIcon";
+import { Mail, Lock, Loader2 } from "lucide-react";
 
 export default function Login() {
   const [showForm, setShowForm] = useState(false);
@@ -85,52 +84,23 @@ export default function Login() {
           </form>
         ) : (
           <>
-            {/* Get Started */}
+            {/* Transparent clickable overlay for Get Started button */}
             <Link
               to="/register"
-              className="w-full h-12 rounded-full bg-gradient-to-r from-yellow-400 to-gold text-black font-heading font-bold flex items-center justify-center gap-2 glow-gold mb-5"
-            >
-              <Heart className="w-4 h-4" fill="currentColor" />
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+              aria-label="Get Started"
+              className="w-full h-12 rounded-full mb-5"
+            />
 
-            {/* Divider */}
-            <div className="w-full flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px bg-gold/30" />
-              <span className="text-xs text-gold/60 font-body">or continue with</span>
-              <div className="flex-1 h-px bg-gold/30" />
+            {/* Transparent clickable overlays for social icons */}
+            <div className="flex items-center justify-center gap-4 mb-5">
+              <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full" />
+              <button onClick={handleApple} aria-label="Continue with Apple" className="w-12 h-12 rounded-full" />
+              <Link to="/register" aria-label="Continue with Phone" className="w-12 h-12 rounded-full" />
             </div>
 
-            {/* Social auth */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <button
-                onClick={handleGoogle}
-                className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center hover:bg-gold/10 transition-colors"
-              >
-                <GoogleIcon className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleApple}
-                className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center hover:bg-gold/10 transition-colors"
-              >
-                <Apple className="w-5 h-5 text-foreground" />
-              </button>
-              <Link
-                to="/register"
-                className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center hover:bg-gold/10 transition-colors"
-              >
-                <Phone className="w-5 h-5 text-foreground" />
-              </Link>
-            </div>
+            {/* Transparent clickable overlay for Sign In */}
+            <button onClick={() => setShowForm(true)} aria-label="Already have an account? Sign In" className="w-full h-8" />
           </>
-        )}
-
-        {/* Footer */}
-        {!showForm && (
-          <button onClick={() => setShowForm(true)} className="text-sm text-white/80 font-body drop-shadow-lg">
-            Already have an account? <span className="text-gold font-semibold">Sign In →</span>
-          </button>
         )}
       </div>
     </div>
