@@ -92,7 +92,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between px-5 pt-4 pb-2 z-20">
+      <header className="flex items-center justify-between px-5 pt-[calc(1rem+env(safe-area-inset-top))] pb-2 z-20">
         <div className="flex items-center gap-2">
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"

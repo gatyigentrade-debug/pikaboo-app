@@ -41,17 +41,25 @@ export default function Meetups() {
   });
 
   const handleJoin = async (meetup) => {
-    const user = await base44.auth.me();
     if (joinedIds.includes(meetup.id)) return;
 
-    const updatedIds = [...(meetup.attendee_ids || []), user.id];
-    const updatedNames = [...(meetup.attendee_names || []), user.full_name || "You"];
-    await base44.entities.BraaiMeetup.update(meetup.id, {
-      attendee_ids: updatedIds,
-      attendee_names: updatedNames,
-    });
+    // Optimistically mark as joined before network request
     setJoinedIds((prev) => [...prev, meetup.id]);
-    queryClient.invalidateQueries({ queryKey: ["meetups"] });
+
+    try {
+      const user = await base44.auth.me();
+      const updatedIds = [...(meetup.attendee_ids || []), user.id];
+      const updatedNames = [...(meetup.attendee_names || []), user.full_name || "You"];
+      await base44.entities.BraaiMeetup.update(meetup.id, {
+        attendee_ids: updatedIds,
+        attendee_names: updatedNames,
+      });
+      queryClient.invalidateQueries({ queryKey: ["meetups"] });
+    } catch (error) {
+      // Revert optimistic update on error
+      setJoinedIds((prev) => prev.filter((id) => id !== meetup.id));
+      console.error("Failed to join meetup:", error);
+    }
   };
 
   const now = new Date();
@@ -90,7 +98,7 @@ export default function Meetups() {
 
   return (
     <PullToRefreshWrapper onRefresh={handleRefresh}>
-    <div className="px-4 pt-4 pb-8 space-y-5">
+    <div className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-8 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

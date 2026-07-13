@@ -55,6 +55,7 @@ const AuthenticatedApp = () => {
         <Route path="/profile" element={<AppLayout />} />
         <Route path="/meetups" element={<AppLayout />} />
         <Route path="/chat" element={<AppLayout />} />
+        <Route path="/chat/:id" element={<AppLayout />} />
         <Route path="/likes" element={<AppLayout />} />
         <Route path="/explore" element={<Explore />} />
       </Route>

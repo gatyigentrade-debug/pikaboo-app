@@ -1,8 +1,10 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import { base44 } from "@/api/base44Client";
 import { useAppNotifications } from "@/hooks/useAppNotifications";
+import ChatView from "@/components/matches/ChatView";
 import Home from "@/pages/Home";
 import Discover from "@/pages/Discover";
 import Meetups from "@/pages/Meetups";
@@ -26,11 +28,19 @@ export default function AppLayout() {
   useAppNotifications();
   const [unreadMatches, setUnreadMatches] = useState(0);
   const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams();
+  const chatId = params.id;
+  const chatMatch = chatId ? location.state?.match : null;
   // Track which tabs have been visited so we only mount them on first visit
   const [mounted, setMounted] = useState({ [location.pathname]: true });
 
   useEffect(() => {
     setMounted((prev) => ({ ...prev, [location.pathname]: true }));
+    // For deep chat routes, ensure the chat tab is mounted underneath
+    if (location.pathname.startsWith("/chat/")) {
+      setMounted((prev) => ({ ...prev, "/chat": true }));
+    }
   }, [location.pathname]);
 
   useEffect(() => {
@@ -59,7 +69,7 @@ export default function AppLayout() {
       {/* Keep-alive tab panels */}
       <main className="relative z-10 pb-20 max-w-lg mx-auto">
         {TABS.map(({ path, Component }) => {
-          const isActive = currentPath === path;
+          const isActive = currentPath === path || (path === "/chat" && currentPath.startsWith("/chat/"));
           if (!mounted[path]) return null;
           return (
             <div
@@ -74,6 +84,13 @@ export default function AppLayout() {
       </main>
 
       <BottomNav unreadMatches={unreadMatches} />
+
+      {/* Deep-link ChatView overlay */}
+      <AnimatePresence>
+        {chatMatch && (
+          <ChatView match={chatMatch} onBack={() => navigate(-1)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

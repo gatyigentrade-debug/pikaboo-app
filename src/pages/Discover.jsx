@@ -20,7 +20,7 @@ export default function Discover() {
   }
 
   return (
-    <div className="px-4 pt-4 space-y-6">
+    <div className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
         <Compass className="w-6 h-6 text-primary" />

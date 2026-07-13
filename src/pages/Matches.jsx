@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Heart, ChevronRight, BadgeCheck, MapPin, Clock } from "lucide-react";
-import { Link } from "react-router-dom";
-import ChatView from "@/components/matches/ChatView";
+import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 const demoMatches = [
@@ -56,11 +54,11 @@ const blurredAvatars = [
 ];
 
 export default function Matches() {
-  const [selectedMatch, setSelectedMatch] = useState(null);
+  const navigate = useNavigate();
   const handleRefresh = () => new Promise((res) => setTimeout(res, 1000));
 
   return (
-    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-6">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
       <div className="space-y-6 pb-4">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -113,7 +111,7 @@ export default function Matches() {
                 key={match.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                onClick={() => setSelectedMatch(match)}
+                onClick={() => navigate(`/chat/${match.id}`, { state: { match } })}
                 className="w-full flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 hover:bg-secondary/60 transition-colors text-left"
               >
                 {/* Avatar */}
@@ -164,12 +162,6 @@ export default function Matches() {
         </section>
       </div>
 
-      {/* Chat View */}
-      <AnimatePresence>
-        {selectedMatch && (
-          <ChatView match={selectedMatch} onBack={() => setSelectedMatch(null)} />
-        )}
-      </AnimatePresence>
     </PullToRefreshWrapper>
   );
 }

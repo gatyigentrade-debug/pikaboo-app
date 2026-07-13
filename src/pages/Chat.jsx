@@ -1,8 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Shield, Settings, BadgeCheck, Mic } from "lucide-react";
-import { Link } from "react-router-dom";
-import ChatView from "@/components/matches/ChatView";
+import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 const newMatches = [
@@ -18,11 +15,11 @@ const messages = [
 ];
 
 export default function Chat() {
-  const [selectedMatch, setSelectedMatch] = useState(null);
+  const navigate = useNavigate();
   const handleRefresh = () => new Promise((res) => setTimeout(res, 1000));
 
   return (
-    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-6">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
       <div className="space-y-6 pb-4">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -54,7 +51,7 @@ export default function Chat() {
             {newMatches.map((m) => (
               <button
                 key={m.id}
-                onClick={() => setSelectedMatch(m)}
+                onClick={() => navigate(`/chat/${m.id}`, { state: { match: m } })}
                 className="flex-shrink-0 w-24 h-28 rounded-2xl flex flex-col items-center justify-center p-2"
                 style={{ backgroundColor: m.color }}
               >
@@ -72,7 +69,7 @@ export default function Chat() {
             {messages.map((msg) => (
               <button
                 key={msg.id}
-                onClick={() => setSelectedMatch({ matched_name: msg.name, matched_photo: "", id: msg.id })}
+                onClick={() => navigate(`/chat/${msg.id}`, { state: { match: { matched_name: msg.name, matched_photo: "", id: msg.id } } })}
                 className="w-full flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 hover:bg-secondary/60 transition-colors text-left"
               >
                 {/* Avatar */}
@@ -123,12 +120,6 @@ export default function Chat() {
         </section>
       </div>
 
-      {/* Chat View */}
-      <AnimatePresence>
-        {selectedMatch && (
-          <ChatView match={selectedMatch} onBack={() => setSelectedMatch(null)} />
-        )}
-      </AnimatePresence>
     </PullToRefreshWrapper>
   );
 }

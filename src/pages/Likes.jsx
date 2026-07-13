@@ -19,7 +19,7 @@ export default function Likes() {
   const toggleFilter = (f) => setFilters((p) => ({ ...p, [f]: !p[f] }));
 
   return (
-    <div className="px-4 pt-6 pb-28">
+    <div className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
         <Link to="/matches" className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">

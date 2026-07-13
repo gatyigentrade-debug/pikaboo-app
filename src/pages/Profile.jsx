@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight } from "lucide-react";
+import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 import PikaBooShop from "@/components/shop/PikaBooShop";
 
 const myProfile = {
@@ -14,6 +17,24 @@ const myProfile = {
 
 export default function Profile() {
   const [showShop, setShowShop] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      // Dummy endpoint — simulates account deletion request
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      toast.success("Account deleted", {
+        description: "Your PikaBoo account has been removed.",
+      });
+      setShowDeleteDialog(false);
+      await base44.auth.logout("/login");
+    } catch (error) {
+      toast.error("Failed to delete account", { description: error.message });
+      setDeleting(false);
+    }
+  };
 
   return (
     <div className="pb-28">
@@ -89,6 +110,26 @@ export default function Profile() {
           </div>
         </div>
 
+        {/* Safety & Settings */}
+        <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
+          <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
+            Safety & Settings
+          </h3>
+          <button
+            onClick={() => setShowDeleteDialog(true)}
+            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-destructive/10 transition-colors text-left"
+          >
+            <div className="w-9 h-9 rounded-full bg-destructive/15 flex items-center justify-center flex-shrink-0">
+              <Trash2 className="w-4 h-4 text-destructive" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-heading font-bold text-destructive">Delete Account</p>
+              <p className="text-[11px] text-muted-foreground font-body">Permanently remove your account and data</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
+
         {/* PikaBoo Shop */}
         <button
           onClick={() => setShowShop(true)}
@@ -107,6 +148,39 @@ export default function Profile() {
 
       {/* Shop Modal */}
       <PikaBooShop isOpen={showShop} onClose={() => setShowShop(false)} />
+
+      {/* Delete Account Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent className="max-w-sm rounded-2xl">
+          <DialogHeader>
+            <div className="w-12 h-12 rounded-full bg-destructive/15 flex items-center justify-center mx-auto mb-2">
+              <ShieldAlert className="w-6 h-6 text-destructive" />
+            </div>
+            <DialogTitle className="text-center text-foreground">Delete Account?</DialogTitle>
+            <DialogDescription className="text-center">
+              This will permanently delete your PikaBoo account, matches, messages, and profile data. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-row gap-2 sm:justify-center">
+            <DialogClose asChild>
+              <button
+                className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors"
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+            </DialogClose>
+            <button
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="flex-1 h-11 rounded-full bg-destructive text-destructive-foreground font-heading font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+              {deleting ? "Deleting..." : "Delete"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
