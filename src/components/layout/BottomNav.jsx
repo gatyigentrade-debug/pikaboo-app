@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Compass, Heart, MessageCircle, User, Flame } from "lucide-react";
+import { Compass, Heart, MessageCircle, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
@@ -7,7 +7,6 @@ const navItems = [
   { path: "/matches", icon: Heart, label: "Matches" },
   { path: "/chat", icon: MessageCircle, label: "Chat" },
   { path: "/profile", icon: User, label: "Profile" },
-  { path: "/meetups", icon: Flame, label: "Braais" },
 ];
 
 export default function BottomNav({ unreadMatches = 0 }) {

@@ -11,7 +11,6 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import AppLayout from '@/components/layout/AppLayout';
-import Explore from '@/pages/Explore';
 import Chat from '@/pages/Chat';
 import Likes from '@/pages/Likes';
 
@@ -50,14 +49,11 @@ const AuthenticatedApp = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/" element={<AppLayout />} />
-        <Route path="/discover" element={<AppLayout />} />
         <Route path="/matches" element={<AppLayout />} />
         <Route path="/profile" element={<AppLayout />} />
-        <Route path="/meetups" element={<AppLayout />} />
         <Route path="/chat" element={<AppLayout />} />
         <Route path="/chat/:id" element={<AppLayout />} />
         <Route path="/likes" element={<AppLayout />} />
-        <Route path="/explore" element={<Explore />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
