@@ -16,12 +16,11 @@ export default function ExploreCard({ card, onClick }) {
         src={card.image}
         alt={card.label}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ mixBlendMode: "luminosity", opacity: 0.45 }}
       />
       {/* Color tint overlay */}
       <div className="absolute inset-0" style={{ backgroundColor: card.tint }} />
       {/* Bottom gradient for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
       {/* Member count badge */}
       <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-2 py-0.5 z-10">
