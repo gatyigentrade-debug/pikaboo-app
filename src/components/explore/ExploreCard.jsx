@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Users } from "lucide-react";
 
 export default function ExploreCard({ card, onClick }) {
   const isFull = card.size === "full";
@@ -23,10 +22,10 @@ export default function ExploreCard({ card, onClick }) {
       {/* Bottom gradient for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-      {/* Member count badge */}
+      {/* Live online count badge */}
       <div className="absolute top-2.5 right-2.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-full px-2 py-0.5 z-10">
-        <Users className="w-2.5 h-2.5 text-white" />
-        <span className="text-[10px] text-white font-bold">{card.count}</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+        <span className="text-[10px] text-white font-bold">{card.count} Online</span>
       </div>
 
       {/* Text content */}

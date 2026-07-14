@@ -140,7 +140,7 @@ export default function Profile() {
           </div>
           <div className="flex-1 text-left">
             <p className="text-sm font-heading font-bold text-foreground">PikaBoo Shop 🛍️</p>
-            <p className="text-[11px] text-muted-foreground font-body">Insider · VIP · Boosts · Drink Tokens</p>
+            <p className="text-[11px] text-muted-foreground font-body">Plus · Gold · Boosts · Drink Tokens</p>
           </div>
           <ChevronRight className="w-5 h-5 text-muted-foreground" />
         </button>
