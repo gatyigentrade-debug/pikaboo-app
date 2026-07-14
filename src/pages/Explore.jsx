@@ -10,7 +10,7 @@ const VIBES_CULTURE = [
     subtitle: "Log drums & late nights",
     color: "#3B1A5A",
     tint: "rgba(59,26,90,0.7)",
-    count: 142,
+    count: 64,
     size: "full",
     image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop",
   },
@@ -19,7 +19,7 @@ const VIBES_CULTURE = [
     label: "Shisanyama Flames",
     color: "#7A2010",
     tint: "rgba(122,32,16,0.7)",
-    count: 89,
+    count: 38,
     size: "half",
     image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=300&fit=crop",
   },
@@ -28,7 +28,7 @@ const VIBES_CULTURE = [
     label: "Foodie Darling",
     color: "#5A1030",
     tint: "rgba(90,16,48,0.7)",
-    count: 67,
+    count: 55,
     size: "half",
     image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=300&fit=crop",
   },
@@ -41,7 +41,7 @@ const SPORT_LIFESTYLE = [
     subtitle: "Chiefs, Pirates & passion",
     color: "#1A4A2A",
     tint: "rgba(26,74,42,0.7)",
-    count: 134,
+    count: 41,
     size: "full",
     image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop",
   },
@@ -50,7 +50,7 @@ const SPORT_LIFESTYLE = [
     label: "Soft Life Kings",
     color: "#7A5A10",
     tint: "rgba(122,90,16,0.7)",
-    count: 78,
+    count: 29,
     size: "half",
     image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=300&h=300&fit=crop",
   },
@@ -59,7 +59,7 @@ const SPORT_LIFESTYLE = [
     label: "Road Trip Romantics",
     color: "#2A3A4A",
     tint: "rgba(42,58,74,0.7)",
-    count: 92,
+    count: 47,
     size: "half",
     image: "https://images.unsplash.com/photo-1469474968028-56623f02e472?w=300&h=300&fit=crop",
   },
@@ -72,7 +72,7 @@ const TONIGHTS_VIBE = [
     subtitle: "No strings. Just vibes.",
     color: "#4A1A5A",
     tint: "rgba(74,26,90,0.75)",
-    count: 156,
+    count: 83,
     size: "full",
     image: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=600&h=400&fit=crop",
   },
@@ -96,10 +96,10 @@ export default function Explore() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-foreground">Explore</h1>
         <div className="flex items-center gap-2">
-          {/* Streak / fire counter */}
-          <div className="flex items-center gap-1 bg-primary/20 rounded-full pl-2 pr-2.5 py-1">
-            <Flame className="w-4 h-4 text-primary" />
-            <span className="text-xs font-heading font-bold text-primary">3</span>
+          {/* Streak / flame pill */}
+          <div className="flex items-center gap-1 border border-orange-500/60 rounded-full pl-2 pr-2.5 py-1">
+            <Flame className="w-4 h-4 text-orange-500" />
+            <span className="text-xs font-heading font-bold text-white">3</span>
           </div>
           {/* Lightning */}
           <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
