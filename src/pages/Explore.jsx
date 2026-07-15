@@ -12,7 +12,7 @@ const VIBES_CULTURE = [
     tint: "rgba(75,20,90,0.5)",
     count: 64,
     size: "full",
-    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop",
   },
   {
     id: "shisanyama-flames",
@@ -21,7 +21,7 @@ const VIBES_CULTURE = [
     tint: "rgba(122,55,15,0.55)",
     count: 38,
     size: "half",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=300&fit=crop",
   },
   {
     id: "foodie-darling",
@@ -43,7 +43,7 @@ const SPORT_LIFESTYLE = [
     tint: "rgba(20,65,45,0.5)",
     count: 41,
     size: "full",
-    image: "https://images.unsplash.com/photo-1551958219-acbc608dda6c?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1510566337590-2fc1f21d0faa?w=600&h=400&fit=crop",
   },
   {
     id: "soft-life-kings",
@@ -52,7 +52,7 @@ const SPORT_LIFESTYLE = [
     tint: "rgba(130,85,20,0.5)",
     count: 29,
     size: "half",
-    image: "https://images.unsplash.com/photo-1543002588-bfa85caba47a?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1758272133795-3a21773ebc5e?w=300&h=300&fit=crop",
   },
   {
     id: "road-trip-romantics",
@@ -74,7 +74,7 @@ const TONIGHTS_VIBE = [
     tint: "rgba(80,20,90,0.55)",
     count: 83,
     size: "full",
-    image: "https://images.unsplash.com/photo-1517197768983-9919a0657c4e?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1775117419764-177be61d070c?w=600&h=400&fit=crop",
   },
 ];
 
