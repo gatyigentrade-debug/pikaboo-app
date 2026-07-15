@@ -61,7 +61,7 @@ const SPORT_LIFESTYLE = [
     tint: "rgba(25,55,70,0.55)",
     count: 47,
     size: "half",
-    image: "https://images.unsplash.com/photo-1469854523086-cc02d5f3f0cd?w=300&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1757383670321-d1c3bf0a05e8?w=300&h=300&fit=crop",
   },
 ];
 

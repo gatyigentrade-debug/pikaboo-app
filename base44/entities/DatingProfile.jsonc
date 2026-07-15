@@ -86,6 +86,20 @@
       "type": "boolean",
       "default": false
     },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "not_submitted",
+        "pending",
+        "verified"
+      ],
+      "default": "not_submitted",
+      "description": "Profile photo verification status"
+    },
+    "verification_photo": {
+      "type": "string",
+      "description": "URL of the photo submitted for verification"
+    },
     "latitude": {
       "type": "number"
     },

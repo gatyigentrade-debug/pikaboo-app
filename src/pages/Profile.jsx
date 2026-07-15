@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2 } from "lucide-react";
+import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import PikaBooShop from "@/components/shop/PikaBooShop";
+import VerificationSection from "@/components/profile/VerificationSection";
 
 const myProfile = {
   name: "Nemza",
@@ -19,6 +20,7 @@ export default function Profile() {
   const [showShop, setShowShop] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
@@ -57,8 +59,9 @@ export default function Profile() {
             <Camera className="w-4 h-4 text-black" />
           </button>
         </div>
-        <h2 className="text-xl font-heading font-bold text-foreground mt-3">
+        <h2 className="text-xl font-heading font-bold text-foreground mt-3 flex items-center gap-1.5">
           {myProfile.name}, {myProfile.age}
+          {isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
         </h2>
         <div className="flex items-center gap-1 text-muted-foreground text-sm font-body mt-0.5">
           <MapPin className="w-3.5 h-3.5" />
@@ -129,6 +132,9 @@ export default function Profile() {
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
+
+        {/* Verification */}
+        <VerificationSection onVerified={setIsVerified} />
 
         {/* PikaBoo Shop */}
         <button
