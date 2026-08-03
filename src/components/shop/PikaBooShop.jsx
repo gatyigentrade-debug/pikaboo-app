@@ -269,7 +269,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
               </section>
             </div>
 
-            <div className="h-6" />
+            <div className="h-6" style={{ paddingBottom: "env(safe-area-inset-bottom)" }} />
           </motion.div>
         </>
       )}

@@ -338,7 +338,7 @@ export default function ChatView({ match, onBack }) {
       </div>
 
       {/* ── Input Bar ── */}
-      <div className="px-4 py-3 border-t border-border/40 bg-card/90 backdrop-blur-xl pb-safe">
+      <div className="px-4 py-3 border-t border-border/40 bg-card/90 backdrop-blur-xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)" }}>
         <div className="flex items-center gap-2">
           <button className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
             <ImagePlus className="w-5 h-5" />

@@ -47,12 +47,16 @@ export default function VerificationSection({ onVerified }) {
 
   const handleSubmit = async () => {
     if (!selectedFile) return;
+    // Optimistically toggle to pending immediately for smooth UX
+    const previousProfile = profile;
+    setProfile(prev => prev ? { ...prev, verification_status: "pending" } : { id: "temp", name: "User", age: 18, verification_status: "pending" });
+    handleClose();
     setSubmitting(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: selectedFile });
 
-      if (profile) {
-        await base44.entities.DatingProfile.update(profile.id, {
+      if (previousProfile) {
+        await base44.entities.DatingProfile.update(previousProfile.id, {
           verification_status: "pending",
           verification_photo: file_url,
         });
@@ -68,9 +72,10 @@ export default function VerificationSection({ onVerified }) {
       toast.success("Verification photo submitted!", {
         description: "We'll review your photo and update your status soon.",
       });
-      handleClose();
       loadProfile();
     } catch (error) {
+      // Revert optimistic update on failure
+      setProfile(previousProfile);
       toast.error("Failed to submit", { description: error.message });
     } finally {
       setSubmitting(false);
