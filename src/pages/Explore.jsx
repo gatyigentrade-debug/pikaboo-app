@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Flame, Zap, SlidersHorizontal } from "lucide-react";
 import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
+import ExploreFilterSheet from "@/components/explore/ExploreFilterSheet";
 
 const VIBES_CULTURE = [
   {
@@ -82,6 +83,8 @@ function SectionHeader({ title, subtitle }) {
 
 export default function Explore() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
 
   return (
     <div className="px-4 pt-5 pb-28 space-y-7 bg-black min-h-screen">
@@ -99,7 +102,7 @@ export default function Explore() {
             <Zap className="w-4 h-4 text-[#FFD700]" />
           </button>
           {/* Filter */}
-          <button className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+          <button onClick={() => setShowFilters(true)} className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
             <SlidersHorizontal className="w-4 h-4 text-white" />
           </button>
         </div>
@@ -146,6 +149,14 @@ export default function Explore() {
           <ExploreCard card={TONIGHTS_VIBE[0]} onClick={setSelectedCategory} />
         </div>
       </section>
+
+      {/* Filter Sheet */}
+      <ExploreFilterSheet
+        isOpen={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        onApply={setFilters}
+      />
 
       {/* Category Sheet */}
       {selectedCategory && (
