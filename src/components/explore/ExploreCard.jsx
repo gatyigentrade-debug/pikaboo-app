@@ -8,8 +8,7 @@ export default function ExploreCard({ card, onClick }) {
     <motion.button
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(card)}
-      className="relative w-full overflow-hidden rounded-2xl text-left"
-      style={{ backgroundColor: card.color }}
+      className="relative w-full overflow-hidden rounded-2xl text-left bg-black"
     >
       {/* Background image */}
       <img
@@ -17,8 +16,6 @@ export default function ExploreCard({ card, onClick }) {
         alt={card.label}
         className="absolute inset-0 w-full h-full object-cover"
       />
-      {/* Color tint overlay */}
-      <div className="absolute inset-0" style={{ backgroundColor: card.tint }} />
       {/* Bottom gradient for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
