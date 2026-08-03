@@ -14,8 +14,10 @@ export default function ExploreCard({ card, onClick }) {
       <img
         src={card.image}
         alt={card.label}
-        className="absolute inset-0 w-full h-full object-cover"
+        className={`absolute inset-0 w-full h-full object-cover ${card.grayscale ? "grayscale" : ""}`}
       />
+      {/* Color tint overlay */}
+      {card.tint && <div className="absolute inset-0" style={{ backgroundColor: card.tint }} />}
       {/* Bottom gradient for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
