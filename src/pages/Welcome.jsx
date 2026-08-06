@@ -66,13 +66,12 @@ export default function Welcome() {
         className="flex flex-col items-center mb-12 relative z-10"
       >
         <h1
-          className="text-4xl font-heading font-black tracking-wide"
-          style={{ color: "#F3E5AB", textShadow: "0 0 20px rgba(212, 175, 55, 0.5)" }}
+          style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "36px", color: "#F3E5AB", textShadow: "0 0 10px #D4AF37", margin: "10px 0" }}
         >
           PikaBoo
         </h1>
-        <p className="text-sm font-body mt-2 text-center max-w-xs" style={{ color: "rgba(243, 229, 171, 0.6)" }}>
-          Find your vibe. Light the spark. Your South African dating adventure starts here.
+        <p style={{ color: "#F3E5AB", textAlign: "center", padding: "0 30px", fontSize: "18px", marginBottom: "60px" }}>
+          find your vibe...
         </p>
       </motion.div>
 
@@ -81,19 +80,36 @@ export default function Welcome() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="w-full max-w-sm flex flex-col gap-3 relative z-10 px-5"
+        className="w-full max-w-sm flex flex-col gap-5 relative z-10 px-5"
       >
         <button
           onClick={() => navigate("/register")}
-          className="w-full h-14 rounded-full font-heading font-bold text-black transition-transform active:scale-95"
-          style={{ background: "linear-gradient(135deg, #d4af37, #f3e5ab)" }}
+          className="w-full rounded-full font-heading font-bold text-black transition-all active:scale-95"
+          style={{
+            padding: "16px",
+            borderRadius: "30px",
+            fontSize: "18px",
+            background: "linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #d4af37 100%)",
+            boxShadow: "0 0 15px 2px rgba(212, 175, 55, 0.6)",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.boxShadow = "0 0 25px 5px rgba(212, 175, 55, 0.8)")}
+          onMouseOut={(e) => (e.currentTarget.style.boxShadow = "0 0 15px 2px rgba(212, 175, 55, 0.6)")}
         >
           Create Account
         </button>
         <button
           onClick={() => navigate("/login")}
-          className="w-full h-14 rounded-full font-heading font-bold bg-transparent transition-transform active:scale-95"
-          style={{ color: "#F3E5AB", border: "1px solid #d4af37" }}
+          className="w-full rounded-full font-heading font-bold transition-all active:scale-95"
+          style={{
+            padding: "16px",
+            borderRadius: "30px",
+            fontSize: "18px",
+            color: "#D4AF37",
+            border: "2px solid transparent",
+            background: "linear-gradient(#000, #000) padding-box, linear-gradient(135deg, #d4af37, #f3e5ab) border-box",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.background = "linear-gradient(rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.08)) padding-box, linear-gradient(135deg, #d4af37, #f3e5ab) border-box")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "linear-gradient(#000, #000) padding-box, linear-gradient(135deg, #d4af37, #f3e5ab) border-box")}
         >
           Log In
         </button>
