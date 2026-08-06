@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Apple, Phone } from "lucide-react";
+import GoogleIcon from "@/components/GoogleIcon";
 
 // CSS-generated starfield positions
 const STARS = Array.from({ length: 30 }, (_, i) => ({
@@ -114,6 +116,35 @@ export default function Welcome() {
           Log In
         </button>
       </motion.div>
+
+      {/* "or continue with" divider */}
+      <div style={{ margin: "40px 0", width: "100%", padding: "0 40px", textAlign: "center", position: "relative" }} className="relative z-10">
+        <span style={{ color: "#F3E5AB", opacity: 0.7, fontSize: "14px" }}>or continue with</span>
+        <div style={{ position: "absolute", top: "50%", left: "40px", width: "calc(50% - 100px)", height: "1px", background: "#D4AF37", opacity: 0.3 }} />
+        <div style={{ position: "absolute", top: "50%", right: "40px", width: "calc(50% - 100px)", height: "1px", background: "#D4AF37", opacity: 0.3 }} />
+      </div>
+
+      {/* Social icons */}
+      <div className="flex gap-5 mb-10 relative z-10">
+        <button
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
+          style={{ border: "1px solid rgba(212, 175, 55, 0.4)" }}
+        >
+          <GoogleIcon className="w-5 h-5" />
+        </button>
+        <button
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
+          style={{ border: "1px solid rgba(212, 175, 55, 0.4)" }}
+        >
+          <Apple className="w-5 h-5" style={{ color: "#F3E5AB" }} />
+        </button>
+        <button
+          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
+          style={{ border: "1px solid rgba(212, 175, 55, 0.4)" }}
+        >
+          <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
+        </button>
+      </div>
     </div>
   );
 }
