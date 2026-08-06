@@ -95,7 +95,7 @@ export default function ChatView({ match, onBack }) {
       className="fixed inset-0 z-50 bg-background flex flex-col"
     >
       {/* ── Header ── */}
-      <div className="flex items-center gap-3 px-4 pt-12 pb-3 border-b border-border/40 bg-card/90 backdrop-blur-xl">
+      <div className="flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-3 border-b border-border/40 bg-card/90 backdrop-blur-xl">
         <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors -ml-1">
           <ArrowLeft className="w-5 h-5" />
         </button>

@@ -23,6 +23,12 @@ export default function BottomNav({ unreadMatches = 0 }) {
             <Link
               key={item.path}
               to={item.path}
+              onClick={(e) => {
+                if (isActive) {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
               className="relative flex flex-col items-center gap-0.5 px-3 py-1.5"
             >
               {isActive && (

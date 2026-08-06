@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Flame, Zap, SlidersHorizontal } from "lucide-react";
 import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
@@ -81,13 +82,29 @@ function SectionHeader({ title, subtitle }) {
   );
 }
 
+const ALL_CARDS = [...VIBES_CULTURE, ...SPORT_LIFESTYLE, ...TONIGHTS_VIBE];
+
 export default function Explore() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showFilters, setShowFilters] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
 
+  const showFilters = searchParams.get("filters") === "open";
+  const categoryId = searchParams.get("category");
+  const selectedCategory = categoryId ? ALL_CARDS.find((c) => c.id === categoryId) : null;
+
+  const openSheet = (key, value) => {
+    const next = new URLSearchParams(searchParams);
+    next.set(key, value);
+    setSearchParams(next);
+  };
+  const closeSheet = (key) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete(key);
+    setSearchParams(next);
+  };
+
   return (
-    <div className="px-4 pt-5 pb-28 space-y-7 bg-black min-h-screen">
+    <div className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-28 space-y-7 bg-black min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-white">Explore</h1>
@@ -102,7 +119,7 @@ export default function Explore() {
             <Zap className="w-4 h-4 text-[#FFD700]" />
           </button>
           {/* Filter */}
-          <button onClick={() => setShowFilters(true)} className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+          <button onClick={() => openSheet("filters", "open")} className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
             <SlidersHorizontal className="w-4 h-4 text-white" />
           </button>
         </div>
@@ -113,12 +130,12 @@ export default function Explore() {
         <SectionHeader title="Vibes & Culture" subtitle="Find your people in the culture" />
         <div className="space-y-3">
           <div className="h-44">
-            <ExploreCard card={VIBES_CULTURE[0]} onClick={setSelectedCategory} />
+            <ExploreCard card={VIBES_CULTURE[0]} onClick={(card) => openSheet("category", card.id)} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             {VIBES_CULTURE.slice(1).map((card) => (
               <div key={card.id} className="h-36">
-                <ExploreCard card={card} onClick={setSelectedCategory} />
+                <ExploreCard card={card} onClick={(card) => openSheet("category", card.id)} />
               </div>
             ))}
           </div>
@@ -130,12 +147,12 @@ export default function Explore() {
         <SectionHeader title="Sport & Lifestyle" subtitle="Lekker dates with like minds" />
         <div className="space-y-3">
           <div className="h-44">
-            <ExploreCard card={SPORT_LIFESTYLE[0]} onClick={setSelectedCategory} />
+            <ExploreCard card={SPORT_LIFESTYLE[0]} onClick={(card) => openSheet("category", card.id)} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             {SPORT_LIFESTYLE.slice(1).map((card) => (
               <div key={card.id} className="h-36">
-                <ExploreCard card={card} onClick={setSelectedCategory} />
+                <ExploreCard card={card} onClick={(card) => openSheet("category", card.id)} />
               </div>
             ))}
           </div>
@@ -146,14 +163,14 @@ export default function Explore() {
       <section>
         <SectionHeader title="Tonight's Vibe 🌙" subtitle="Short notice. Real connection. No drama." />
         <div className="h-44">
-          <ExploreCard card={TONIGHTS_VIBE[0]} onClick={setSelectedCategory} />
+          <ExploreCard card={TONIGHTS_VIBE[0]} onClick={(card) => openSheet("category", card.id)} />
         </div>
       </section>
 
       {/* Filter Sheet */}
       <ExploreFilterSheet
         isOpen={showFilters}
-        onClose={() => setShowFilters(false)}
+        onClose={() => closeSheet("filters")}
         filters={filters}
         onApply={setFilters}
       />
@@ -162,7 +179,7 @@ export default function Explore() {
       {selectedCategory && (
         <ExploreCategorySheet
           category={selectedCategory}
-          onClose={() => setSelectedCategory(null)}
+          onClose={() => closeSheet("category")}
         />
       )}
     </div>

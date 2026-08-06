@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
@@ -17,10 +18,23 @@ const myProfile = {
 };
 
 export default function Profile() {
-  const [showShop, setShowShop] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [deleting, setDeleting] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+
+  const showShop = searchParams.get("shop") === "open";
+  const showDeleteDialog = searchParams.get("delete_confirm") === "open";
+
+  const openSheet = (key) => {
+    const next = new URLSearchParams(searchParams);
+    next.set(key, "open");
+    setSearchParams(next);
+  };
+  const closeSheet = (key) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete(key);
+    setSearchParams(next);
+  };
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
@@ -30,7 +44,7 @@ export default function Profile() {
       toast.success("Account deleted", {
         description: "Your PikaBoo account has been removed.",
       });
-      setShowDeleteDialog(false);
+      closeSheet("delete_confirm");
       await base44.auth.logout("/login");
     } catch (error) {
       toast.error("Failed to delete account", { description: error.message });
@@ -41,7 +55,7 @@ export default function Profile() {
   return (
     <div className="pb-28">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-5">
+      <div className="flex items-center justify-between px-4 pt-[calc(1.25rem+env(safe-area-inset-top))]">
         <h1 className="text-xl font-heading font-bold text-foreground">My Profile</h1>
         <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gold/40 text-gold text-xs font-heading font-bold">
           <Pencil className="w-3 h-3" />
@@ -119,7 +133,7 @@ export default function Profile() {
             Safety & Settings
           </h3>
           <button
-            onClick={() => setShowDeleteDialog(true)}
+            onClick={() => openSheet("delete_confirm")}
             className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-destructive/10 transition-colors text-left"
           >
             <div className="w-9 h-9 rounded-full bg-destructive/15 flex items-center justify-center flex-shrink-0">
@@ -138,7 +152,7 @@ export default function Profile() {
 
         {/* PikaBoo Shop */}
         <button
-          onClick={() => setShowShop(true)}
+          onClick={() => openSheet("shop")}
           className="w-full rounded-2xl border border-gold/30 bg-secondary/30 p-4 flex items-center gap-3 hover:bg-secondary/50 transition-colors"
         >
           <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
@@ -153,10 +167,10 @@ export default function Profile() {
       </div>
 
       {/* Shop Modal */}
-      <PikaBooShop isOpen={showShop} onClose={() => setShowShop(false)} />
+      <PikaBooShop isOpen={showShop} onClose={() => closeSheet("shop")} />
 
       {/* Delete Account Dialog */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <Dialog open={showDeleteDialog} onOpenChange={(open) => (open ? openSheet("delete_confirm") : closeSheet("delete_confirm"))}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
             <div className="w-12 h-12 rounded-full bg-destructive/15 flex items-center justify-center mx-auto mb-2">
