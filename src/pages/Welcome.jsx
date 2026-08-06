@@ -52,7 +52,7 @@ export default function Welcome() {
           style={{ boxShadow: "0 0 60px 10px rgba(212, 175, 55, 0.5)" }}
         >
           <img
-            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
+            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/b0eb3dd4a_AppIcon.png"
             alt="PikaBoo"
             className="w-full h-full object-contain"
             style={{ filter: "brightness(1.3) hue-rotate(25deg) drop-shadow(0 0 20px rgba(212, 175, 55, 0.6))" }}

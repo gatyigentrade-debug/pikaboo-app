@@ -22,7 +22,7 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex flex-col items-center justify-center bg-background gap-4">
         <img
-          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
+          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/b0eb3dd4a_AppIcon.png"
           alt="PikaBoo"
           className="w-16 h-16 object-contain animate-float"
           style={{ filter: "drop-shadow(0 0 12px rgba(251, 191, 36, 0.8)) brightness(1.2) hue-rotate(25deg)" }}
