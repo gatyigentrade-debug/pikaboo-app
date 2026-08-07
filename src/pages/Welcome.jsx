@@ -99,12 +99,23 @@ export default function Welcome() {
               boxShadow: "inset 0 0 20px rgba(212, 175, 55, 0.1)",
             }}
           />
-          <img
-            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/b0eb3dd4a_AppIcon.png"
-            alt="PikaBoo"
-            className="w-[88%] h-[88%] object-contain rounded-full"
-            style={{ filter: "brightness(1.15) drop-shadow(0 0 15px rgba(212, 175, 55, 0.5))" }}
-          />
+          <svg
+            viewBox="0 0 24 24"
+            className="w-[58%] h-[58%]"
+            style={{ filter: "drop-shadow(0 0 12px rgba(212, 175, 55, 0.6))" }}
+          >
+            <defs>
+              <linearGradient id="heartGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#B8860B" />
+                <stop offset="50%" stopColor="#F3E5AB" />
+                <stop offset="100%" stopColor="#D4AF37" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              fill="url(#heartGold)"
+            />
+          </svg>
         </div>
       </motion.div>
 
