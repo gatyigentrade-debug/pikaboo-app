@@ -83,9 +83,9 @@ export default function Welcome() {
         className="relative mb-7 z-10"
       >
         <div
-          className="relative w-36 h-36 rounded-full flex items-center justify-center animate-float"
+          className="relative w-36 h-36 rounded-full flex items-center justify-center animate-float overflow-hidden"
           style={{
-            background: "radial-gradient(circle, rgba(0,0,0,0.9) 40%, rgba(20,15,5,0.95) 100%)",
+            background: "#000000",
             border: "3px solid #D4AF37",
             boxShadow:
               "0 0 50px 8px rgba(212, 175, 55, 0.5), 0 0 100px 20px rgba(212, 175, 55, 0.2), inset 0 0 30px rgba(212, 175, 55, 0.15)",
@@ -93,7 +93,7 @@ export default function Welcome() {
         >
           {/* Inner metallic ring */}
           <div
-            className="absolute inset-1.5 rounded-full pointer-events-none"
+            className="absolute inset-1.5 rounded-full pointer-events-none z-10"
             style={{
               border: "1px solid rgba(243, 229, 171, 0.4)",
               boxShadow: "inset 0 0 20px rgba(212, 175, 55, 0.1)",
@@ -102,7 +102,7 @@ export default function Welcome() {
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/a6b6bd9f8_AppIcon.png"
             alt="PikaBoo"
-            className="w-[92%] h-[92%] object-contain"
+            className="w-[120%] h-[120%] object-contain"
             style={{
               mixBlendMode: "screen",
               filter: "drop-shadow(0 0 12px rgba(212, 175, 55, 0.6))",
