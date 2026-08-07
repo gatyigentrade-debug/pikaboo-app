@@ -83,10 +83,11 @@ export default function Welcome() {
         className="relative mb-7 z-10"
       >
         <img
-          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4379558eb_Gemini_Generated_Image_.png"
+          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
           alt="PikaBoo"
-          className="w-44 h-44 object-contain animate-float"
+          className="w-48 h-48 object-contain animate-float"
           style={{
+            mixBlendMode: "screen",
             filter: "drop-shadow(0 0 25px rgba(212, 175, 55, 0.55)) drop-shadow(0 0 60px rgba(212, 175, 55, 0.25))",
           }}
         />
