@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, Star, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 const FILTERS = ["Nearby", "Has a Bio", "Photo Verified"];
 
@@ -15,11 +16,12 @@ const likedCards = [
 export default function Likes() {
   const [activeTab, setActiveTab] = useState("likes");
   const [filters, setFilters] = useState({});
+  const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
   const toggleFilter = (f) => setFilters((p) => ({ ...p, [f]: !p[f] }));
 
   return (
-    <div className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
         <Link to="/matches" className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
@@ -123,6 +125,6 @@ export default function Likes() {
           See who Likes you 👀
         </button>
       </div>
-    </div>
+    </PullToRefreshWrapper>
   );
 }

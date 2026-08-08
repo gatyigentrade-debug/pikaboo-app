@@ -4,6 +4,7 @@ import { Flame, Zap, SlidersHorizontal } from "lucide-react";
 import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
 import ExploreFilterSheet from "@/components/explore/ExploreFilterSheet";
+import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 const VIBES_CULTURE = [
   {
@@ -87,6 +88,7 @@ const ALL_CARDS = [...VIBES_CULTURE, ...SPORT_LIFESTYLE, ...TONIGHTS_VIBE];
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
+  const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
   const showFilters = searchParams.get("filters") === "open";
   const categoryId = searchParams.get("category");
@@ -104,7 +106,8 @@ export default function Explore() {
   };
 
   return (
-    <div className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-28 space-y-7 bg-black min-h-screen">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-28 bg-black min-h-screen">
+      <div className="space-y-7">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-heading font-bold text-white">Explore</h1>
@@ -166,6 +169,7 @@ export default function Explore() {
           <ExploreCard card={TONIGHTS_VIBE[0]} onClick={(card) => openSheet("category", card.id)} />
         </div>
       </section>
+      </div>
 
       {/* Filter Sheet */}
       <ExploreFilterSheet
@@ -182,6 +186,6 @@ export default function Explore() {
           onClose={() => closeSheet("category")}
         />
       )}
-    </div>
+    </PullToRefreshWrapper>
   );
 }

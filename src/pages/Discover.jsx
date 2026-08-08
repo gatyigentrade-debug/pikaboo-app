@@ -4,12 +4,15 @@ import { Compass, Zap, Users, Grid3X3 } from "lucide-react";
 import NearbyMap from "@/components/discover/NearbyMap";
 import OnlineBubbles from "@/components/discover/OnlineBubbles";
 import EncounterCard from "@/components/discover/EncounterCard";
+import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 export default function Discover() {
-  const { data: profiles = [], isLoading } = useQuery({
+  const { data: profiles = [], isLoading, refetch } = useQuery({
     queryKey: ["profiles"],
     queryFn: () => base44.entities.DatingProfile.list(),
   });
+
+  const handleRefresh = async () => { await refetch(); };
 
   if (isLoading) {
     return (
@@ -20,7 +23,8 @@ export default function Discover() {
   }
 
   return (
-    <div className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] space-y-6">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
+      <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
         <Compass className="w-6 h-6 text-primary" />
@@ -63,6 +67,7 @@ export default function Discover() {
           ))}
         </div>
       </section>
-    </div>
+      </div>
+    </PullToRefreshWrapper>
   );
 }

@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -17,6 +18,21 @@ import Welcome from '@/pages/Welcome';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const onBackButton = (e) => {
+      if (location.pathname !== "/") {
+        if (e && e.preventDefault) e.preventDefault();
+        navigate(-1);
+      } else if (window.navigator?.app?.exitApp) {
+        window.navigator.app.exitApp();
+      }
+    };
+    document.addEventListener("backbutton", onBackButton, false);
+    return () => document.removeEventListener("backbutton", onBackButton);
+  }, [location.pathname, navigate]);
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, Apple, Phone } from "lucide-react";
+import GoogleIcon from "@/components/GoogleIcon";
 
 export default function Login() {
   const [showForm, setShowForm] = useState(false);
@@ -84,22 +85,32 @@ export default function Login() {
           </form>
         ) : (
           <>
-            {/* Transparent clickable overlay for Get Started button */}
+            {/* Get Started */}
             <Link
               to="/register"
               aria-label="Get Started"
-              className="w-full h-12 rounded-full mb-5"
-            />
+              className="w-full h-12 rounded-full mb-5 flex items-center justify-center bg-gradient-to-r from-yellow-400 to-gold text-black font-heading font-bold shadow-lg active:scale-95 transition-transform"
+            >
+              Get Started
+            </Link>
 
-            {/* Transparent clickable overlays for social icons */}
+            {/* Social icons */}
             <div className="flex items-center justify-center gap-4 mb-5">
-              <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full" />
-              <button onClick={handleApple} aria-label="Continue with Apple" className="w-12 h-12 rounded-full" />
-              <Link to="/register" aria-label="Continue with Phone" className="w-12 h-12 rounded-full" />
+              <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
+                <GoogleIcon className="w-5 h-5" />
+              </button>
+              <button onClick={handleApple} aria-label="Continue with Apple" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
+                <Apple className="w-5 h-5 text-gold" />
+              </button>
+              <Link to="/register" aria-label="Continue with Phone" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
+                <Phone className="w-5 h-5 text-gold" />
+              </Link>
             </div>
 
-            {/* Transparent clickable overlay for Sign In */}
-            <button onClick={() => setShowForm(true)} aria-label="Already have an account? Sign In" className="w-full h-8" />
+            {/* Sign In */}
+            <button onClick={() => setShowForm(true)} className="w-full text-sm text-gold/90 font-body active:scale-95 transition-transform">
+              Already have an account? <span className="font-bold underline">Sign In</span>
+            </button>
           </>
         )}
       </div>

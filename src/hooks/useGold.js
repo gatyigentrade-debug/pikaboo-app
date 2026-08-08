@@ -16,13 +16,18 @@ export function useGold() {
   }, []);
 
   const activateGold = async () => {
-    const expires = new Date();
-    expires.setMonth(expires.getMonth() + 1);
-    await base44.auth.updateMe({
-      is_gold: true,
-      gold_expires_at: expires.toISOString(),
-    });
     setIsGold(true);
+    try {
+      const expires = new Date();
+      expires.setMonth(expires.getMonth() + 1);
+      await base44.auth.updateMe({
+        is_gold: true,
+        gold_expires_at: expires.toISOString(),
+      });
+    } catch (err) {
+      setIsGold(false);
+      throw err;
+    }
   };
 
   return { isGold, loading, activateGold };

@@ -1,12 +1,47 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Calendar, Heart } from "lucide-react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 const INTERESTS = [
   "Amapiano", "Soccer", "Braai", "Road Trips", "Foodie",
   "Nightlife", "Outdoors", "Gaming", "Music", "Fitness",
   "Travel", "Movies", "Art", "Coffee", "Hiking",
 ];
+
+function AgeDrawer({ label, value, onChange }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="w-full h-11 rounded-xl bg-secondary border border-border/40 px-3 text-sm font-body text-foreground flex items-center justify-between"
+      >
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <span className="font-heading font-bold text-foreground">{value}</span>
+      </button>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent className="max-h-[50vh]">
+          <DrawerHeader>
+            <DrawerTitle>Select {label}</DrawerTitle>
+          </DrawerHeader>
+          <div className="px-6 pb-8">
+            <input
+              type="range"
+              min="18"
+              max="99"
+              value={value}
+              onChange={(e) => onChange(Number(e.target.value))}
+              className="w-full accent-primary"
+            />
+            <div className="text-center mt-3 text-2xl font-heading font-bold text-foreground">{value}</div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+}
 
 export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }) {
   const [localFilters, setLocalFilters] = useState(filters);
@@ -91,25 +126,19 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <label className="text-xs text-muted-foreground font-body block mb-1">Min</label>
-                    <input
-                      type="number"
-                      min="18"
-                      max="99"
+                    <AgeDrawer
+                      label="Min"
                       value={localFilters.ageMin}
-                      onChange={(e) => setLocalFilters((prev) => ({ ...prev, ageMin: Number(e.target.value) }))}
-                      className="w-full h-11 rounded-xl bg-secondary border border-border/40 px-3 text-sm font-body text-foreground"
+                      onChange={(v) => setLocalFilters((prev) => ({ ...prev, ageMin: v }))}
                     />
                   </div>
                   <span className="text-muted-foreground mt-5">—</span>
                   <div className="flex-1">
                     <label className="text-xs text-muted-foreground font-body block mb-1">Max</label>
-                    <input
-                      type="number"
-                      min="18"
-                      max="99"
+                    <AgeDrawer
+                      label="Max"
                       value={localFilters.ageMax}
-                      onChange={(e) => setLocalFilters((prev) => ({ ...prev, ageMax: Number(e.target.value) }))}
-                      className="w-full h-11 rounded-xl bg-secondary border border-border/40 px-3 text-sm font-body text-foreground"
+                      onChange={(v) => setLocalFilters((prev) => ({ ...prev, ageMax: v }))}
                     />
                   </div>
                 </div>
