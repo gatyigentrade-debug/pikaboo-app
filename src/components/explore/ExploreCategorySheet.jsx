@@ -69,7 +69,7 @@ export default function ExploreCategorySheet({ category, onClose }) {
               <motion.div
                 key={p.name}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate(`/profile/${encodeURIComponent(p.name)}`, { state: { profile: p } })}
+                onClick={() => navigate(`/profile/${encodeURIComponent(p.name)}`, { state: { profiles: DEMO_PROFILES, startName: p.name, category } })}
                 className="relative rounded-2xl overflow-hidden aspect-square cursor-pointer"
               >
                 <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />

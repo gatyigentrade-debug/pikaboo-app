@@ -1,78 +1,121 @@
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, Heart, Share2, MapPin, BadgeCheck } from "lucide-react";
+import { ArrowLeft, Users } from "lucide-react";
+import SwipeCard from "@/components/swipe/SwipeCard";
+import SwipeActions from "@/components/swipe/SwipeActions";
+import MatchModal from "@/components/swipe/MatchModal";
+
+const normalize = (p) => ({
+  ...p,
+  photos: p.photos || (p.photo ? [p.photo] : []),
+  city: p.city || "Nearby",
+});
 
 export default function ProfileDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const profile = location.state?.profile;
+  const { profiles: raw = [], startName, category } = location.state || {};
 
-  if (!profile) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-6">
-        <p className="text-sm text-muted-foreground font-body">Profile not found.</p>
-        <button onClick={() => navigate(-1)} className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold">
-          Go back
-        </button>
-      </div>
-    );
-  }
+  // Build the deck: start at the tapped profile, then the rest. Fall back to a single passed profile.
+  const ordered = (() => {
+    const list = raw.length ? raw : location.state?.profile ? [location.state.profile] : [];
+    if (!startName) return list;
+    const idx = list.findIndex((p) => p.name === startName);
+    if (idx <= 0) return list;
+    return [list[idx], ...list.slice(0, idx), ...list.slice(idx + 1)];
+  })();
+
+  const [deck, setDeck] = useState(ordered.map(normalize));
+  const [matchProfile, setMatchProfile] = useState(null);
+  const topCardRef = useRef(null);
+
+  const top = deck[0];
+
+  const handleSwipe = (direction) => {
+    const swiped = deck[0];
+    setDeck((d) => d.slice(1));
+    if (direction === "like" || direction === "super_like") {
+      setMatchProfile(swiped);
+    }
+  };
+
+  const handleAction = (id) => {
+    if (!top) return;
+    if (id === "like" || id === "super_like") topCardRef.current?.flyOff("like");
+    else if (id === "dislike") topCardRef.current?.flyOff("dislike");
+    // rewind / boost are visual-only for now
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Hero image */}
-      <div className="relative w-full aspect-[3/4] max-h-[68vh]">
-        <img src={profile.photo} alt={profile.name} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-black/40" />
-
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-[calc(1rem+env(safe-area-inset-top))] left-4 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform"
-        >
-          <ArrowLeft className="w-4 h-4 text-white" />
-        </button>
-        <button
-          className="absolute top-[calc(1rem+env(safe-area-inset-top))] right-4 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform"
-        >
-          <Share2 className="w-4 h-4 text-white" />
-        </button>
-      </div>
-
-      {/* Info card */}
-      <div className="flex-1 -mt-6 relative z-10 bg-background rounded-t-3xl px-5 pt-5 pb-28">
-        <div className="flex items-center gap-2 mb-1">
-          <h1 className="text-2xl font-heading font-bold text-foreground">{profile.name}</h1>
-          <span className="text-xl font-heading text-muted-foreground">{profile.age}</span>
-          <BadgeCheck className="w-5 h-5 text-gold" />
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-body mb-4">
-          <MapPin className="w-3.5 h-3.5" /> Nearby · within 50 km
-        </div>
-
-        <p className="text-sm text-muted-foreground font-body leading-relaxed">
-          Hey, I'm {profile.name}. Let's see where the vibe takes us 🌙
-        </p>
-      </div>
-
-      {/* Action bar */}
+      {/* Header */}
       <div
-        className="fixed bottom-0 left-0 right-0 px-5 py-4 bg-background/90 backdrop-blur-xl border-t border-border/40 flex items-center gap-4"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
+        className="flex items-center gap-3 px-4 py-3 flex-shrink-0"
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 0.75rem)" }}
       >
         <button
           onClick={() => navigate(-1)}
-          className="w-12 h-12 rounded-full border border-border flex items-center justify-center active:scale-95 transition-transform"
+          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform"
         >
-          <ArrowLeft className="w-5 h-5 text-foreground" />
+          <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          onClick={() => navigate(-1)}
-          className="flex-1 max-w-xs h-12 rounded-full bg-gradient-to-r from-yellow-400 to-gold text-black font-heading font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-transform"
-        >
-          <Heart className="w-5 h-5" /> Like
-        </motion.button>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-lg font-heading font-bold text-foreground truncate">
+            {category?.label || "Discover"}
+          </h1>
+          {category?.count && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground font-body">
+              <Users className="w-3 h-3" /> {category.count} people here
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Deck */}
+      <div className="flex-1 flex flex-col px-4 pb-6">
+        {top ? (
+          <>
+            <div className="relative w-full flex-1 min-h-[60vh]">
+              {deck.slice(0, 3).reverse().map((p, i, arr) => {
+                const isTop = i === arr.length - 1;
+                return (
+                  <SwipeCard
+                    key={p.name}
+                    ref={isTop ? topCardRef : null}
+                    profile={p}
+                    isTop={isTop}
+                    onSwipe={handleSwipe}
+                  />
+                );
+              })}
+            </div>
+            <SwipeActions onAction={handleAction} />
+          </>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mb-4">
+              <Users className="w-7 h-7 text-muted-foreground" />
+            </div>
+            <p className="text-base font-heading font-bold text-foreground">That's everyone in this vibe</p>
+            <p className="text-sm text-muted-foreground font-body mt-1 mb-5 max-w-[240px]">
+              You've seen all the Boos here. Come back later for fresh faces.
+            </p>
+            <button
+              onClick={() => navigate(-1)}
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-yellow-400 to-gold text-black font-heading font-bold text-sm shadow-lg active:scale-95 transition-transform"
+            >
+              Back to Explore
+            </button>
+          </div>
+        )}
+      </div>
+
+      <MatchModal
+        isOpen={!!matchProfile}
+        matchedProfile={matchProfile}
+        onClose={() => setMatchProfile(null)}
+        onChat={() => setMatchProfile(null)}
+      />
     </div>
   );
 }
