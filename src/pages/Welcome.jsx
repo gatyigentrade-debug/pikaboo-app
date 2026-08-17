@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Apple, Phone } from "lucide-react";
+import { Apple, Phone, Heart, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import GoogleIcon from "@/components/GoogleIcon";
 
@@ -23,7 +23,7 @@ export default function Welcome() {
     <div
       className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-y-auto px-6"
       style={{
-        backgroundColor: "#070708",
+        backgroundColor: "#08080A",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
@@ -58,12 +58,12 @@ export default function Welcome() {
       ))}
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* Emblem badge */}
+        {/* Emblem badge - double gold ring */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative mb-6"
+          className="relative mb-4"
         >
           <div
             className="absolute -inset-3 rounded-full pointer-events-none"
@@ -72,20 +72,29 @@ export default function Welcome() {
               filter: "blur(10px)",
             }}
           />
+          {/* Outer ring */}
           <div
-            className="relative w-40 h-40 rounded-full flex items-center justify-center"
+            className="relative w-44 h-44 rounded-full flex items-center justify-center"
             style={{
-              border: "1px solid rgba(212,175,55,0.5)",
-              boxShadow: "inset 0 0 18px rgba(212,175,55,0.16), 0 0 26px rgba(212,175,55,0.24)",
-              background: "transparent",
+              border: "1px solid rgba(212,175,55,0.55)",
+              boxShadow: "0 0 26px rgba(212,175,55,0.24)",
             }}
           >
-            <img
-              src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
-              alt="PikaBoo"
-              className="w-28 h-28 object-contain animate-float"
-              style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
-            />
+            {/* Inner ring */}
+            <div
+              className="w-36 h-36 rounded-full flex items-center justify-center"
+              style={{
+                border: "1px solid rgba(212,175,55,0.4)",
+                boxShadow: "inset 0 0 18px rgba(212,175,55,0.16)",
+              }}
+            >
+              <img
+                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
+                alt="PikaBoo"
+                className="w-28 h-28 object-contain animate-float"
+                style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
+              />
+            </div>
           </div>
         </motion.div>
 
@@ -122,50 +131,67 @@ export default function Welcome() {
           ♥ find your Boo ♥
         </motion.p>
 
-        {/* Log In */}
+        {/* Tagline */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="text-center mt-6"
+        >
+          <p className="text-sm font-body">
+            <span style={{ color: "#F3E5AB" }}>Real people. </span>
+            <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
+          </p>
+          <p className="text-xs font-body mt-1" style={{ color: "rgba(212,175,55,0.75)" }}>
+            Find your perfect Boo today.
+          </p>
+        </motion.div>
+
+        {/* Get Started */}
         <motion.button
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
           onClick={() => navigate("/login")}
-          className="btn-shimmer w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-center mt-8 active:scale-95 transition-transform"
+          className="btn-shimmer w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-between px-5 mt-7 active:scale-95 transition-transform"
           style={{
             background:
               "linear-gradient(110deg, #B8860B 0%, #F3E5AB 45%, #FFFDF5 50%, #F3E5AB 55%, #D4AF37 100%)",
             boxShadow: "0 0 20px rgba(212,175,55,0.45), inset 0 1px 2px rgba(255,255,255,0.35)",
+            border: "1px solid rgba(212,175,55,0.6)",
           }}
         >
-          Log In
+          <Heart className="w-4 h-4 fill-black" />
+          <span>Get Started</span>
+          <ArrowRight className="w-4 h-4" />
         </motion.button>
 
-        {/* Create Account */}
-        <motion.button
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          onClick={() => navigate("/register")}
-          className="w-full h-12 mt-3 rounded-full font-heading font-semibold flex items-center justify-center active:scale-95 transition-transform"
-          style={{
-            background: "rgba(20,15,5,0.4)",
-            border: "1px solid rgba(212,175,55,0.5)",
-            color: "#F3E5AB",
-          }}
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
+          className="flex items-center gap-3 w-full mt-6"
         >
-          Create Account
-        </motion.button>
+          <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.35)" }} />
+          <span className="text-xs font-body whitespace-nowrap" style={{ color: "rgba(212,175,55,0.65)" }}>
+            or continue with
+          </span>
+          <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.35)" }} />
+        </motion.div>
 
         {/* Social */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex gap-5 mt-7"
+          className="flex gap-5 mt-5"
         >
           <button
             onClick={handleGoogle}
             aria-label="Continue with Google"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "rgba(20,15,5,0.4)" }}
+            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}
           >
             <GoogleIcon className="w-5 h-5" />
           </button>
@@ -173,7 +199,7 @@ export default function Welcome() {
             onClick={handleApple}
             aria-label="Continue with Apple"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "rgba(20,15,5,0.4)" }}
+            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}
           >
             <Apple className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </button>
@@ -181,11 +207,23 @@ export default function Welcome() {
             onClick={() => navigate("/register")}
             aria-label="Continue with Phone"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "rgba(20,15,5,0.4)" }}
+            style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}
           >
             <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </button>
         </motion.div>
+
+        {/* Footer link */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          onClick={() => navigate("/login")}
+          className="mt-6 text-sm font-body flex items-center gap-1.5 active:scale-95 transition-transform"
+          style={{ color: "rgba(212,175,55,0.85)" }}
+        >
+          Already have an account? <span className="font-bold">Sign In</span> <ArrowRight className="w-3.5 h-3.5" />
+        </motion.button>
       </div>
     </div>
   );
