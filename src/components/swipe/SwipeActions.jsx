@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { X, Star, Heart, RotateCcw, Zap } from "lucide-react";
 
 const actions = [
@@ -50,16 +51,36 @@ const actions = [
 ];
 
 export default function SwipeActions({ onAction }) {
+  const [pulseId, setPulseId] = useState(null);
+
+  const handleClick = (action) => {
+    setPulseId(action.id + Date.now());
+    onAction(action.id);
+  };
+
   return (
     <div className="flex items-center justify-center gap-3 py-4">
       {actions.map((action) => (
         <motion.button
           key={action.id}
-          whileTap={{ scale: 0.85 }}
+          whileTap={{ scale: 0.8 }}
           whileHover={{ scale: 1.1 }}
-          onClick={() => onAction(action.id)}
-          className={`${action.size} rounded-full border ${action.bg} ${action.glow} flex items-center justify-center transition-all`}
+          onClick={() => handleClick(action)}
+          className={`relative ${action.size} rounded-full border ${action.bg} ${action.glow} flex items-center justify-center transition-all`}
         >
+          <AnimatePresence>
+            {pulseId && pulseId.startsWith(action.id) && (
+              <motion.span
+                key={pulseId}
+                initial={{ opacity: 0.6, scale: 1 }}
+                animate={{ opacity: 0, scale: 1.9 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className={`absolute inset-0 rounded-full border-2 ${action.bg.split(" ")[0].replace("bg-", "border-")}`}
+                onAnimationComplete={() => setPulseId(null)}
+              />
+            )}
+          </AnimatePresence>
           <action.icon className={`${action.iconSize} ${action.color}`} />
         </motion.button>
       ))}

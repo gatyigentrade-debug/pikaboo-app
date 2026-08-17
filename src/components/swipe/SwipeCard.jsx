@@ -1,5 +1,5 @@
 import { useState, useImperativeHandle, forwardRef } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useAnimation } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, useAnimation, useMotionTemplate } from "framer-motion";
 import { MapPin, Flame, ChevronDown, MessageCircle, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ReportUserSheet from "@/components/common/ReportUserSheet";
@@ -10,19 +10,26 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   const [showReport, setShowReport] = useState(false);
   const x = useMotionValue(0);
   const controls = useAnimation();
-  const rotate = useTransform(x, [-250, 250], [-20, 20]);
+  const rotate = useTransform(x, [-250, 250], [-24, 24]);
+  const scale = useTransform(x, [-250, 0, 250], [0.94, 1, 0.94]);
   const likeOpacity = useTransform(x, [20, 120], [0, 1]);
   const nopeOpacity = useTransform(x, [-120, -20], [1, 0]);
   const cardOpacity = useTransform(x, [-300, -200, 0, 200, 300], [0, 1, 1, 1, 0]);
+  const likeGlow = useTransform(x, [20, 150], [0, 0.55]);
+  const nopeGlow = useTransform(x, [-150, -20], [0.55, 0]);
+  const boxShadow = useMotionTemplate`0 0 40px rgba(74, 222, 128, ${likeGlow}), 0 0 40px rgba(248, 113, 113, ${nopeGlow})`;
 
   const photos = profile.photos || [];
   const photo = photos[imgIdx] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop";
 
   const flyOff = async (direction) => {
     await controls.start({
-      x: direction === "like" ? 600 : -600,
+      x: direction === "like" ? 700 : -700,
+      y: -40,
+      rotate: direction === "like" ? 35 : -35,
+      scale: 0.85,
       opacity: 0,
-      transition: { duration: 0.3, ease: "easeOut" },
+      transition: { duration: 0.35, ease: "easeOut" },
     });
     onSwipe(direction === "like" ? "like" : "dislike");
   };
@@ -58,14 +65,15 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
     <>
       <motion.div
         className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter touch-none"
-        style={{ x, rotate, opacity: cardOpacity }}
+        style={{ x, rotate, scale, opacity: cardOpacity, boxShadow }}
         animate={controls}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.7}
         dragMomentum={false}
         onDragEnd={handleDragEnd}
-        whileDrag={{ scale: 1.02 }}
+        whileDrag={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
       >
         {/* Photo */}
         <div className="relative w-full h-full" onClick={handleTapPhoto}>
