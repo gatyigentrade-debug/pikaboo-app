@@ -87,7 +87,7 @@ export default function Login() {
     <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-between py-10 px-6 box-border">
       {/* Section 1 — Logo Header */}
       <div className="flex flex-col items-center">
-        <img src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/d56637120_Gemini_Generated_Image_lele2vlele2vlele.png" alt="PikaBoo" className="w-28 h-28 object-contain animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
+        <img src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png" alt="PikaBoo" className="w-44 h-44 object-contain rounded-full animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
         <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
           PikaBoo
         </h1>
