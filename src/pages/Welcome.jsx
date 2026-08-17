@@ -74,24 +74,25 @@ export default function Welcome() {
           />
           {/* Outer ring */}
           <div
-            className="relative w-44 h-44 rounded-full flex items-center justify-center"
+            className="relative w-44 h-44 rounded-full flex items-center justify-center overflow-hidden"
             style={{
               border: "1px solid rgba(212,175,55,0.55)",
               boxShadow: "0 0 26px rgba(212,175,55,0.24)",
+              backgroundColor: "#08080A",
             }}
           >
             {/* Inner ring */}
             <div
-              className="w-36 h-36 rounded-full flex items-center justify-center"
+              className="w-36 h-36 rounded-full flex items-center justify-center overflow-hidden"
               style={{
                 border: "1px solid rgba(212,175,55,0.4)",
                 boxShadow: "inset 0 0 18px rgba(212,175,55,0.16)",
               }}
             >
               <img
-                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/a65636dde_AppIcon.PNG"
+                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
                 alt="PikaBoo"
-                className="w-28 h-28 object-contain animate-float"
+                className="w-28 h-28 object-contain bg-transparent animate-float"
                 style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
               />
             </div>
