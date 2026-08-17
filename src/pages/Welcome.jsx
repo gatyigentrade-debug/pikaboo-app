@@ -101,8 +101,7 @@ export default function Welcome() {
               border: "1px solid rgba(212,175,55,0.5)",
               boxShadow:
                 "inset 0 0 22px rgba(212,175,55,0.18), 0 0 32px rgba(212,175,55,0.28)",
-              background:
-                "radial-gradient(circle at 50% 38%, rgba(22,16,6,0.6), rgba(0,0,0,0.88))",
+              background: "transparent",
             }}
           >
             <img
