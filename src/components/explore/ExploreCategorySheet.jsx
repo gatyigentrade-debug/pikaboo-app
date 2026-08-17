@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Users, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const DEMO_PROFILES = [
   { name: "Nomsa", age: 24, photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop&faces=1" },
@@ -12,6 +13,7 @@ const DEMO_PROFILES = [
 ];
 
 export default function ExploreCategorySheet({ category, onClose }) {
+  const navigate = useNavigate();
   return (
     <AnimatePresence>
       <motion.div
@@ -67,6 +69,7 @@ export default function ExploreCategorySheet({ category, onClose }) {
               <motion.div
                 key={p.name}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => navigate(`/profile/${encodeURIComponent(p.name)}`, { state: { profile: p } })}
                 className="relative rounded-2xl overflow-hidden aspect-square cursor-pointer"
               >
                 <img src={p.photo} alt={p.name} className="w-full h-full object-cover" />
@@ -76,7 +79,10 @@ export default function ExploreCategorySheet({ category, onClose }) {
                     {p.name}, {p.age}
                   </p>
                 </div>
-                <button className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center">
+                <button
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center"
+                >
                   <Heart className="w-3 h-3 text-white" />
                 </button>
               </motion.div>

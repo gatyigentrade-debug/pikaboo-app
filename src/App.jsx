@@ -15,6 +15,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import Chat from '@/pages/Chat';
 import Likes from '@/pages/Likes';
 import Welcome from '@/pages/Welcome';
+import ProfileDetail from '@/pages/ProfileDetail';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -72,6 +73,7 @@ const AuthenticatedApp = () => {
         <Route path="/chat" element={<AppLayout />} />
         <Route path="/chat/:id" element={<AppLayout />} />
         <Route path="/likes" element={<AppLayout />} />
+        <Route path="/profile/:id" element={<ProfileDetail />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
