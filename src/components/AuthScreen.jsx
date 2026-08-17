@@ -1,13 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, Sparkles } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { Input } from "@/components/ui/input";
-import { safeReturnTo } from "@/lib/authReturnTo";
 import GoogleIcon from "@/components/GoogleIcon";
 
-// Ambient gold dust / sparkle
 const DUST = Array.from({ length: 40 }, (_, i) => ({
   id: i,
   top: Math.random() * 100,
@@ -18,12 +15,30 @@ const DUST = Array.from({ length: 40 }, (_, i) => ({
   opacity: Math.random() * 0.5 + 0.25,
 }));
 
+const DISCOVER = "/discover";
+
 export default function AuthScreen({ subtitle = "find your Boo" }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
+
+  // Signed-in users bypass the login screen → straight to Discover.
+  useEffect(() => {
+    let active = true;
+    base44.auth
+      .isAuthenticated()
+      .then((ok) => {
+        if (active && ok) navigate(DISCOVER, { replace: true });
+      })
+      .catch(() => {})
+      .finally(() => active && setChecking(false));
+    return () => {
+      active = false;
+    };
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,8 +46,7 @@ export default function AuthScreen({ subtitle = "find your Boo" }) {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      // Hard redirect to the main discovery route so auth state re-initializes cleanly.
-      window.location.href = safeReturnTo();
+      window.location.href = DISCOVER;
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
@@ -40,27 +54,38 @@ export default function AuthScreen({ subtitle = "find your Boo" }) {
     }
   };
 
-  const handleGoogle = () => base44.auth.loginWithProvider("google", safeReturnTo());
+  const handleGoogle = () => base44.auth.loginWithProvider("google", DISCOVER);
 
-  const inputClass =
-    "pl-11 h-12 rounded-full bg-white/5 backdrop-blur-md border-gold/30 focus:border-gold/70 focus-visible:ring-gold/25 text-foreground placeholder:text-gold/40 shadow-[inset_0_1px_3px_rgba(0,0,0,0.45)]";
+  if (checking) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "#0A0A0C" }}>
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  const fieldStyle = {
+    backgroundColor: "rgba(20,20,25,0.8)",
+    border: "1px solid #D4AF37",
+    color: "#F3E5AB",
+  };
 
   return (
     <div
       className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-y-auto px-6"
       style={{
-        backgroundColor: "#08080A",
+        backgroundColor: "#0A0A0C",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
       }}
     >
-      {/* Dark gradient + radial gold glows */}
+      {/* Radial ambient gold gradients */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 28%, rgba(212,175,55,0.15) 0%, transparent 55%), radial-gradient(ellipse at 50% 88%, rgba(212,175,55,0.05) 0%, transparent 45%), linear-gradient(180deg, #08080A 0%, #0D0D12 100%)",
+            "radial-gradient(ellipse at 50% 26%, rgba(212,175,55,0.16) 0%, transparent 55%), radial-gradient(ellipse at 50% 88%, rgba(212,175,55,0.06) 0%, transparent 45%)",
         }}
       />
 
@@ -105,10 +130,7 @@ export default function AuthScreen({ subtitle = "find your Boo" }) {
               boxShadow: "0 0 28px rgba(212,175,55,0.25), inset 0 0 14px rgba(212,175,55,0.1)",
             }}
           />
-          <div
-            className="absolute inset-[6px] rounded-full"
-            style={{ border: "1px solid rgba(212,175,55,0.35)" }}
-          />
+          <div className="absolute inset-[6px] rounded-full" style={{ border: "1px solid rgba(212,175,55,0.35)" }} />
           <div className="absolute inset-[10px] rounded-full flex items-center justify-center">
             <img
               src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
@@ -139,22 +161,26 @@ export default function AuthScreen({ subtitle = "find your Boo" }) {
           PikaBoo
         </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
+        {/* Subtitle + sparkle */}
+        <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          style={{
-            fontFamily: "'Nunito', sans-serif",
-            fontWeight: 400,
-            fontSize: "13px",
-            letterSpacing: "1px",
-            color: "#D4AF37",
-            marginTop: "4px",
-          }}
+          className="flex items-center gap-1.5 mt-1"
         >
-          {subtitle}
-        </motion.p>
+          <span
+            style={{
+              fontFamily: "'Nunito', sans-serif",
+              fontWeight: 400,
+              fontSize: "13px",
+              letterSpacing: "1px",
+              color: "#D4AF37",
+            }}
+          >
+            {subtitle}
+          </span>
+          <Sparkles className="w-3.5 h-3.5" style={{ color: "#F3E5AB" }} />
+        </motion.div>
 
         {/* Form */}
         <motion.form
@@ -170,86 +196,93 @@ export default function AuthScreen({ subtitle = "find your Boo" }) {
             </div>
           )}
 
-          <div className="mb-3">
-            <label className="block text-[11px] tracking-[2px] text-gold/70 font-heading mb-1.5">EMAIL</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/55" />
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={inputClass}
-                required
-              />
-            </div>
+          <div className="relative mb-3">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(212,175,55,0.6)" }} />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full h-12 pl-11 pr-4 rounded-full outline-none focus:border-gold placeholder:text-gold/50 font-body text-sm"
+              style={fieldStyle}
+            />
           </div>
 
-          <div className="mb-5">
-            <label className="block text-[11px] tracking-[2px] text-gold/70 font-heading mb-1.5">PASSWORD</label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/55" />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={inputClass}
-                required
-              />
-            </div>
+          <div className="relative mb-5">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "rgba(212,175,55,0.6)" }} />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full h-12 pl-11 pr-4 rounded-full outline-none focus:border-gold placeholder:text-gold/50 font-body text-sm"
+              style={fieldStyle}
+            />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="btn-shimmer w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-transform"
+            className="w-full h-12 rounded-full font-heading font-bold flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-transform"
             style={{
-              background:
-                "linear-gradient(110deg, #B8860B 0%, #F3E5AB 45%, #FFFDF5 50%, #F3E5AB 55%, #D4AF37 100%)",
-              boxShadow: "0 0 20px rgba(212,175,55,0.45), inset 0 1px 2px rgba(255,255,255,0.35)",
+              background: "linear-gradient(90deg, #D4AF37 0%, #F3E5AB 100%)",
+              color: "#1a1205",
+              boxShadow: "0 0 20px rgba(212,175,55,0.4)",
               letterSpacing: "1px",
               fontSize: "14px",
             }}
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "LOG IN TO PIKABOO"}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Log In"}
           </button>
         </motion.form>
+
+        {/* Create Account */}
+        <button
+          onClick={() => navigate("/register")}
+          className="w-full h-12 mt-3 rounded-full font-heading font-semibold flex items-center justify-center active:scale-95 transition-transform"
+          style={{
+            background: "rgba(20,20,25,0.5)",
+            border: "1px solid rgba(212,175,55,0.5)",
+            color: "#F3E5AB",
+            fontSize: "14px",
+          }}
+        >
+          Create Account
+        </button>
 
         {/* Continue with Google */}
         <button
           onClick={handleGoogle}
           className="w-full h-12 mt-3 rounded-full flex items-center justify-center gap-2.5 active:scale-95 transition-transform"
           style={{
-            background: "rgba(20,15,5,0.4)",
+            background: "rgba(20,20,25,0.5)",
             border: "1px solid rgba(212,175,55,0.45)",
           }}
         >
           <GoogleIcon className="w-4 h-4" />
-          <span className="text-sm font-heading font-semibold text-gold/90">Continue with Google</span>
+          <span className="text-sm font-heading font-semibold" style={{ color: "#F3E5AB" }}>
+            Continue with Google
+          </span>
         </button>
 
-        {/* Secondary links */}
+        {/* Links */}
         <button
           onClick={() => navigate("/forgot-password")}
-          className="mt-5 text-xs text-gold/65 font-body hover:text-gold transition-colors"
+          className="mt-5 text-xs font-body hover:text-gold transition-colors"
+          style={{ color: "rgba(212,175,55,0.7)" }}
         >
           Forgot Password?
         </button>
-        <p className="mt-2 text-xs text-gold/65 font-body">
-          New to PikaBoo?{" "}
-          <Link to="/register" className="font-bold text-gold underline">
-            Create Profile
-          </Link>
-        </p>
 
         {/* Terms / Privacy */}
         <div className="mt-6 flex items-center gap-4">
-          <button type="button" className="text-[11px] text-gold/45 font-body hover:text-gold/70 transition-colors">
+          <button type="button" className="text-[11px] font-body hover:text-gold transition-colors" style={{ color: "rgba(243,229,171,0.5)" }}>
             Terms
           </button>
-          <span className="text-gold/25 text-xs">·</span>
-          <button type="button" className="text-[11px] text-gold/45 font-body hover:text-gold/70 transition-colors">
+          <span style={{ color: "rgba(212,175,55,0.3)" }}>·</span>
+          <button type="button" className="text-[11px] font-body hover:text-gold transition-colors" style={{ color: "rgba(243,229,171,0.5)" }}>
             Privacy
           </button>
         </div>
