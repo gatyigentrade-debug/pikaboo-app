@@ -89,10 +89,10 @@ export default function Welcome() {
               }}
             >
               <img
-                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/a65636dde_AppIcon.PNG"
+                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/dd93063e9_generated_image.png"
                 alt="PikaBoo"
-                className="w-28 h-28 object-contain animate-float"
-                style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
+                className="w-28 h-28 object-contain bg-transparent animate-float"
+                style={{ filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
               />
             </div>
           </div>
