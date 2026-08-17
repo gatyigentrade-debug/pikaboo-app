@@ -45,5 +45,8 @@
   "required": [
     "user_profile_id",
     "matched_profile_id"
-  ]
+  ],
+  "rls": {
+    "read": {}
+  }
 }

@@ -51,8 +51,14 @@ export default function AppLayout() {
     };
 
     fetchUnreadCount();
-    const unsubscribe = base44.entities.Match.subscribe(() => { fetchUnreadCount(); });
-    return unsubscribe;
+    let unsubscribe = () => {};
+    try {
+      const unsub = base44.entities.Match.subscribe(() => { fetchUnreadCount(); });
+      if (typeof unsub === "function") unsubscribe = unsub;
+    } catch (e) {
+      console.error("Realtime subscribe failed:", e);
+    }
+    return () => unsubscribe();
   }, []);
 
   const currentPath = location.pathname;

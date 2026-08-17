@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 
 function sendNotification(title, body, icon) {
-  if (Notification.permission !== "granted") return;
+  if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
   new Notification(title, {
     body,
     icon: icon || "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png",
@@ -17,8 +17,9 @@ export function useAppNotifications() {
   const knownMessageSigs = useRef(null); // map of matchId -> last_message_time
 
   useEffect(() => {
+    const hasNotifications = typeof Notification !== "undefined";
     // Request permission silently (no prompt if already decided)
-    if (Notification.permission === "default") {
+    if (hasNotifications && Notification.permission === "default") {
       Notification.requestPermission();
     }
 
@@ -75,12 +76,18 @@ export function useAppNotifications() {
       }
     };
 
-    // Subscribe to real-time match changes
-    const unsubscribe = base44.entities.Match.subscribe(handleMatchEvent);
+    // Subscribe to real-time match changes (guarded so offline/restricted networks don't break the UI)
+    let unsubscribe = () => {};
+    try {
+      const unsub = base44.entities.Match.subscribe(handleMatchEvent);
+      if (typeof unsub === "function") unsubscribe = unsub;
+    } catch (e) {
+      // silent fail — UI still renders without realtime
+    }
 
     // Also initialise baseline on mount
     handleMatchEvent();
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 }

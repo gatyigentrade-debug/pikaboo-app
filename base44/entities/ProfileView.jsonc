@@ -24,5 +24,8 @@
   "required": [
     "viewer_profile_id",
     "viewed_profile_id"
-  ]
+  ],
+  "rls": {
+    "read": {}
+  }
 }

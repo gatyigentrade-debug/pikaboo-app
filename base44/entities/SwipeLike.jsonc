@@ -24,5 +24,8 @@
   "required": [
     "liker_profile_id",
     "liked_profile_id"
-  ]
+  ],
+  "rls": {
+    "read": {}
+  }
 }

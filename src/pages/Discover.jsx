@@ -6,10 +6,22 @@ import OnlineBubbles from "@/components/discover/OnlineBubbles";
 import EncounterCard from "@/components/discover/EncounterCard";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
+const DEFAULT_RADIUS_KM = 50;
+const withTimeout = (promise, ms, fallback) =>
+  Promise.race([promise, new Promise((resolve) => setTimeout(() => resolve(fallback), ms))]);
+
 export default function Discover() {
-  const { data: profiles = [], isLoading, refetch } = useQuery({
+  const { data: profiles = [], isLoading, refetch, isError } = useQuery({
     queryKey: ["profiles"],
-    queryFn: () => base44.entities.DatingProfile.list(),
+    queryFn: async () => {
+      try {
+        return await withTimeout(base44.entities.DatingProfile.list(), 8000, []);
+      } catch {
+        return [];
+      }
+    },
+    retry: 1,
+    staleTime: 60_000,
   });
 
   const handleRefresh = async () => { await refetch(); };
@@ -21,6 +33,8 @@ export default function Discover() {
       </div>
     );
   }
+
+  const isEmpty = profiles.length === 0;
 
   return (
     <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
@@ -55,17 +69,31 @@ export default function Discover() {
         <div className="flex items-center gap-2 mb-3">
           <Grid3X3 className="w-4 h-4 text-gold" />
           <h2 className="text-sm font-heading font-semibold text-foreground">Encounters</h2>
+          <span className="text-[10px] text-muted-foreground font-body ml-auto">within {DEFAULT_RADIUS_KM} km</span>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {profiles.slice(0, 4).map((profile) => (
-            <EncounterCard
-              key={profile.id}
-              profile={profile}
-              onLike={() => {}}
-              onPass={() => {}}
-            />
-          ))}
-        </div>
+        {isEmpty ? (
+          <div className="flex flex-col items-center justify-center text-center py-10 px-4 rounded-2xl border border-border/40 bg-secondary/30">
+            <Grid3X3 className="w-8 h-8 text-muted-foreground mb-3" />
+            <p className="text-sm font-heading font-bold text-foreground">No profiles nearby yet</p>
+            <p className="text-xs text-muted-foreground font-body mt-1 mb-4 max-w-[220px]">
+              {isError ? "Couldn't load profiles right now." : "Try expanding your filters or check back soon."}
+            </p>
+            <button onClick={() => refetch()} className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold active:scale-95 transition-transform">
+              Retry
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {profiles.slice(0, 4).map((profile) => (
+              <EncounterCard
+                key={profile.id}
+                profile={profile}
+                onLike={() => {}}
+                onPass={() => {}}
+              />
+            ))}
+          </div>
+        )}
       </section>
       </div>
     </PullToRefreshWrapper>

@@ -21,5 +21,8 @@
     "swiper_id",
     "swiped_id",
     "action"
-  ]
+  ],
+  "rls": {
+    "read": {}
+  }
 }
