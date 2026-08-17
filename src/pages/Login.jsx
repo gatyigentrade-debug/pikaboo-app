@@ -41,9 +41,9 @@ export default function Login() {
             <ArrowLeft className="w-3.5 h-3.5" /> Back
           </button>
           <h2 className="text-xl font-heading font-bold text-center" style={{ color: "#F3E5AB" }}>Welcome back</h2>
-          {error && (
-            <div className="p-3 rounded-lg text-sm text-center" style={{ background: "rgba(220,38,38,0.12)", color: "#fca5a5" }}>{error}</div>
-          )}
+          {error &&
+          <div className="p-3 rounded-lg text-sm text-center" style={{ background: "rgba(220,38,38,0.12)", color: "#fca5a5" }}>{error}</div>
+          }
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-xs font-body" style={{ color: "rgba(212,175,55,0.8)" }}>Email</Label>
             <div className="relative">
@@ -53,8 +53,8 @@ export default function Login() {
                 value={email} onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
-                required
-              />
+                required />
+              
             </div>
           </div>
           <div className="space-y-1.5">
@@ -66,20 +66,20 @@ export default function Login() {
                 value={password} onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
-                required
-              />
+                required />
+              
             </div>
           </div>
           <button
             type="submit" disabled={loading}
             className="w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-transform"
-            style={{ background: "linear-gradient(110deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", boxShadow: "0 0 18px rgba(212,175,55,0.4)" }}
-          >
+            style={{ background: "linear-gradient(110deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", boxShadow: "0 0 18px rgba(212,175,55,0.4)" }}>
+            
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
           </button>
         </form>
-      </div>
-    );
+      </div>);
+
   }
 
   // Main entry layout
@@ -87,7 +87,7 @@ export default function Login() {
     <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-between py-10 px-6 box-border">
       {/* Section 1 — Logo Header */}
       <div className="flex flex-col items-center">
-        <img src={EMBLEM_URL} alt="PikaBoo" className="w-28 h-28 object-contain animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
+        <img src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/d56637120_Gemini_Generated_Image_lele2vlele2vlele.png" alt="PikaBoo" className="w-28 h-28 object-contain animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
         <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
           PikaBoo
         </h1>
@@ -105,14 +105,14 @@ export default function Login() {
       <div className="w-full max-w-sm">
         <Link
           to="/register"
-          className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform"
-        >
+          className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+          
           Create Account
         </Link>
         <button
           onClick={() => setShowForm(true)}
-          className="w-full py-3.5 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full text-center mt-3 active:scale-95 transition-transform"
-        >
+          className="w-full py-3.5 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full text-center mt-3 active:scale-95 transition-transform">
+          
           Log In
         </button>
 
@@ -137,6 +137,6 @@ export default function Login() {
           </button>
         </p>
       </div>
-    </div>
-  );
+    </div>);
+
 }
