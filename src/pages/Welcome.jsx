@@ -104,14 +104,14 @@ export default function Welcome() {
               background: "transparent"
             }}>
             
-            <img src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4379558eb_Gemini_Generated_Image_.png"
+            
 
-            alt="PikaBoo"
-            className="w-24 h-24 object-contain animate-float hidden"
-            style={{
-              mixBlendMode: "screen",
-              filter: "drop-shadow(0 0 14px rgba(212,175,55,0.55))"
-            }} />
+
+
+
+
+
+            
             
           </div>
         </motion.div>
