@@ -35,9 +35,8 @@ export default function Login() {
   // Sign-in form view
   if (showForm) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 relative" style={{ backgroundColor: "#070708" }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.12) 0%, transparent 55%)" }} />
-        <form onSubmit={handleSubmit} className="relative z-10 w-full max-w-sm space-y-4 rounded-2xl p-6" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
+      <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-center px-6 box-border">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-2xl p-6" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
           <button type="button" onClick={() => setShowForm(false)} className="flex items-center gap-1 text-xs font-body mb-1" style={{ color: "rgba(212,175,55,0.8)" }}>
             <ArrowLeft className="w-3.5 h-3.5" /> Back
           </button>
@@ -83,20 +82,12 @@ export default function Login() {
     );
   }
 
-  // Default clean entry layout
+  // Main entry layout
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen py-8 px-4 relative overflow-hidden" style={{ backgroundColor: "#070708" }}>
-      {/* Ambient gold glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 28%, rgba(212,175,55,0.12) 0%, transparent 55%)" }} />
-
-      {/* Row 1 — Header: emblem + title + tagline */}
-      <div className="relative z-10 flex flex-col items-center w-full">
-        <div className="relative mb-4">
-          <div className="absolute -inset-3 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)", filter: "blur(10px)" }} />
-          <div className="relative w-32 h-32 rounded-full flex items-center justify-center" style={{ border: "1px solid rgba(212,175,55,0.5)", boxShadow: "inset 0 0 18px rgba(212,175,55,0.16), 0 0 26px rgba(212,175,55,0.24)" }}>
-            <img src={EMBLEM_URL} alt="PikaBoo" className="w-24 h-24 object-contain animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
-          </div>
-        </div>
+    <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-between py-10 px-6 box-border">
+      {/* Section 1 — Logo Header */}
+      <div className="flex flex-col items-center">
+        <img src={EMBLEM_URL} alt="PikaBoo" className="w-28 h-28 object-contain animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
         <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
           PikaBoo
         </h1>
@@ -105,39 +96,29 @@ export default function Login() {
         </p>
       </div>
 
-      {/* Row 2 — Mid-page tagline */}
-      <p className="relative z-10 text-center text-sm font-body" style={{ color: "rgba(243,229,171,0.8)", padding: "24px 0", maxWidth: "300px" }}>
+      {/* Section 2 — Body Text */}
+      <p className="text-gray-300 text-center text-sm font-medium my-4 max-w-xs">
         Real people. Real connections. Find your perfect Boo today.
       </p>
 
-      {/* Rows 3–5 — Actions */}
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* Get Started */}
+      {/* Section 3 — Primary Buttons */}
+      <div className="w-full max-w-sm">
         <Link
           to="/register"
-          className="w-full h-12 rounded-full flex items-center justify-center font-heading font-bold text-black active:scale-95 transition-transform"
-          style={{ background: "linear-gradient(110deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", boxShadow: "0 0 20px rgba(212,175,55,0.4)" }}
+          className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform"
         >
-          Get Started
+          Create Account
         </Link>
+        <button
+          onClick={() => setShowForm(true)}
+          className="w-full py-3.5 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full text-center mt-3 active:scale-95 transition-transform"
+        >
+          Log In
+        </button>
 
-        {/* Sign In link */}
-        <p className="text-sm font-body mt-4 text-center" style={{ color: "rgba(243,229,171,0.85)" }}>
-          Already have an account?{" "}
-          <button onClick={() => setShowForm(true)} className="font-bold underline" style={{ color: "#F3E5AB" }}>
-            Sign In
-          </button>
-        </p>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 w-full mt-6">
-          <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.25)" }} />
-          <span className="text-xs font-body whitespace-nowrap" style={{ color: "rgba(212,175,55,0.6)" }}>or continue with</span>
-          <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.25)" }} />
-        </div>
-
-        {/* Social row */}
-        <div className="flex items-center justify-center gap-4 mt-4">
+        {/* Section 4 — Social Login */}
+        <p className="text-xs text-amber-200/60 my-3 text-center">or continue with</p>
+        <div className="flex justify-center gap-4">
           <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform" style={{ background: "#141416", border: "1px solid rgba(212,175,55,0.35)" }}>
             <GoogleIcon className="w-5 h-5" />
           </button>
@@ -148,6 +129,13 @@ export default function Login() {
             <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </Link>
         </div>
+
+        <p className="text-sm font-body mt-4 text-center" style={{ color: "rgba(243,229,171,0.85)" }}>
+          Already have an account?{" "}
+          <button onClick={() => setShowForm(true)} className="font-bold underline" style={{ color: "#F3E5AB" }}>
+            Sign In
+          </button>
+        </p>
       </div>
     </div>
   );
