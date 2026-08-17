@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { base44 } from "@/api/base44Client";
 import { useAppNotifications } from "@/hooks/useAppNotifications";
 import ChatView from "@/components/matches/ChatView";
+import Home from "@/pages/Home";
 import Explore from "@/pages/Explore";
 import Matches from "@/pages/Matches";
 import Chat from "@/pages/Chat";
@@ -13,7 +14,8 @@ import Profile from "@/pages/Profile";
 
 // Tabs that get keep-alive (visibility toggle instead of unmount)
 const TABS = [
-  { path: "/",         Component: Explore },
+  { path: "/",         Component: Home },
+  { path: "/explore",  Component: Explore },
   { path: "/matches",  Component: Matches },
   { path: "/chat",     Component: Chat },
   { path: "/likes",    Component: Likes },
