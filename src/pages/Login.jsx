@@ -94,23 +94,26 @@ export default function Login() {
               Get Started
             </Link>
 
-            {/* Social icons */}
-            <div className="flex items-center justify-center gap-4 mb-5">
-              <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
-                <GoogleIcon className="w-5 h-5" />
-              </button>
-              <button onClick={handleApple} aria-label="Continue with Apple" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
-                <Apple className="w-5 h-5 text-gold" />
-              </button>
-              <Link to="/register" aria-label="Continue with Phone" className="w-12 h-12 rounded-full border border-gold/40 bg-black/30 backdrop-blur-sm flex items-center justify-center active:scale-95 transition-transform">
-                <Phone className="w-5 h-5 text-gold" />
-              </Link>
-            </div>
-
             {/* Sign In */}
             <button onClick={() => setShowForm(true)} className="w-full text-sm text-gold/90 font-body active:scale-95 transition-transform">
               Already have an account? <span className="font-bold underline">Sign In</span>
             </button>
+
+            {/* or continue with */}
+            <p className="text-xs text-gold/60 font-body mt-6 text-center">or continue with</p>
+
+            {/* Social row */}
+            <div className="flex items-center justify-center gap-4 mt-3">
+              <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform" style={{ background: "#141416", border: "1px solid rgba(212,175,55,0.35)" }}>
+                <GoogleIcon className="w-5 h-5" />
+              </button>
+              <button onClick={handleApple} aria-label="Continue with Apple" className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform" style={{ background: "#141416", border: "1px solid rgba(212,175,55,0.35)" }}>
+                <Apple className="w-5 h-5 text-gold" />
+              </button>
+              <Link to="/register" aria-label="Continue with Phone" className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform" style={{ background: "#141416", border: "1px solid rgba(212,175,55,0.35)" }}>
+                <Phone className="w-5 h-5 text-gold" />
+              </Link>
+            </div>
           </>
         )}
       </div>
