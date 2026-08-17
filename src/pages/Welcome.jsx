@@ -74,7 +74,7 @@ export default function Welcome() {
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png"
             alt="PikaBoo"
-            className="w-44 h-44 object-contain bg-transparent animate-float"
+            className="w-44 h-44 object-contain bg-transparent rounded-full animate-float"
             style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
           />
         </motion.div>
