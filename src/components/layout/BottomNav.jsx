@@ -3,7 +3,7 @@ import { Compass, Heart, MessageCircle, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
-  { path: "/discover", icon: Compass, label: "Discover" },
+  { path: "/", icon: Compass, label: "Discover" },
   { path: "/matches", icon: Heart, label: "Matches" },
   { path: "/chat", icon: MessageCircle, label: "Chat" },
   { path: "/profile", icon: User, label: "Profile" },
