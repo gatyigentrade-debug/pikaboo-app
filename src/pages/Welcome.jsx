@@ -58,45 +58,25 @@ export default function Welcome() {
       )}
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* Emblem badge - double gold ring */}
+        {/* Emblem badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative mb-4">
-          
           <div
             className="absolute -inset-3 rounded-full pointer-events-none"
             style={{
               background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
               filter: "blur(10px)"
-            }} />
-          
-          {/* Outer ring */}
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
+            }}
+          />
+          <img
+            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png"
+            alt="PikaBoo"
+            className="w-44 h-44 object-contain bg-transparent animate-float"
+            style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
+          />
         </motion.div>
 
         <motion.h1
