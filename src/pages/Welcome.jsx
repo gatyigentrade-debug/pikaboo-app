@@ -1,272 +1,301 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Apple, Phone } from "lucide-react";
+import { Mail, Lock, Loader2, Apple, Phone, ArrowRight } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { Input } from "@/components/ui/input";
+import { safeReturnTo } from "@/lib/authReturnTo";
 import GoogleIcon from "@/components/GoogleIcon";
 
-// Glittering gold dust stars
-const STARS = Array.from({ length: 50 }, (_, i) => ({
+// Delicate gold particle dust / bokeh
+const DUST = Array.from({ length: 42 }, (_, i) => ({
   id: i,
   top: Math.random() * 100,
   left: Math.random() * 100,
-  size: Math.random() * 2.5 + 0.5,
+  size: Math.random() * 2.4 + 0.5,
   delay: Math.random() * 4,
-  duration: Math.random() * 3 + 2,
-  opacity: Math.random() * 0.5 + 0.3,
+  duration: Math.random() * 3 + 2.5,
+  opacity: Math.random() * 0.5 + 0.25,
 }));
-
-// Heart constellation points (normalized 0-100)
-const HEART_CONSTELLATION = [
-  { x: 50, y: 30 }, { x: 38, y: 22 }, { x: 28, y: 28 }, { x: 25, y: 40 },
-  { x: 30, y: 52 }, { x: 50, y: 72 }, { x: 70, y: 52 }, { x: 75, y: 40 },
-  { x: 72, y: 28 }, { x: 62, y: 22 },
-];
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await base44.auth.loginViaEmailPassword(email, password);
+      window.location.href = safeReturnTo();
+    } catch (err) {
+      setError(err.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = () => base44.auth.loginWithProvider("google", safeReturnTo());
+  const handleApple = () => base44.auth.loginWithProvider("apple", safeReturnTo());
 
   return (
     <div
-      className="w-screen h-screen flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ backgroundColor: "#000000", color: "#F3E5AB" }}
+      className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-y-auto px-6"
+      style={{
+        backgroundColor: "#070708",
+        color: "#F3E5AB",
+        paddingTop: "calc(2rem + env(safe-area-inset-top))",
+        paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
+      }}
     >
-      {/* Radial golden ambient lighting */}
+      {/* Deep dark gradient + radial gold glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 35%, rgba(212, 175, 55, 0.12) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 50% 28%, rgba(212,175,55,0.16) 0%, transparent 55%), radial-gradient(ellipse at 50% 92%, rgba(212,175,55,0.06) 0%, transparent 45%), linear-gradient(180deg, #0A0A0C 0%, #050506 100%)",
         }}
       />
 
-      {/* Heart constellation line art */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ opacity: 0.08 }}
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <polygon
-          points={HEART_CONSTELLATION.map((p) => `${p.x},${p.y}`).join(" ")}
-          fill="none"
-          stroke="#D4AF37"
-          strokeWidth="0.15"
-        />
-        {HEART_CONSTELLATION.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="0.3" fill="#F3E5AB" />
-        ))}
-      </svg>
-
-      {/* Glittering gold dust stars */}
-      {STARS.map((star) => (
+      {/* Gold particle dust */}
+      {DUST.map((d) => (
         <div
-          key={star.id}
-          className="absolute rounded-full animate-sparkle"
+          key={d.id}
+          className="absolute rounded-full animate-sparkle pointer-events-none"
           style={{
-            top: `${star.top}%`,
-            left: `${star.left}%`,
-            width: `${star.size}px`,
-            height: `${star.size}px`,
+            top: `${d.top}%`,
+            left: `${d.left}%`,
+            width: `${d.size}px`,
+            height: `${d.size}px`,
             background: "radial-gradient(circle, #F3E5AB 0%, #D4AF37 50%, transparent 100%)",
-            animationDelay: `${star.delay}s`,
-            animationDuration: `${star.duration}s`,
-            opacity: star.opacity,
-            boxShadow: "0 0 4px rgba(212, 175, 55, 0.6)",
+            animationDelay: `${d.delay}s`,
+            animationDuration: `${d.duration}s`,
+            opacity: d.opacity,
+            boxShadow: "0 0 4px rgba(212,175,55,0.6)",
           }}
         />
       ))}
 
-      {/* Gilded circular logo badge */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="relative mb-7 z-10"
-      >
-        <img
-          src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
-          alt="PikaBoo"
-          className="w-48 h-48 object-contain animate-float"
-          style={{
-            mixBlendMode: "screen",
-            filter: "drop-shadow(0 0 25px rgba(212, 175, 55, 0.55)) drop-shadow(0 0 60px rgba(212, 175, 55, 0.25))",
-          }}
-        />
-      </motion.div>
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+        {/* Gilded emblem in glowing circular frame */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="relative mb-5"
+        >
+          <div
+            className="absolute -inset-4 rounded-full pointer-events-none"
+            style={{
+              background: "radial-gradient(circle, rgba(212,175,55,0.38) 0%, transparent 70%)",
+              filter: "blur(10px)",
+            }}
+          />
+          <div
+            className="relative w-36 h-36 rounded-full flex items-center justify-center"
+            style={{
+              border: "1px solid rgba(212,175,55,0.5)",
+              boxShadow:
+                "inset 0 0 22px rgba(212,175,55,0.18), 0 0 32px rgba(212,175,55,0.28)",
+              background:
+                "radial-gradient(circle at 50% 38%, rgba(22,16,6,0.6), rgba(0,0,0,0.88))",
+            }}
+          >
+            <img
+              src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png"
+              alt="PikaBoo"
+              className="w-24 h-24 object-contain animate-float"
+              style={{
+                mixBlendMode: "screen",
+                filter: "drop-shadow(0 0 14px rgba(212,175,55,0.55))",
+              }}
+            />
+          </div>
+        </motion.div>
 
-      {/* Brand name + subtitle + tagline */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex flex-col items-center mb-8 relative z-10 px-6"
-      >
-        <h1
+        {/* Brand name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
           style={{
             fontFamily: "'Cinzel', serif",
             fontWeight: 700,
-            fontSize: "38px",
+            fontSize: "34px",
             letterSpacing: "2px",
             background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            textShadow: "0 0 20px rgba(212, 175, 55, 0.4)",
+            textShadow: "0 0 18px rgba(212,175,55,0.35)",
             margin: 0,
           }}
         >
           PikaBoo
-        </h1>
-        <p
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
           style={{
             fontFamily: "'Cinzel', serif",
             fontWeight: 400,
-            fontSize: "15px",
+            fontSize: "13px",
+            letterSpacing: "3px",
             color: "#D4AF37",
             marginTop: "6px",
-            textShadow: "0 0 8px rgba(212, 175, 55, 0.3)",
+            textTransform: "uppercase",
           }}
         >
-          ♥ find your Boo ♥
-        </p>
-        <p
-          style={{
-            fontFamily: "'Nunito', sans-serif",
-            fontSize: "13px",
-            color: "rgba(243, 229, 171, 0.65)",
-            marginTop: "10px",
-            textAlign: "center",
-            maxWidth: "280px",
-            lineHeight: "1.5",
-          }}
-        >
-          Real people. Real connections. Find your perfect Boo today.
-        </p>
-      </motion.div>
+          Where Sparks Catch Fire
+        </motion.p>
 
-      {/* Action buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="w-full max-w-sm flex flex-col gap-4 relative z-10 px-6"
-      >
-        <button
+        {/* Login form */}
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="w-full mt-7 space-y-3"
+        >
+          {error && (
+            <div className="p-2.5 rounded-xl bg-destructive/15 border border-destructive/30 text-destructive text-xs text-center font-body">
+              {error}
+            </div>
+          )}
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/55" />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="pl-11 h-12 rounded-full bg-white/5 backdrop-blur-md border-gold/25 focus:border-gold/70 focus-visible:ring-gold/25 text-foreground placeholder:text-muted-foreground/60 shadow-[inset_0_1px_3px_rgba(0,0,0,0.45)]"
+              required
+            />
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/55" />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-11 h-12 rounded-full bg-white/5 backdrop-blur-md border-gold/25 focus:border-gold/70 focus-visible:ring-gold/25 text-foreground placeholder:text-muted-foreground/60 shadow-[inset_0_1px_3px_rgba(0,0,0,0.45)]"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-shimmer w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-transform"
+            style={{
+              background:
+                "linear-gradient(110deg, #B8860B 0%, #F3E5AB 45%, #FFFDF5 50%, #F3E5AB 55%, #D4AF37 100%)",
+              boxShadow:
+                "0 0 20px rgba(212,175,55,0.45), inset 0 1px 2px rgba(255,255,255,0.35)",
+            }}
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                Log In <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </motion.form>
+
+        {/* Create Account (outline) */}
+        <motion.button
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.55 }}
           onClick={() => navigate("/register")}
-          className="w-full font-heading font-bold text-black transition-all active:scale-95"
+          className="w-full h-12 mt-3 rounded-full font-heading font-bold text-gold active:scale-95 transition-transform"
           style={{
-            padding: "15px",
-            borderRadius: "30px",
-            fontSize: "17px",
-            background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)",
-            boxShadow:
-              "0 0 20px 3px rgba(212, 175, 55, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.3)",
+            background: "rgba(20,15,5,0.4)",
+            border: "1.5px solid rgba(212,175,55,0.55)",
+            boxShadow: "inset 0 0 12px rgba(212,175,55,0.06)",
           }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 0 30px 6px rgba(212, 175, 55, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.3)")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 0 20px 3px rgba(212, 175, 55, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.3)")
-          }
         >
           Create Account
-        </button>
-        <button
-          onClick={() => navigate("/login")}
-          className="w-full font-heading font-bold transition-all active:scale-95"
-          style={{
-            padding: "15px",
-            borderRadius: "30px",
-            fontSize: "17px",
-            color: "#F3E5AB",
-            background: "rgba(20, 15, 5, 0.6)",
-            border: "2px solid #D4AF37",
-            boxShadow: "0 0 15px 1px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.05)",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 0 25px 3px rgba(212, 175, 55, 0.5), inset 0 0 15px rgba(212, 175, 55, 0.08)")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.boxShadow =
-              "0 0 15px 1px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.05)")
-          }
-        >
-          Log In
-        </button>
-      </motion.div>
+        </motion.button>
 
-      {/* "or continue with" divider */}
-      <div
-        style={{
-          margin: "30px 0 18px",
-          width: "100%",
-          padding: "0 40px",
-          textAlign: "center",
-          position: "relative",
-        }}
-        className="relative z-10"
-      >
-        <span style={{ color: "rgba(243, 229, 171, 0.6)", fontSize: "13px", fontFamily: "'Nunito', sans-serif" }}>
-          or continue with
-        </span>
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "40px",
-            width: "calc(50% - 100px)",
-            height: "1px",
-            background: "linear-gradient(90deg, transparent, #D4AF37)",
-            opacity: 0.4,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            right: "40px",
-            width: "calc(50% - 100px)",
-            height: "1px",
-            background: "linear-gradient(90deg, #D4AF37, transparent)",
-            opacity: 0.4,
-          }}
-        />
-      </div>
+        <button
+          onClick={() => navigate("/forgot-password")}
+          className="mt-3 text-xs text-gold/65 font-body hover:text-gold transition-colors"
+        >
+          Forgot password?
+        </button>
 
-      {/* Social icons */}
-      <div className="flex gap-5 mb-10 relative z-10">
-        <button
-          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
-          style={{
-            border: "1px solid rgba(212, 175, 55, 0.5)",
-            background: "rgba(20, 15, 5, 0.4)",
-            boxShadow: "0 0 10px rgba(212, 175, 55, 0.15)",
-          }}
-        >
-          <GoogleIcon className="w-5 h-5" />
-        </button>
-        <button
-          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
-          style={{
-            border: "1px solid rgba(212, 175, 55, 0.5)",
-            background: "rgba(20, 15, 5, 0.4)",
-            boxShadow: "0 0 10px rgba(212, 175, 55, 0.15)",
-          }}
-        >
-          <Apple className="w-5 h-5" style={{ color: "#F3E5AB" }} />
-        </button>
-        <button
-          className="w-12 h-12 rounded-full flex items-center justify-center transition-transform active:scale-95"
-          style={{
-            border: "1px solid rgba(212, 175, 55, 0.5)",
-            background: "rgba(20, 15, 5, 0.4)",
-            boxShadow: "0 0 10px rgba(212, 175, 55, 0.15)",
-          }}
-        >
-          <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
-        </button>
+        {/* "or continue with" divider */}
+        <div className="w-full mt-7 mb-4 relative text-center">
+          <span
+            className="relative z-10 px-3"
+            style={{
+              color: "rgba(243,229,171,0.55)",
+              fontSize: "12px",
+              fontFamily: "'Nunito', sans-serif",
+              backgroundColor: "#070708",
+            }}
+          >
+            or continue with
+          </span>
+          <div
+            className="absolute top-1/2 left-0 right-0 h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)",
+            }}
+          />
+        </div>
+
+        {/* Social login */}
+        <div className="flex gap-5">
+          <button
+            onClick={handleGoogle}
+            aria-label="Continue with Google"
+            className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+            style={{
+              border: "1px solid rgba(212,175,55,0.5)",
+              background: "rgba(20,15,5,0.4)",
+              boxShadow: "0 0 10px rgba(212,175,55,0.15)",
+            }}
+          >
+            <GoogleIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleApple}
+            aria-label="Continue with Apple"
+            className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+            style={{
+              border: "1px solid rgba(212,175,55,0.5)",
+              background: "rgba(20,15,5,0.4)",
+              boxShadow: "0 0 10px rgba(212,175,55,0.15)",
+            }}
+          >
+            <Apple className="w-5 h-5" style={{ color: "#F3E5AB" }} />
+          </button>
+          <button
+            onClick={() => navigate("/register")}
+            aria-label="Continue with Phone"
+            className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
+            style={{
+              border: "1px solid rgba(212,175,55,0.5)",
+              background: "rgba(20,15,5,0.4)",
+              boxShadow: "0 0 10px rgba(212,175,55,0.15)",
+            }}
+          >
+            <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
+          </button>
+        </div>
       </div>
     </div>
   );
