@@ -107,12 +107,12 @@ export default function Login() {
       <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
       {/* Section 1 — Logo Header */}
       <div className="flex flex-col items-center relative z-10 mt-2">
-        <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }} className="hidden">
-          PikaBoo
-        </h1>
-        <p style={{ fontFamily: "'Cinzel', serif", fontSize: "12px", letterSpacing: "2px", color: "#D4AF37", marginTop: "4px" }} className="hidden">
-          find your Boo
-        </p>
+        
+
+        
+        
+
+        
       </div>
 
       {/* Section 2 — Body Text */}
