@@ -59,7 +59,7 @@ export default function Welcome() {
             letterSpacing: "2px",
             color: "#D4AF37",
             marginTop: "6px"
-          }}>
+          }} className="hidden">
           ♥ find your Boo ♥
         </motion.p>
 
