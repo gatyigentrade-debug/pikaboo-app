@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2, Apple, Phone, ArrowLeft } from "lucide-react";
 import GoogleIcon from "@/components/GoogleIcon";
 
-const EMBLEM_URL = "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/4db3d9300_generated_image.png";
-
 export default function Login() {
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
@@ -35,8 +33,19 @@ export default function Login() {
   // Sign-in form view
   if (showForm) {
     return (
-      <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-center px-6 box-border">
-        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-2xl p-6" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
+      <div
+        className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative"
+        style={{
+          backgroundColor: "#050300",
+          paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
+          paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
+          backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+          backgroundSize: "contain",
+          backgroundPosition: "top",
+          backgroundRepeat: "no-repeat"
+        }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-2xl p-6 relative z-10" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
           <button type="button" onClick={() => setShowForm(false)} className="flex items-center gap-1 text-xs font-body mb-1" style={{ color: "rgba(212,175,55,0.8)" }}>
             <ArrowLeft className="w-3.5 h-3.5" /> Back
           </button>
@@ -84,10 +93,20 @@ export default function Login() {
 
   // Main entry layout
   return (
-    <div className="min-h-screen w-full bg-[#0A0A0C] flex flex-col items-center justify-between pt-[calc(2.5rem+env(safe-area-inset-top))] pb-[calc(2.5rem+env(safe-area-inset-bottom))] px-6 box-border">
+    <div
+      className="min-h-screen w-full flex flex-col items-center justify-between px-6 box-border relative"
+      style={{
+        backgroundColor: "#050300",
+        paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
+        paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))",
+        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+        backgroundSize: "contain",
+        backgroundPosition: "top",
+        backgroundRepeat: "no-repeat"
+      }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
       {/* Section 1 — Logo Header */}
-      <div className="flex flex-col items-center">
-        <img src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png" alt="PikaBoo" className="w-44 h-44 object-contain rounded-full animate-float" style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
+      <div className="flex flex-col items-center relative z-10 mt-2">
         <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
           PikaBoo
         </h1>
@@ -97,12 +116,12 @@ export default function Login() {
       </div>
 
       {/* Section 2 — Body Text */}
-      <p className="text-gray-300 text-center text-sm font-medium my-4 max-w-xs">
+      <p className="text-gray-300 text-center text-sm font-medium my-4 max-w-xs relative z-10">
         Real people. Real connections. Find your perfect Boo today.
       </p>
 
       {/* Section 3 — Primary Buttons */}
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm relative z-10">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
