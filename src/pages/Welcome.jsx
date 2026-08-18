@@ -32,23 +32,23 @@ export default function Welcome() {
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center pr-4 pl-2 pb-2">
         {/* Wordmark */}
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontWeight: 700,
-            fontSize: "34px",
-            letterSpacing: "2px",
-            background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            margin: 0
-          }} className="mx-1 px-2 hidden">
-          PikaBoo
-        </motion.h1>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
