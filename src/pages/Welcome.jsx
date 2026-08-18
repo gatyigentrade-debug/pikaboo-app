@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Apple, Phone, Heart, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import GoogleIcon from "@/components/GoogleIcon";
+import ConstellationBackground from "@/components/welcome/ConstellationBackground";
 
 const DUST = Array.from({ length: 36 }, (_, i) => ({
   id: i,
@@ -23,7 +24,7 @@ export default function Welcome() {
     <div
       className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-y-auto px-6"
       style={{
-        backgroundColor: "#08080A",
+        backgroundColor: "#050300",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))"
@@ -34,9 +35,11 @@ export default function Welcome() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-          "radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.14) 0%, transparent 55%), linear-gradient(180deg, #0A0A0C 0%, #050506 100%)"
+          "radial-gradient(ellipse at 50% 28%, rgba(212,175,55,0.16) 0%, transparent 55%), linear-gradient(180deg, #0A0A0C 0%, #050300 100%)"
         }} />
-      
+
+      {/* Gold constellation + heart line-art */}
+      <ConstellationBackground />
 
       {/* Gold particle dust */}
       {DUST.map((d) =>
@@ -58,23 +61,34 @@ export default function Welcome() {
       )}
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* Emblem badge */}
+        {/* Emblem badge with double concentric gold rings */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative mb-4">
+          className="relative w-[200px] h-[200px] flex items-center justify-center mb-4">
+          {/* Soft glow */}
           <div
-            className="absolute -inset-3 rounded-full pointer-events-none"
+            className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
               filter: "blur(10px)"
             }}
           />
+          {/* Outer ring */}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{ border: "1px solid rgba(212,175,55,0.4)", boxShadow: "0 0 14px rgba(212,175,55,0.2)" }}
+          />
+          {/* Inner ring */}
+          <div
+            className="absolute inset-[10px] rounded-full"
+            style={{ border: "1px solid rgba(212,175,55,0.6)" }}
+          />
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png"
             alt="PikaBoo"
-            className="w-44 h-44 object-contain bg-transparent rounded-full animate-float"
+            className="w-40 h-40 object-contain bg-transparent rounded-full animate-float relative z-10"
             style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
           />
         </motion.div>
@@ -120,12 +134,13 @@ export default function Welcome() {
           className="text-center mt-6">
           
           <p className="text-sm font-body">
-            <span style={{ color: "#F3E5AB" }}>Real people. </span>
+            <span style={{ color: "#FFFFFF" }}>Real people. </span>
             <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
           </p>
           <p className="text-xs font-body mt-1" style={{ color: "rgba(212,175,55,0.75)" }}>
             Find your perfect Boo today.
           </p>
+          <Heart className="w-3 h-3 mx-auto mt-2" style={{ color: "#D4AF37", fill: "rgba(212,175,55,0.5)" }} />
         </motion.div>
 
         {/* Get Started */}
