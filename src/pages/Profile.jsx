@@ -39,10 +39,23 @@ export default function Profile() {
   const handleDeleteAccount = async () => {
     setDeleting(true);
     try {
-      // Dummy endpoint — simulates account deletion request
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const me = await base44.auth.me();
+      const myId = me?.id;
+
+      // Remove the user's dating profile
+      await base44.entities.DatingProfile.deleteMany({ created_by_id: myId });
+
+      // Remove all data the user created across the app
+      await Promise.all([
+        base44.entities.SwipeLike.deleteMany({ created_by_id: myId }),
+        base44.entities.SwipeAction.deleteMany({ created_by_id: myId }),
+        base44.entities.Match.deleteMany({ created_by_id: myId }),
+        base44.entities.ProfileView.deleteMany({ created_by_id: myId }),
+        base44.entities.BraaiMeetup.deleteMany({ created_by_id: myId }),
+      ]);
+
       toast.success("Account deleted", {
-        description: "Your PikaBoo account has been removed.",
+        description: "Your PikaBoo profile and data have been removed.",
       });
       closeSheet("delete_confirm");
       await base44.auth.logout("/login");

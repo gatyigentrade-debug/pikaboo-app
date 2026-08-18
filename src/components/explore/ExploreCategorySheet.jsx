@@ -44,9 +44,9 @@ export default function ExploreCategorySheet({ category, onClose }) {
           <div className="absolute inset-0" style={{ backgroundColor: category.tint }} />
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/40 flex items-center justify-center text-white"
+            className="absolute top-4 right-4 w-11 h-11 rounded-full bg-black/40 flex items-center justify-center text-white active:scale-95 transition-transform"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
           <div className="absolute bottom-4 left-4 right-16">
             <h2 className="text-white font-heading font-bold text-xl drop-shadow-md">
@@ -81,9 +81,9 @@ export default function ExploreCategorySheet({ category, onClose }) {
                 </div>
                 <button
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary/80 flex items-center justify-center"
+                  className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center"
                 >
-                  <Heart className="w-3 h-3 text-white" />
+                  <Heart className="w-4 h-4 text-white" />
                 </button>
               </motion.div>
             ))}
