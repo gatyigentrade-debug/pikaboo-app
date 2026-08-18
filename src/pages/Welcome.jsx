@@ -46,7 +46,7 @@ export default function Welcome() {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             margin: 0
-          }} className="mx-1 px-2">
+          }} className="mx-1 px-2 hidden">
           PikaBoo
         </motion.h1>
         <motion.p
