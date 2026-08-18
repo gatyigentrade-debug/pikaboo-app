@@ -30,7 +30,7 @@ export default function Welcome() {
           background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)"
         }} />
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center opacity-95">
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
         {/* Wordmark */}
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
@@ -46,7 +46,7 @@ export default function Welcome() {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             margin: 0
-          }}>
+          }} className="mx-1 px-2">
           PikaBoo
         </motion.h1>
         <motion.p
