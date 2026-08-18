@@ -107,17 +107,20 @@ export default function Login() {
       <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
       {/* Section 1 — Logo Header */}
       <div className="flex flex-col items-center relative z-10 mt-2">
-        
-
-        
-        
-
-        
+        <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }} className="hidden">
+          PikaBoo
+        </h1>
+        <p style={{ fontFamily: "'Cinzel', serif", fontSize: "12px", letterSpacing: "2px", color: "#D4AF37", marginTop: "4px" }} className="hidden">
+          find your Boo
+        </p>
       </div>
 
       {/* Section 2 — Body Text */}
-      <p className="text-gray-300 text-center text-sm font-medium max-w-xs relative z-10 my-6 mx-2 px-1">
-        Real people. Real connections. Find your perfect Boo today.
+      <p className="text-center text-sm font-body max-w-xs relative z-10 my-0 mx-2 px-1" style={{ color: "#F3E5AB" }}>
+        <span style={{ color: "#FFFFFF" }}>Real people. </span>
+        <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
+        <br />
+        <span style={{ color: "rgba(212,175,55,0.85)" }}>Find your perfect Boo today.</span>
       </p>
 
       {/* Section 3 — Primary Buttons */}
