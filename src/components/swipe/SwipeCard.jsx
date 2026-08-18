@@ -107,7 +107,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
 
-          {/* Minimal on-photo info (Badoo style) */}
+          {/* Auto-expanding bio + details (inline, smooth) */}
           <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
             <div className="flex items-center gap-2">
               <h2 className="text-3xl font-heading font-bold text-white drop-shadow-lg">{profile.name}</h2>
@@ -127,6 +127,91 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
               {profile.distance_km && <span className="text-white/50">· {profile.distance_km} km away</span>}
             </div>
 
+            {/* Smoothly expanding details */}
+            <AnimatePresence initial={false}>
+              {showDetails && (
+                <motion.div
+                  key="details"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="pt-3 max-h-[42vh] overflow-y-auto overscroll-contain touch-pan-y pr-1 -mr-1">
+                    {/* Quote */}
+                    {profile.braai_starter && (
+                      <div className="flex items-start gap-2 bg-white/10 rounded-2xl px-3 py-2 mb-3">
+                        <Flame className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <p className="text-white/90 text-sm font-body italic">"{profile.braai_starter}"</p>
+                      </div>
+                    )}
+
+                    {/* Interest pills */}
+                    <div className="flex gap-2 flex-wrap mb-3">
+                      {profile.home_language && <Badge className="bg-primary/20 text-primary border-primary/30 border font-body text-xs">{profile.home_language}</Badge>}
+                      {profile.braai_role && <Badge className="bg-amber/20 text-amber border-amber/30 border font-body text-xs">🔥 {profile.braai_role}</Badge>}
+                      {profile.spirit_animal && <Badge className="bg-violet/20 text-violet border-violet/30 border font-body text-xs">{profile.spirit_animal}</Badge>}
+                      {profile.sports_team && <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-xs">⚽ {profile.sports_team}</Badge>}
+                      {profile.looking_for && (
+                        <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-xs">
+                          {profile.looking_for === "relationship" ? "💍 Relationship" : profile.looking_for === "friendship" ? "🤝 Friendship" : profile.looking_for === "casual" ? "✌️ Casual" : "🤔 Not Sure"}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Lifestyle details */}
+                    {(profile.favorite_kota_spot || profile.dream_date_location || profile.cant_live_without) && (
+                      <div className="space-y-2 mb-3">
+                        {profile.favorite_kota_spot && (
+                          <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
+                            <span className="text-base flex-shrink-0">📍</span>
+                            <div className="min-w-0">
+                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
+                              <p className="text-white/90 text-xs font-body truncate">{profile.favorite_kota_spot}</p>
+                            </div>
+                          </div>
+                        )}
+                        {profile.cant_live_without && (
+                          <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
+                            <span className="text-base flex-shrink-0">❤️</span>
+                            <div className="min-w-0">
+                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
+                              <p className="text-white/90 text-xs font-body truncate">{profile.cant_live_without}</p>
+                            </div>
+                          </div>
+                        )}
+                        {profile.dream_date_location && (
+                          <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
+                            <span className="text-base flex-shrink-0">🌅</span>
+                            <div className="min-w-0">
+                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
+                              <p className="text-white/90 text-xs font-body truncate">{profile.dream_date_location}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Bio */}
+                    {profile.bio && <p className="text-white/80 text-sm font-body mb-3">{profile.bio}</p>}
+
+                    {/* Message before matching */}
+                    {onMessage && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onMessage(profile); }}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-heading font-semibold hover:bg-white/25 transition-colors"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        Message {profile.name}
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Expand toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}
@@ -136,99 +221,6 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
               {showDetails ? "Less" : "More about " + profile.name}
             </button>
           </div>
-
-          {/* Slide-up details panel (Badoo style) */}
-          <AnimatePresence>
-            {showDetails && (
-              <motion.div
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ type: "spring", stiffness: 320, damping: 32 }}
-                onClick={(e) => e.stopPropagation()}
-                className="absolute inset-x-0 bottom-0 top-16 z-30 bg-background/95 backdrop-blur-xl rounded-t-3xl overflow-y-auto p-5 pt-4 touch-pan-y overscroll-contain"
-              >
-                {/* Grab handle + close */}
-                <div className="flex justify-center mb-3 relative">
-                  <div className="w-10 h-1 rounded-full bg-white/20" />
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setShowDetails(false); }}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1 text-white/70 text-xs font-heading font-semibold"
-                  >
-                    Less <ChevronDown className="w-4 h-4 rotate-180" />
-                  </button>
-                </div>
-
-                {/* Quote */}
-                {profile.braai_starter && (
-                  <div className="flex items-start gap-2 bg-white/10 rounded-2xl px-3 py-2 mb-3">
-                    <Flame className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-white/90 text-sm font-body italic">"{profile.braai_starter}"</p>
-                  </div>
-                )}
-
-                {/* Interest pills */}
-                <div className="flex gap-2 flex-wrap mb-4">
-                  {profile.home_language && <Badge className="bg-primary/20 text-primary border-primary/30 border font-body text-xs">{profile.home_language}</Badge>}
-                  {profile.braai_role && <Badge className="bg-amber/20 text-amber border-amber/30 border font-body text-xs">🔥 {profile.braai_role}</Badge>}
-                  {profile.spirit_animal && <Badge className="bg-violet/20 text-violet border-violet/30 border font-body text-xs">{profile.spirit_animal}</Badge>}
-                  {profile.sports_team && <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-xs">⚽ {profile.sports_team}</Badge>}
-                  {profile.looking_for && (
-                    <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-xs">
-                      {profile.looking_for === "relationship" ? "💍 Relationship" : profile.looking_for === "friendship" ? "🤝 Friendship" : profile.looking_for === "casual" ? "✌️ Casual" : "🤔 Not Sure"}
-                    </Badge>
-                  )}
-                </div>
-
-                {/* Lifestyle details */}
-                {(profile.favorite_kota_spot || profile.dream_date_location || profile.cant_live_without) && (
-                  <div className="space-y-2 mb-4">
-                    {profile.favorite_kota_spot && (
-                      <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
-                        <span className="text-base flex-shrink-0">📍</span>
-                        <div className="min-w-0">
-                          <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
-                          <p className="text-white/90 text-xs font-body truncate">{profile.favorite_kota_spot}</p>
-                        </div>
-                      </div>
-                    )}
-                    {profile.cant_live_without && (
-                      <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
-                        <span className="text-base flex-shrink-0">❤️</span>
-                        <div className="min-w-0">
-                          <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
-                          <p className="text-white/90 text-xs font-body truncate">{profile.cant_live_without}</p>
-                        </div>
-                      </div>
-                    )}
-                    {profile.dream_date_location && (
-                      <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
-                        <span className="text-base flex-shrink-0">🌅</span>
-                        <div className="min-w-0">
-                          <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
-                          <p className="text-white/90 text-xs font-body truncate">{profile.dream_date_location}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Bio */}
-                {profile.bio && <p className="text-white/80 text-sm font-body mb-4">{profile.bio}</p>}
-
-                {/* Message before matching */}
-                {onMessage && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onMessage(profile); }}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-heading font-semibold hover:bg-white/25 transition-colors"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    Message {profile.name}
-                  </button>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </motion.div>
 
