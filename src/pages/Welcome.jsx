@@ -3,18 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Apple, Phone, Heart, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import GoogleIcon from "@/components/GoogleIcon";
-import ConstellationBackground from "@/components/welcome/ConstellationBackground";
-
-const DUST = Array.from({ length: 36 }, (_, i) => ({
-  id: i,
-  top: Math.random() * 100,
-  left: Math.random() * 100,
-  size: Math.random() * 2.2 + 0.5,
-  delay: Math.random() * 4,
-  duration: Math.random() * 3 + 2.5,
-  opacity: Math.random() * 0.5 + 0.25
-}));
-
 export default function Welcome() {
   const navigate = useNavigate();
   const handleGoogle = () => base44.auth.loginWithProvider("google", "/");
@@ -27,47 +15,27 @@ export default function Welcome() {
         backgroundColor: "#050300",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
-        paddingBottom: "calc(2rem + env(safe-area-inset-bottom))"
+        paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
+        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
       }}>
-      
-      {/* Deep dark gradient + radial gold glow */}
+
+      {/* Lower fade so the CTA content reads cleanly over the starry field */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-          "radial-gradient(ellipse at 50% 28%, rgba(212,175,55,0.16) 0%, transparent 55%), linear-gradient(180deg, #0A0A0C 0%, #050300 100%)"
+          background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)"
         }} />
-
-      {/* Gold constellation + heart line-art */}
-      <ConstellationBackground />
-
-      {/* Gold particle dust */}
-      {DUST.map((d) =>
-      <div
-        key={d.id}
-        className="absolute rounded-full animate-sparkle pointer-events-none"
-        style={{
-          top: `${d.top}%`,
-          left: `${d.left}%`,
-          width: `${d.size}px`,
-          height: `${d.size}px`,
-          background: "radial-gradient(circle, #F3E5AB 0%, #D4AF37 50%, transparent 100%)",
-          animationDelay: `${d.delay}s`,
-          animationDuration: `${d.duration}s`,
-          opacity: d.opacity,
-          boxShadow: "0 0 4px rgba(212,175,55,0.6)"
-        }} />
-
-      )}
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* Emblem badge with double concentric gold rings */}
+        {/* PikaBoo logo emblem (uploaded image, rings included) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative w-[200px] h-[200px] flex items-center justify-center mb-4">
-          {/* Soft glow */}
+          className="relative mb-4">
           <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
@@ -75,20 +43,10 @@ export default function Welcome() {
               filter: "blur(10px)"
             }}
           />
-          {/* Outer ring */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{ border: "1px solid rgba(212,175,55,0.4)", boxShadow: "0 0 14px rgba(212,175,55,0.2)" }}
-          />
-          {/* Inner ring */}
-          <div
-            className="absolute inset-[10px] rounded-full"
-            style={{ border: "1px solid rgba(212,175,55,0.6)" }}
-          />
           <img
-            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/357b1f071_Gemini_Generated_Image_lele2vlele2vlele.png"
+            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG"
             alt="PikaBoo"
-            className="w-40 h-40 object-contain bg-transparent rounded-full animate-float relative z-10"
+            className="w-44 h-44 object-contain bg-transparent rounded-full animate-float relative z-10"
             style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
           />
         </motion.div>
