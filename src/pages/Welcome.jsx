@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Apple, Phone, Heart, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import GoogleIcon from "@/components/GoogleIcon";
+
 export default function Welcome() {
   const navigate = useNavigate();
   const handleGoogle = () => base44.auth.loginWithProvider("google", "/");
@@ -10,7 +11,7 @@ export default function Welcome() {
 
   return (
     <div
-      className="w-full min-h-screen flex flex-col items-center justify-center relative overflow-y-auto px-6"
+      className="w-full min-h-screen flex flex-col items-center justify-end relative overflow-y-auto px-6"
       style={{
         backgroundColor: "#050300",
         color: "#F3E5AB",
@@ -30,76 +31,53 @@ export default function Welcome() {
         }} />
 
       <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        {/* PikaBoo logo emblem (uploaded image, rings included) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative mb-4">
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
-              filter: "blur(10px)"
-            }} />
-          
-          
-
-
-
-          
-          
-        </motion.div>
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-        
+        {/* Wordmark */}
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontWeight: 700,
+            fontSize: "34px",
+            letterSpacing: "2px",
+            background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            margin: 0
+          }}>
+          PikaBoo
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize: "13px",
+            letterSpacing: "2px",
+            color: "#D4AF37",
+            marginTop: "6px"
+          }}>
+          ♥ find your Boo ♥
+        </motion.p>
 
         {/* Tagline */}
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="text-center mt-6">
+          <p className="text-sm font-body">
+            <span style={{ color: "#FFFFFF" }}>Real people. </span>
+            <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
+          </p>
+          <p className="text-xs font-body mt-1" style={{ color: "rgba(212,175,55,0.75)" }}>
+            Find your perfect Boo today.
+          </p>
+          <Heart className="w-3 h-3 mx-auto mt-2" style={{ color: "#D4AF37", fill: "rgba(212,175,55,0.5)" }} />
+        </motion.div>
 
         {/* Get Started */}
         <motion.button
@@ -114,7 +92,6 @@ export default function Welcome() {
             boxShadow: "0 0 20px rgba(212,175,55,0.45), inset 0 1px 2px rgba(255,255,255,0.35)",
             border: "1px solid rgba(212,175,55,0.6)"
           }}>
-          
           <Heart className="w-4 h-4 fill-black" />
           <span>Get Started</span>
           <ArrowRight className="w-4 h-4" />
@@ -126,7 +103,6 @@ export default function Welcome() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.55 }}
           className="flex items-center gap-3 w-full mt-6">
-          
           <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.35)" }} />
           <span className="text-xs font-body whitespace-nowrap" style={{ color: "rgba(212,175,55,0.65)" }}>
             or continue with
@@ -140,13 +116,11 @@ export default function Welcome() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="flex gap-5 mt-5">
-          
           <button
             onClick={handleGoogle}
             aria-label="Continue with Google"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
             style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}>
-            
             <GoogleIcon className="w-5 h-5" />
           </button>
           <button
@@ -154,7 +128,6 @@ export default function Welcome() {
             aria-label="Continue with Apple"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
             style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}>
-            
             <Apple className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </button>
           <button
@@ -162,7 +135,6 @@ export default function Welcome() {
             aria-label="Continue with Phone"
             className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform"
             style={{ border: "1px solid rgba(212,175,55,0.5)", background: "#0F0F10" }}>
-            
             <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </button>
         </motion.div>
@@ -175,10 +147,8 @@ export default function Welcome() {
           onClick={() => navigate("/login")}
           className="mt-6 text-sm font-body flex items-center gap-1.5 active:scale-95 transition-transform"
           style={{ color: "rgba(212,175,55,0.85)" }}>
-          
           Already have an account? <span className="font-bold">Sign In</span> <ArrowRight className="w-3.5 h-3.5" />
         </motion.button>
       </div>
     </div>);
-
 }
