@@ -6,9 +6,9 @@ import { base44 } from "@/api/base44Client";
 import VipSuccessModal from "@/components/payment/VipSuccessModal";
 
 const PLANS = [
-  { id: "weekly", label: "Weekly", price: "R49", per: "/ week", popular: false },
-  { id: "monthly", label: "Monthly", price: "R149", per: "/ month", popular: true, badge: "Most Popular" },
-  { id: "quarterly", label: "3-Month", price: "R349", per: "/ 3 months", popular: false, badge: "Best Value" },
+  { id: "weekly", label: "Weekly VIP", price: "R49", amount: 4900, per: "/ week", popular: false },
+  { id: "monthly", label: "Monthly VIP", price: "R149", amount: 14900, per: "/ month", popular: true, badge: "Most Popular" },
+  { id: "quarterly", label: "3-Month Premium", price: "R349", amount: 34900, per: "/ 3 months", popular: false, badge: "Best Value" },
 ];
 
 const PERKS = [
@@ -19,21 +19,44 @@ const PERKS = [
   { icon: Heart, title: "VIP Badge", color: "text-pink-400", bg: "bg-pink-400/10" },
 ];
 
+const genRef = (planId) =>
+  `pikaboo_${planId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
 export default function Subscriptions() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState("monthly");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [publicKey, setPublicKey] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    if (!document.getElementById("paystack-inline-script")) {
+    // Load Paystack Inline V2 SDK
+    if (!document.getElementById("paystack-inline-v2")) {
       const script = document.createElement("script");
-      script.id = "paystack-inline-script";
-      script.src = "https://js.paystack.co/v1/inline.js";
+      script.id = "paystack-inline-v2";
+      script.src = "https://js.paystack.co/v2/inline.js";
       script.async = true;
       document.body.appendChild(script);
     }
+    // Fetch public key + user email
+    (async () => {
+      try {
+        const cfg = await base44.functions.invoke("getPaystackConfig", {});
+        setPublicKey(cfg.data.public_key);
+      } catch (e) {
+        setError("Payment config unavailable. Try again later.");
+      }
+      try {
+        const me = await base44.auth.me();
+        if (me?.email) setUserEmail(me.email);
+        if (me?.id) setUserId(me.id);
+      } catch (e) {
+        /* ignore */
+      }
+    })();
   }, []);
 
   const handleSubscribe = async () => {
@@ -42,18 +65,37 @@ export default function Subscriptions() {
       setError("Payment SDK still loading, please try again in a moment.");
       return;
     }
+    if (!publicKey) {
+      setError("Payment config unavailable. Try again later.");
+      return;
+    }
+    if (!userEmail) {
+      setError("We couldn't load your email. Please re-open the app and try again.");
+      return;
+    }
+    const plan = PLANS.find((p) => p.id === selectedPlan);
+    const reference = genRef(selectedPlan);
     setLoading(true);
     try {
-      const res = await base44.functions.invoke("createPaystackSession", { plan: selectedPlan });
-      const { access_code, reference } = res.data;
-
-      const handler = window.PaystackPop.setup({
-        access_code,
-        onClose: () => setLoading(false),
-        callback: async (response) => {
+      const paystack = new window.PaystackPop();
+      paystack.newTransaction({
+        key: publicKey,
+        email: userEmail,
+        amount: plan.amount,
+        currency: "ZAR",
+        ref: reference,
+        metadata: {
+          user_id: userId,
+          plan_type: selectedPlan,
+          custom_fields: [
+            { display_name: "User ID", variable_name: "user_id", value: userId },
+            { display_name: "Plan", variable_name: "plan_type", value: selectedPlan },
+          ],
+        },
+        onSuccess: async (transaction) => {
           try {
             const verifyRes = await base44.functions.invoke("verifyPaystackPayment", {
-              reference: response.reference || reference,
+              reference: transaction.reference || reference,
               plan: selectedPlan,
             });
             if (verifyRes.data.success) {
@@ -61,7 +103,7 @@ export default function Subscriptions() {
               setShowSuccess(true);
               setTimeout(() => {
                 setShowSuccess(false);
-                navigate("/");
+                navigate("/discover");
               }, 2600);
             } else {
               setError(verifyRes.data.error || "Verification failed. If you were charged, contact support.");
@@ -72,8 +114,12 @@ export default function Subscriptions() {
             setLoading(false);
           }
         },
+        onCancel: () => setLoading(false),
+        onError: (err) => {
+          setError(err?.message || "Payment failed. Please try again.");
+          setLoading(false);
+        },
       });
-      handler.openIframe();
     } catch (e) {
       setError(e.message || "Failed to start payment");
       setLoading(false);
@@ -173,7 +219,7 @@ export default function Subscriptions() {
           ) : (
             <>
               <Crown className="w-5 h-5" />
-              Subscribe — {PLANS.find((p) => p.id === selectedPlan).price}
+              Subscribe to VIP — {PLANS.find((p) => p.id === selectedPlan).price}
             </>
           )}
         </button>

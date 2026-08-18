@@ -7,6 +7,7 @@ import { useAppNotifications } from "@/hooks/useAppNotifications";
 import ChatView from "@/components/matches/ChatView";
 import Home from "@/pages/Home";
 import Explore from "@/pages/Explore";
+import Discover from "@/pages/Discover";
 import Matches from "@/pages/Matches";
 import Chat from "@/pages/Chat";
 import Likes from "@/pages/Likes";
@@ -16,6 +17,7 @@ import Profile from "@/pages/Profile";
 const TABS = [
   { path: "/",         Component: Home },
   { path: "/explore",  Component: Explore },
+  { path: "/discover", Component: Discover },
   { path: "/matches",  Component: Matches },
   { path: "/chat",     Component: Chat },
   { path: "/likes",    Component: Likes },

@@ -71,6 +71,7 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/welcome" replace />} />}>
         <Route path="/" element={<AppLayout />} />
         <Route path="/explore" element={<AppLayout />} />
+        <Route path="/discover" element={<AppLayout />} />
         <Route path="/matches" element={<AppLayout />} />
         <Route path="/profile" element={<AppLayout />} />
         <Route path="/chat" element={<AppLayout />} />
