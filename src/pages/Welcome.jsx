@@ -65,7 +65,7 @@ export default function Welcome() {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             margin: 0
-          }}>
+          }} className="hidden">
           
           PikaBoo
         </motion.h1>
@@ -79,7 +79,7 @@ export default function Welcome() {
             letterSpacing: "2px",
             color: "#D4AF37",
             marginTop: "6px"
-          }}>
+          }} className="hidden">
           
           ♥ find your Boo ♥
         </motion.p>
@@ -89,7 +89,7 @@ export default function Welcome() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-center mt-6">
+          className="text-center mt-6 hidden">
           
           <p className="text-sm font-body">
             <span style={{ color: "#FFFFFF" }}>Real people. </span>
