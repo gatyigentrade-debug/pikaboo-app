@@ -86,17 +86,16 @@ export default function Subscriptions() {
         ref: reference,
         metadata: {
           user_id: userId,
-          plan_type: selectedPlan,
+          plan: selectedPlan,
           custom_fields: [
             { display_name: "User ID", variable_name: "user_id", value: userId },
-            { display_name: "Plan", variable_name: "plan_type", value: selectedPlan },
+            { display_name: "Plan", variable_name: "plan", value: selectedPlan },
           ],
         },
         onSuccess: async (transaction) => {
           try {
             const verifyRes = await base44.functions.invoke("verifyPaystackPayment", {
               reference: transaction.reference || reference,
-              plan: selectedPlan,
             });
             if (verifyRes.data.success) {
               setLoading(false);

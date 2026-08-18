@@ -21,9 +21,22 @@ export default async function (req: Request): Promise<Response> {
       return Response.json({ error: "Payment not successful", paystack_status: data.data?.status }, { status: 400 });
     }
 
-    const planId = data.data.metadata?.plan || body.plan;
+    // Plan must come from Paystack's server-side transaction metadata — never trust client-supplied plan.
+    const planId = data.data.metadata?.plan;
     const plan = PLANS[planId];
-    if (!plan) return Response.json({ error: "Invalid plan in transaction" }, { status: 400 });
+    if (!plan) return Response.json({ error: "Invalid or missing plan in transaction" }, { status: 400 });
+
+    // Verify the paid amount and currency match the selected plan exactly (prevents tier tampering).
+    if (Number(data.data.amount) !== plan.amountKobo) {
+      return Response.json({ error: "Amount mismatch" }, { status: 400 });
+    }
+    if (data.data.currency !== "ZAR") {
+      return Response.json({ error: "Currency mismatch" }, { status: 400 });
+    }
+    // Verify the transaction belongs to the authenticated caller.
+    if (data.data.metadata?.user_id && data.data.metadata.user_id !== user.id) {
+      return Response.json({ error: "User mismatch" }, { status: 403 });
+    }
 
     const profiles = await base44.entities.DatingProfile.filter({ created_by_id: user.id });
     const profile = profiles[0];
