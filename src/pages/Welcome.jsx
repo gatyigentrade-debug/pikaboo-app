@@ -41,14 +41,14 @@ export default function Welcome() {
             style={{
               background: "radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%)",
               filter: "blur(10px)"
-            }}
-          />
+            }} />
+          
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG"
             alt="PikaBoo"
-            className="w-44 h-44 object-contain bg-transparent rounded-full animate-float relative z-10"
-            style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }}
-          />
+            className="w-44 h-44 object-contain bg-transparent rounded-full animate-float relative z-10 hidden"
+            style={{ mixBlendMode: "screen", filter: "drop-shadow(0 0 12px rgba(212,175,55,0.5))" }} />
+          
         </motion.div>
 
         <motion.h1
