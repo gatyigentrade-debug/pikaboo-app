@@ -67,7 +67,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
         className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter touch-none"
         style={{ x, rotate, scale, opacity: cardOpacity, boxShadow }}
         animate={controls}
-        drag="x"
+        drag={showDetails ? false : "x"}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.7}
         dragMomentum={false}
@@ -146,7 +146,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                 exit={{ y: "100%" }}
                 transition={{ type: "spring", stiffness: 320, damping: 32 }}
                 onClick={(e) => e.stopPropagation()}
-                className="absolute inset-x-0 bottom-0 top-16 z-30 bg-background/95 backdrop-blur-xl rounded-t-3xl overflow-y-auto p-5 pt-4"
+                className="absolute inset-x-0 bottom-0 top-16 z-30 bg-background/95 backdrop-blur-xl rounded-t-3xl overflow-y-auto p-5 pt-4 touch-pan-y overscroll-contain"
               >
                 {/* Grab handle */}
                 <div className="flex justify-center mb-3">
