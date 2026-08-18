@@ -31,7 +31,7 @@ export default function ReportUserSheet({ profileName, onClose }) {
       <motion.div
         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 300, damping: 32 }}
-        className="fixed bottom-0 left-0 right-0 z-[80] bg-card rounded-t-3xl"
+        className="fixed bottom-0 left-0 right-0 z-[80] bg-card rounded-t-3xl overscroll-y-contain"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">

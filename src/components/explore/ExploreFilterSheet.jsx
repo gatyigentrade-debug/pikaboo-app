@@ -84,7 +84,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[85vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[85vh] overflow-y-auto overscroll-y-contain"
           >
             {/* Header */}
             <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-border/30">

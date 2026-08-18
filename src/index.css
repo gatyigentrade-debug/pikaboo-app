@@ -106,16 +106,18 @@
   }
 }
 
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: hsl(220, 15%, 8%);
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(220, 10%, 25%);
-  border-radius: 4px;
+/* Custom scrollbar for dark theme (desktop/hover only) */
+@media (hover: hover) {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(220, 15%, 8%);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(220, 10%, 25%);
+    border-radius: 4px;
+  }
 }
 
 /* Glow effects */
