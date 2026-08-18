@@ -19,7 +19,7 @@ export default function Welcome() {
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
         backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
         backgroundSize: "contain",
-        backgroundPosition: "center",
+        backgroundPosition: "top",
         backgroundRepeat: "no-repeat"
       }}>
 
