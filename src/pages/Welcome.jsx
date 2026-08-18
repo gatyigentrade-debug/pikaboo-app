@@ -16,11 +16,7 @@ export default function Welcome() {
         backgroundColor: "#050300",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
-        paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
-        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
-        backgroundSize: "contain",
-        backgroundPosition: "top",
-        backgroundRepeat: "no-repeat"
+        paddingBottom: "calc(2rem + env(safe-area-inset-bottom))"
       }}>
 
       {/* Lower fade so the CTA content reads cleanly over the starry field */}
