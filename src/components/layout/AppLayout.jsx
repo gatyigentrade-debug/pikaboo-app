@@ -32,8 +32,22 @@ export default function AppLayout() {
   const params = useParams();
   const chatId = params.id;
   const chatMatch = chatId ? location.state?.match : null;
+  const [activeMatch, setActiveMatch] = useState(null);
   // Track which tabs have been visited so we only mount them on first visit
   const [mounted, setMounted] = useState({ [location.pathname]: true });
+
+  // Fetch match details for direct deep-links where router state is missing
+  useEffect(() => {
+    if (chatId && !location.state?.match) {
+      let cancelled = false;
+      base44.entities.Match.get(chatId)
+        .then((match) => { if (!cancelled) setActiveMatch(match); })
+        .catch((e) => { console.error("Failed to load match:", e); if (!cancelled) setActiveMatch(null); });
+      return () => { cancelled = true; };
+    }
+    setActiveMatch(null);
+    return undefined;
+  }, [chatId, location.state?.match]);
 
   useEffect(() => {
     setMounted((prev) => ({ ...prev, [location.pathname]: true }));
@@ -93,8 +107,8 @@ export default function AppLayout() {
 
       {/* Deep-link ChatView overlay */}
       <AnimatePresence>
-        {chatMatch && (
-          <ChatView match={chatMatch} onBack={() => navigate(-1)} />
+        {(chatMatch || activeMatch) && (
+          <ChatView match={chatMatch || activeMatch} onBack={() => navigate(-1)} />
         )}
       </AnimatePresence>
     </div>

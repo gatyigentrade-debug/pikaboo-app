@@ -128,7 +128,7 @@ export default function Subscriptions() {
   return (
     <div className="min-h-screen w-full bg-background flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl flex items-center gap-3 px-4 py-4 border-b border-border/30">
+      <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-4 border-b border-border/30">
         <button onClick={() => navigate(-1)} className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
