@@ -77,7 +77,10 @@ export default function Matches() {
         </div>
 
         {/* Gold banner card */}
-        <div className="rounded-2xl border border-gold/30 bg-secondary/50 p-4 flex items-center gap-3">
+        <button
+          onClick={() => navigate("/subscriptions")}
+          className="w-full rounded-2xl border border-gold/30 bg-secondary/50 p-4 flex items-center gap-3 active:scale-[0.98] transition-transform text-left"
+        >
           {/* Overlapping avatars */}
           <div className="flex -space-x-3 flex-shrink-0">
             {blurredAvatars.map((a, i) => (
@@ -98,7 +101,7 @@ export default function Matches() {
             <p className="text-xs text-gold font-body">👑 Go Gold to reveal them all</p>
           </div>
           <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-        </div>
+        </button>
 
         {/* Your Matches */}
         <section>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, Star, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 
 const FILTERS = ["Nearby", "Has a Bio", "Photo Verified"];
@@ -14,6 +14,7 @@ const likedCards = [
 ];
 
 export default function Likes() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("likes");
   const [filters, setFilters] = useState({});
   const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
@@ -121,7 +122,10 @@ export default function Likes() {
 
       {/* Sticky bottom CTA */}
       <div className="fixed bottom-20 left-0 right-0 px-4 z-30">
-        <button className="w-full max-w-lg mx-auto h-12 rounded-full bg-gold text-black font-heading font-bold flex items-center justify-center gap-2 glow-gold">
+        <button
+          onClick={() => navigate("/subscriptions")}
+          className="w-full max-w-lg mx-auto h-12 rounded-full bg-gold text-black font-heading font-bold flex items-center justify-center gap-2 glow-gold active:scale-95 transition-transform"
+        >
           See who Likes you 👀
         </button>
       </div>
