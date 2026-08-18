@@ -51,55 +51,55 @@ export default function Welcome() {
           
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontWeight: 700,
-            fontSize: "34px",
-            letterSpacing: "2px",
-            background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            margin: 0
-          }} className="hidden">
-          
-          PikaBoo
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: "13px",
-            letterSpacing: "2px",
-            color: "#D4AF37",
-            marginTop: "6px"
-          }} className="hidden">
-          
-          ♥ find your Boo ♥
-        </motion.p>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
         {/* Tagline */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-center mt-6 hidden">
-          
-          <p className="text-sm font-body">
-            <span style={{ color: "#FFFFFF" }}>Real people. </span>
-            <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
-          </p>
-          <p className="text-xs font-body mt-1" style={{ color: "rgba(212,175,55,0.75)" }}>
-            Find your perfect Boo today.
-          </p>
-          <Heart className="w-3 h-3 mx-auto mt-2" style={{ color: "#D4AF37", fill: "rgba(212,175,55,0.5)" }} />
-        </motion.div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
         {/* Get Started */}
         <motion.button
