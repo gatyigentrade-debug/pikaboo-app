@@ -11,6 +11,7 @@ import WhoLikedYou from "@/components/gold/WhoLikedYou";
 import { useGold } from "@/hooks/useGold";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthContext";
 
 const FREE_SWIPE_LIMIT = 20;
 
@@ -22,6 +23,7 @@ export default function Home() {
   const [showWhoLiked, setShowWhoLiked] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { isGold, activateGold } = useGold();
   const topCardRef = useRef(null);
 
@@ -45,6 +47,18 @@ export default function Home() {
 
     if (action === "like" || action === "super_like") {
       if (Math.random() < 0.3) {
+        // Persist the match so the notification system can alert the user
+        base44.entities.Match.create({
+          user_profile_id: user?.id || "me",
+          matched_profile_id: currentProfile.id,
+          matched_name: currentProfile.name,
+          matched_photo: currentProfile.photos?.[0] || "",
+          status: "matched",
+        }).catch(() => {});
+        // Ask for notification permission on this user-initiated gesture
+        if (typeof Notification !== "undefined" && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
         setMatchedProfile(currentProfile);
         setShowMatch(true);
       }
@@ -57,7 +71,7 @@ export default function Home() {
 
     setSwipeCount((c) => c + 1);
     setCurrentIdx((i) => Math.min(i + 1, profiles.length));
-  }, [currentProfile, currentIdx, profiles.length, outOfSwipes]);
+  }, [currentProfile, currentIdx, profiles.length, outOfSwipes, user]);
 
   const handleAction = useCallback((actionId) => {
     if (actionId === "boost") return;

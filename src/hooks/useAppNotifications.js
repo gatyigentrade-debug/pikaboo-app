@@ -1,14 +1,23 @@
 import { useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 
-function sendNotification(title, body, icon) {
+const LOGO = "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/b85857139_PikaBoo_logo-removebg-preview.png";
+
+function sendNotification(title, body, icon, onClickUrl) {
   if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  new Notification(title, {
+  const n = new Notification(title, {
     body,
-    icon: icon || "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png",
-    badge: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png",
+    icon: icon || LOGO,
+    badge: LOGO,
     tag: title, // prevents duplicate stacking
   });
+  if (onClickUrl) {
+    n.onclick = () => {
+      n.close();
+      window.focus();
+      window.location.href = onClickUrl;
+    };
+  }
 }
 
 export function useAppNotifications() {
@@ -43,10 +52,16 @@ export function useAppNotifications() {
         // Detect new matches
         for (const match of matches) {
           if (!knownMatchIds.current.has(match.id)) {
+            // Skip the browser notification when the user just swiped (the MatchModal is showing)
+            // and the app is in the foreground — only notify when they're away/backgrounded.
+            const createdMs = match.created_date ? new Date(match.created_date).getTime() : 0;
+            const isFresh = Date.now() - createdMs < 8000;
+            if (isFresh && !document.hidden) continue;
             sendNotification(
               "🔥 It's a Lekker Match!",
-              `You and ${match.matched_name} matched! Send the first move.`,
-              match.matched_photo
+              `You and ${match.matched_name} matched! Tap to start the conversation.`,
+              match.matched_photo,
+              "/matches"
             );
           }
         }
@@ -64,7 +79,8 @@ export function useAppNotifications() {
             sendNotification(
               `💬 New message from ${match.matched_name}`,
               match.last_message,
-              match.matched_photo
+              match.matched_photo,
+              "/chat"
             );
           }
         }
