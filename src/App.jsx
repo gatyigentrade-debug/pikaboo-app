@@ -52,9 +52,9 @@ const AuthenticatedApp = () => {
             }}
           />
           <img
-            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/b0eb3dd4a_AppIcon.png"
+            src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/eb969a81b_App_Icon-removebg-preview.png"
             alt="PikaBoo"
-            className="relative w-28 h-28 object-contain animate-float"
+            className="relative w-32 h-32 object-contain animate-float"
             style={{ filter: "drop-shadow(0 0 18px rgba(191,255,0,0.7)) brightness(1.15)" }}
           />
         </div>
