@@ -37,8 +37,8 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   useImperativeHandle(ref, () => ({ flyOff }));
 
   const handleDragEnd = (_, info) => {
-    const swipeThreshold = 80;
-    const velocityThreshold = 500;
+    const swipeThreshold = 60;
+    const velocityThreshold = 400;
     const { offset, velocity } = info;
     if (offset.x > swipeThreshold || velocity.x > velocityThreshold) flyOff("like");
     else if (offset.x < -swipeThreshold || velocity.x < -velocityThreshold) flyOff("dislike");
@@ -64,7 +64,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   return (
     <>
       <motion.div
-        className="absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter touch-none"
+        className={`absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter ${showDetails ? "touch-pan-y" : "touch-none"}`}
         style={{ x, rotate, scale, opacity: cardOpacity, boxShadow }}
         animate={controls}
         drag={showDetails ? false : "x"}
