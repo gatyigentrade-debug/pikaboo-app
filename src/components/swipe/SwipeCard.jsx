@@ -148,9 +148,15 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                 onClick={(e) => e.stopPropagation()}
                 className="absolute inset-x-0 bottom-0 top-16 z-30 bg-background/95 backdrop-blur-xl rounded-t-3xl overflow-y-auto p-5 pt-4 touch-pan-y overscroll-contain"
               >
-                {/* Grab handle */}
-                <div className="flex justify-center mb-3">
+                {/* Grab handle + close */}
+                <div className="flex justify-center mb-3 relative">
                   <div className="w-10 h-1 rounded-full bg-white/20" />
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowDetails(false); }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1 text-white/70 text-xs font-heading font-semibold"
+                  >
+                    Less <ChevronDown className="w-4 h-4 rotate-180" />
+                  </button>
                 </div>
 
                 {/* Quote */}
