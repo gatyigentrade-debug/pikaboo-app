@@ -122,6 +122,27 @@
     "distance_km": {
       "type": "number",
       "default": 50
+    },
+    "is_vip": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has an active VIP subscription"
+    },
+    "vip_plan": {
+      "type": "string",
+      "enum": [
+        "none",
+        "weekly",
+        "monthly",
+        "quarterly"
+      ],
+      "default": "none",
+      "description": "Active VIP subscription plan"
+    },
+    "vip_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the current VIP subscription expires"
     }
   },
   "required": [

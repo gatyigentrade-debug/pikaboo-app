@@ -1,4 +1,5 @@
 import { Zap, Star, Coins } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const premiumFeatures = [
@@ -26,6 +27,7 @@ const premiumFeatures = [
 ];
 
 export default function PremiumSection() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-3">
       <h3 className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
@@ -52,7 +54,10 @@ export default function PremiumSection() {
             );
           })}
         </div>
-        <Button className="w-full bg-gradient-to-r from-primary to-amber hover:opacity-90 text-primary-foreground font-heading font-semibold rounded-full">
+        <Button
+          onClick={() => navigate("/subscriptions")}
+          className="w-full bg-gradient-to-r from-primary to-amber hover:opacity-90 text-primary-foreground font-heading font-semibold rounded-full"
+        >
           Unlock Premium
         </Button>
       </div>

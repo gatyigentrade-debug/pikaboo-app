@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Zap, Eye, Wine, Star, Crown, Check, Heart, Sparkles } from "lucide-react";
 import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
@@ -46,6 +47,7 @@ const POWER_UPS = [
 ];
 
 export default function PikaBooShop({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const [plusCycle, setPlusCycle] = useState("week"); // "week" | "month"
 
   const plusPrice = plusCycle === "week" ? "R39/week" : "R99/month";
@@ -169,7 +171,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       ))}
                     </ul>
                     <button
-                      onClick={() => triggerPurchase(plusProductId)}
+                      onClick={() => { onClose(); navigate("/subscriptions"); }}
                       className="w-full h-11 rounded-full bg-gold text-black font-heading font-bold"
                     >
                       Upgrade to Plus — {plusPrice}
@@ -194,7 +196,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       ))}
                     </ul>
                     <button
-                      onClick={() => triggerPurchase(BILLING_PRODUCTS.GOLD_MONTHLY)}
+                      onClick={() => { onClose(); navigate("/subscriptions"); }}
                       className="w-full h-11 rounded-full bg-amber text-black font-heading font-bold"
                     >
                       Upgrade to Gold — R199/month
