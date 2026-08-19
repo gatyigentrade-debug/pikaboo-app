@@ -17,7 +17,7 @@ export default function Welcome() {
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
-        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/eb969a81b_App_Icon-removebg-preview.png')",
         backgroundSize: "contain",
         backgroundPosition: "top",
         backgroundRepeat: "no-repeat"
@@ -30,39 +30,7 @@ export default function Welcome() {
           background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)"
         }} />
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center pl-2 pt-5 pr-6 pb-8">
-        {/* Wordmark */}
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: "13px",
-            letterSpacing: "2px",
-            color: "#D4AF37",
-            marginTop: "6px"
-          }} className="hidden">
-          ♥ find your Boo ♥
-        </motion.p>
-
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center px-6 pt-5 pb-8">
         {/* Tagline */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}

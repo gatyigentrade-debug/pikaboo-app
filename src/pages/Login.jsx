@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2, Apple, Phone, ArrowLeft } from "lucide-react";
 import GoogleIcon from "@/components/GoogleIcon";
 
+const EMBLEM_URL = "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/eb969a81b_App_Icon-removebg-preview.png";
+const FADE = "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)";
+
 export default function Login() {
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
@@ -39,12 +42,12 @@ export default function Login() {
           backgroundColor: "#050300",
           paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
           paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
-          backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+          backgroundImage: `url('${EMBLEM_URL}')`,
           backgroundSize: "contain",
           backgroundPosition: "top",
           backgroundRepeat: "no-repeat"
         }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-2xl p-6 relative z-10" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
           <button type="button" onClick={() => setShowForm(false)} className="flex items-center gap-1 text-xs font-body mb-1" style={{ color: "rgba(212,175,55,0.8)" }}>
             <ArrowLeft className="w-3.5 h-3.5" /> Back
@@ -63,7 +66,6 @@ export default function Login() {
                 className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
                 required />
-              
             </div>
           </div>
           <div className="space-y-1.5">
@@ -76,14 +78,12 @@ export default function Login() {
                 className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
                 required />
-              
             </div>
           </div>
           <button
             type="submit" disabled={loading}
             className="w-full h-12 rounded-full font-heading font-bold text-black flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95 transition-transform"
             style={{ background: "linear-gradient(110deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", boxShadow: "0 0 18px rgba(212,175,55,0.4)" }}>
-            
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
           </button>
         </form>
@@ -99,46 +99,35 @@ export default function Login() {
         backgroundColor: "#050300",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))",
-        backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/ccc97ece9_AppIcon.PNG')",
+        backgroundImage: `url('${EMBLEM_URL}')`,
         backgroundSize: "contain",
         backgroundPosition: "top",
         backgroundRepeat: "no-repeat"
       }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)" }} />
-      {/* Section 1 — Logo Header */}
-      <div className="flex flex-col items-center relative z-10 mt-2">
-        <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "30px", letterSpacing: "2px", background: "linear-gradient(135deg, #B8860B 0%, #F3E5AB 50%, #D4AF37 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }} className="hidden">
-          PikaBoo
-        </h1>
-        <p style={{ fontFamily: "'Cinzel', serif", fontSize: "12px", letterSpacing: "2px", color: "#D4AF37", marginTop: "4px" }} className="hidden">
-          find your Boo
-        </p>
-      </div>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
 
-      {/* Section 2 — Body Text */}
-      <p className="text-center text-sm max-w-xs relative z-10 my-0 mt-16 mx-2 px-1 [font-family:'Merriweather',_serif]" style={{ color: "#F3E5AB" }}>
+      {/* Body Text */}
+      <p className="text-center text-sm max-w-xs relative z-10 mt-16 mx-2 px-1 [font-family:'Merriweather',_serif]" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
         <span style={{ color: "rgba(212,175,55,0.85)" }}>Find your perfect Boo today.</span>
       </p>
 
-      {/* Section 3 — Primary Buttons */}
+      {/* Primary Buttons */}
       <div className="w-full max-w-sm relative z-10">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
-          
           Create Account
         </Link>
         <button
           onClick={() => setShowForm(true)}
           className="w-full py-3.5 border border-[#D4AF37] text-[#D4AF37] font-semibold rounded-full text-center mt-3 active:scale-95 transition-transform">
-          
           Log In
         </button>
 
-        {/* Section 4 — Social Login */}
+        {/* Social Login */}
         <p className="text-xs text-amber-200/60 my-3 text-center">or continue with</p>
         <div className="flex justify-center gap-4">
           <button onClick={handleGoogle} aria-label="Continue with Google" className="w-12 h-12 rounded-full flex items-center justify-center active:scale-95 transition-transform" style={{ background: "#141416", border: "1px solid rgba(212,175,55,0.35)" }}>
@@ -151,13 +140,6 @@ export default function Login() {
             <Phone className="w-5 h-5" style={{ color: "#F3E5AB" }} />
           </Link>
         </div>
-
-        <p className="text-sm font-body mt-4 text-center" style={{ color: "rgba(243,229,171,0.85)" }}>
-          Already have an account?{" "}
-          <button onClick={() => setShowForm(true)} className="font-bold underline" style={{ color: "#F3E5AB" }}>
-            Sign In
-          </button>
-        </p>
       </div>
     </div>);
 
