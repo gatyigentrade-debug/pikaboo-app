@@ -30,13 +30,13 @@ export default function Welcome() {
           background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)"
         }} />
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center px-6 pt-5 pb-8 mx-4">
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center px-6 pt-5 pb-8">
         {/* Tagline */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-center mt-6">
+          className="text-center mt-10 mb-4">
           <p className="text-sm font-body">
             <span style={{ color: "#FFFFFF" }}>Real people. </span>
             <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
