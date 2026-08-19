@@ -106,7 +106,7 @@ export default function Login() {
       <img
         src={EMBLEM_URL}
         alt="PikaBoo"
-        className="relative z-10 w-72 h-72 object-contain py-3 mr-1"
+        className="relative z-10 w-72 h-72 object-contain py-3 mb-6"
         style={{ filter: "drop-shadow(0 0 18px rgba(212,175,55,0.35))" }} />
 
       {/* Body Text */}
