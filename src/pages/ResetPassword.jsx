@@ -46,7 +46,7 @@ export default function ResetPassword() {
           </Link>
         }
       >
-        <p className="text-sm text-foreground text-center">
+        <p className="text-sm text-white text-center">
           The link you used appears to be incomplete. Please request a new password reset email.
         </p>
       </AuthLayout>
@@ -60,15 +60,15 @@ export default function ResetPassword() {
       subtitle="Enter your new password below"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+        <div className="mb-4 p-3 rounded-lg bg-red-500/10 text-red-300 text-sm">
           {error}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="password">New Password</Label>
+          <Label htmlFor="password" className="text-slate-200">New Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
             <Input
               id="password"
               type="password"
@@ -77,15 +77,15 @@ export default function ResetPassword() {
               placeholder="••••••••"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="pl-10 h-12"
+              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
               required
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm Password</Label>
+          <Label htmlFor="confirm" className="text-slate-200">Confirm Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
             <Input
               id="confirm"
               type="password"
@@ -93,12 +93,12 @@ export default function ResetPassword() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12"
+              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
               required
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

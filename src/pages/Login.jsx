@@ -46,7 +46,7 @@ export default function Login() {
           backgroundPosition: "top",
           backgroundRepeat: "no-repeat"
         }}>
-        <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
+        <div className="absolute inset-0 bg-black/60 pointer-events-none" />
         <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4 rounded-2xl p-6 relative z-10" style={{ background: "rgba(15,12,5,0.6)", border: "1px solid rgba(212,175,55,0.25)" }}>
           <button type="button" onClick={() => setShowForm(false)} className="flex items-center gap-1 text-xs font-body mb-1" style={{ color: "rgba(212,175,55,0.8)" }}>
             <ArrowLeft className="w-3.5 h-3.5" /> Back
@@ -62,7 +62,7 @@ export default function Login() {
               <Input
                 id="email" type="email" autoFocus placeholder="you@example.com"
                 value={email} onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
+                className="pl-10 h-12 rounded-full text-foreground placeholder:text-slate-300"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
                 required />
             </div>
@@ -74,7 +74,7 @@ export default function Login() {
               <Input
                 id="password" type="password" placeholder="••••••••"
                 value={password} onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 h-12 rounded-full text-foreground placeholder:text-muted-foreground/60"
+                className="pl-10 h-12 rounded-full text-foreground placeholder:text-slate-300"
                 style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(212,175,55,0.25)" }}
                 required />
             </div>
@@ -98,7 +98,7 @@ export default function Login() {
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))"
       }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
+      <div className="absolute inset-0 bg-black/60 pointer-events-none" />
 
       {/* Emblem */}
       <img

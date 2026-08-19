@@ -78,7 +78,7 @@ export default function Register() {
         subtitle={`We sent a code to ${email}`}
       >
         {error && (
-          <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-red-500/10 text-red-300 text-sm">
             {error}
           </div>
         )}
@@ -101,7 +101,7 @@ export default function Register() {
           </InputOTP>
         </div>
         <Button
-          className="w-full h-12 font-medium"
+          className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700"
           onClick={handleVerify}
           disabled={loading || otpCode.length < 6}
         >
@@ -114,7 +114,7 @@ export default function Register() {
             "Verify"
           )}
         </Button>
-        <p className="text-center text-sm text-muted-foreground mt-4">
+        <p className="text-center text-sm text-slate-200 mt-4">
           Didn't receive the code?{" "}
           <button onClick={handleResend} className="text-primary font-medium hover:underline">
             Resend
@@ -140,7 +140,7 @@ export default function Register() {
     >
       <Button
         variant="outline"
-        className="w-full h-12 text-sm font-medium mb-6"
+        className="w-full h-12 text-sm font-medium mb-6 bg-black/30 border-amber-500/40 text-white"
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
@@ -149,24 +149,24 @@ export default function Register() {
 
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
+          <div className="w-full border-t border-amber-500/20" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-black/50 px-3 text-slate-300">or</span>
         </div>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
+        <div className="mb-4 p-3 rounded-lg bg-red-500/10 text-red-300 text-sm">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="text-slate-200">Email</Label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
             <Input
               id="email"
               type="email"
@@ -175,15 +175,15 @@ export default function Register() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 h-12"
+              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
               required
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className="text-slate-200">Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
             <Input
               id="password"
               type="password"
@@ -191,15 +191,15 @@ export default function Register() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 h-12"
+              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
               required
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirm Password</Label>
+          <Label htmlFor="confirm" className="text-slate-200">Confirm Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
             <Input
               id="confirm"
               type="password"
@@ -207,12 +207,12 @@ export default function Register() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12"
+              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
               required
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

@@ -37,15 +37,15 @@ export default function ForgotPassword() {
       }
     >
       {sent ? (
-        <p className="text-sm text-foreground text-center">
+        <p className="text-sm text-white text-center">
           If an account exists with that email, you'll receive a password reset link shortly.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email" className="text-slate-200">Email address</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
               <Input
                 id="email"
                 type="email"
@@ -54,12 +54,12 @@ export default function ForgotPassword() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 h-12"
+                className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
+          <Button type="submit" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
