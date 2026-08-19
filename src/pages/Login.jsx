@@ -94,7 +94,7 @@ export default function Login() {
   // Main entry layout
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center px-6 box-border relative"
+      className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative gap-6"
       style={{
         backgroundColor: "#050300",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
@@ -106,22 +106,19 @@ export default function Login() {
       <img
         src={EMBLEM_URL}
         alt="PikaBoo"
-        className="relative z-10 w-80 h-80 object-contain mt-6"
+        className="relative z-10 w-72 h-72 object-contain"
         style={{ filter: "drop-shadow(0 0 18px rgba(212,175,55,0.35))" }} />
-      
 
       {/* Body Text */}
-      <p className="text-center text-sm max-w-xs relative z-10 [font-family:'Merriweather',_serif] mr-1 py-2 px-2 ml-1" style={{ color: "#F3E5AB" }}>
+      <p className="text-center text-sm max-w-xs relative z-10 [font-family:'Merriweather',_serif]" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
         <span style={{ color: "rgba(212,175,55,0.85)" }}>Find your perfect Boo today.</span>
       </p>
 
-      <div className="flex-1" />
-
       {/* Primary Buttons */}
-      <div className="w-full max-w-sm relative z-10 px-1 mx-1">
+      <div className="w-full max-w-sm relative z-10">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
