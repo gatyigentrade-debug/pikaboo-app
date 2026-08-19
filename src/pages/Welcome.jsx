@@ -30,7 +30,7 @@ export default function Welcome() {
           background: "linear-gradient(180deg, rgba(5,3,0,0) 0%, rgba(5,3,0,0) 30%, rgba(5,3,0,0.85) 62%, #050300 100%)"
         }} />
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center px-6 pt-5 pb-8">
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center px-6 pt-5 pb-8 mx-4">
         {/* Tagline */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
