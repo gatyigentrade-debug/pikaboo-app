@@ -37,7 +37,7 @@ export default function Login() {
   if (showForm) {
     return (
       <div
-        className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative"
+        className="h-[100dvh] overflow-hidden w-full flex flex-col items-center justify-center px-6 box-border relative"
         style={{
           paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
           paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
@@ -93,7 +93,7 @@ export default function Login() {
   // Main entry layout
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative gap-6"
+      className="h-[100dvh] overflow-hidden w-full flex flex-col items-center justify-center px-6 box-border relative gap-4"
       style={{
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))"
@@ -104,7 +104,7 @@ export default function Login() {
       <img
         src={EMBLEM_URL}
         alt="PikaBoo"
-        className="relative z-10 w-72 h-72 object-contain py-3 mb-12"
+        className="relative z-10 w-56 h-56 object-contain mb-2"
         style={{ filter: "drop-shadow(0 0 18px rgba(212,175,55,0.35))" }} />
 
       {/* Body Text */}
@@ -116,7 +116,7 @@ export default function Login() {
       </p>
 
       {/* Primary Buttons */}
-      <div className="w-full max-w-sm relative z-10 mb-10">
+      <div className="w-full max-w-sm relative z-10 mb-4">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
