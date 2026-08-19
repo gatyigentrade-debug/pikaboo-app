@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Crown, Check, Loader2, ArrowLeft, Zap, Eye, Heart, RotateCcw, Star } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
 import VipSuccessModal from "@/components/payment/VipSuccessModal";
 
 const PLANS = [
@@ -21,6 +22,13 @@ const PERKS = [
 
 const genRef = (planId) =>
   `pikaboo_${planId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+// Map subscription plans to native Google Play Billing product IDs
+const PRODUCT_MAP = {
+  weekly: BILLING_PRODUCTS.PLUS_WEEKLY,
+  monthly: BILLING_PRODUCTS.PLUS_MONTHLY,
+  quarterly: BILLING_PRODUCTS.GOLD_MONTHLY,
+};
 
 export default function Subscriptions() {
   const navigate = useNavigate();
@@ -61,6 +69,31 @@ export default function Subscriptions() {
 
   const handleSubscribe = async () => {
     setError("");
+    const plan = PLANS.find((p) => p.id === selectedPlan);
+
+    // Native Android (Google Play Billing) flow
+    if (window.AndroidBilling?.launchPurchaseFlow) {
+      setLoading(true);
+      try {
+        const result = await triggerPurchase(PRODUCT_MAP[selectedPlan]);
+        if (result?.success) {
+          setShowSuccess(true);
+          setTimeout(() => {
+            setShowSuccess(false);
+            navigate("/discover");
+          }, 2600);
+        } else {
+          setError(result?.error?.message || "Purchase was not completed.");
+        }
+      } catch (e) {
+        setError(e.message || "Purchase failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Web Paystack Inline flow
     if (!window.PaystackPop) {
       setError("Payment SDK still loading, please try again in a moment.");
       return;
@@ -73,7 +106,6 @@ export default function Subscriptions() {
       setError("We couldn't load your email. Please re-open the app and try again.");
       return;
     }
-    const plan = PLANS.find((p) => p.id === selectedPlan);
     const reference = genRef(selectedPlan);
     setLoading(true);
     try {

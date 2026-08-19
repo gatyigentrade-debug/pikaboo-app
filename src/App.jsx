@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { ThemeProvider } from 'next-themes';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -19,6 +20,8 @@ import Welcome from '@/pages/Welcome';
 import ProfileDetail from '@/pages/ProfileDetail';
 import Subscriptions from '@/pages/Subscriptions';
 
+const ROOT_TABS = ["/explore", "/matches", "/chat", "/profile"];
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
@@ -26,11 +29,14 @@ const AuthenticatedApp = () => {
 
   useEffect(() => {
     const onBackButton = (e) => {
-      if (location.pathname !== "/") {
+      if (location.pathname === "/") {
+        if (window.navigator?.app?.exitApp) window.navigator.app.exitApp();
+      } else if (ROOT_TABS.includes(location.pathname)) {
+        if (e && e.preventDefault) e.preventDefault();
+        navigate("/");
+      } else {
         if (e && e.preventDefault) e.preventDefault();
         navigate(-1);
-      } else if (window.navigator?.app?.exitApp) {
-        window.navigator.app.exitApp();
       }
     };
     document.addEventListener("backbutton", onBackButton, false);
@@ -98,7 +104,8 @@ const AuthenticatedApp = () => {
 
 function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <div
@@ -123,7 +130,8 @@ function App() {
         <Toaster />
         <SonnerToaster position="top-center" richColors />
       </QueryClientProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 
