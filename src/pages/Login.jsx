@@ -94,25 +94,31 @@ export default function Login() {
   // Main entry layout
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-between px-6 box-border relative"
+      className="min-h-screen w-full flex flex-col items-center px-6 box-border relative"
       style={{
         backgroundColor: "#050300",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
-        paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))",
-        backgroundImage: `url('${EMBLEM_URL}')`,
-        backgroundSize: "contain",
-        backgroundPosition: "top",
-        backgroundRepeat: "no-repeat"
+        paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))"
       }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
 
+      {/* Emblem */}
+      <img
+        src={EMBLEM_URL}
+        alt="PikaBoo"
+        className="relative z-10 w-52 h-52 object-contain mt-6"
+        style={{ filter: "drop-shadow(0 0 18px rgba(212,175,55,0.35))" }}
+      />
+
       {/* Body Text */}
-      <p className="text-center text-sm max-w-xs relative z-10 px-1 [font-family:'Merriweather',_serif] mx-8" style={{ color: "#F3E5AB" }}>
+      <p className="text-center text-sm max-w-xs relative z-10 mt-5 px-1 [font-family:'Merriweather',_serif]" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
         <span style={{ color: "rgba(212,175,55,0.85)" }}>Find your perfect Boo today.</span>
       </p>
+
+      <div className="flex-1" />
 
       {/* Primary Buttons */}
       <div className="w-full max-w-sm relative z-10 px-1 mx-1">
