@@ -101,6 +101,16 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
+          <div
+            className="fixed inset-0 pointer-events-none"
+            style={{
+              backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/19e2302af_Gemini_Generated_Image_gpdoukgpdoukgpdo.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              zIndex: 0
+            }}
+          />
           <AuthenticatedApp />
         </Router>
         <Toaster />

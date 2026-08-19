@@ -13,7 +13,6 @@ export default function Welcome() {
     <div
       className="w-full min-h-screen flex flex-col items-center justify-end relative overflow-y-auto px-6"
       style={{
-        backgroundColor: "#050300",
         color: "#F3E5AB",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",

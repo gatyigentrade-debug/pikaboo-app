@@ -82,7 +82,7 @@ export default function AppLayout() {
   const currentPath = location.pathname;
 
   return (
-    <div className="min-h-screen bg-background font-body relative">
+    <div className="min-h-screen font-body relative">
       {/* Campfire ambient glow */}
       <div className="fixed inset-0 pointer-events-none campfire-glow z-0" />
 

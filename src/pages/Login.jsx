@@ -39,7 +39,6 @@ export default function Login() {
       <div
         className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative"
         style={{
-          backgroundColor: "#050300",
           paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
           paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
           backgroundImage: `url('${EMBLEM_URL}')`,
@@ -96,7 +95,6 @@ export default function Login() {
     <div
       className="min-h-screen w-full flex flex-col items-center justify-center px-6 box-border relative gap-6"
       style={{
-        backgroundColor: "#050300",
         paddingTop: "calc(2.5rem + env(safe-area-inset-top))",
         paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))"
       }}>
