@@ -20,6 +20,36 @@ function sendNotification(title, body, icon, onClickUrl) {
   }
 }
 
+// Pleasant two-tone "ping" via Web Audio API — no asset file needed.
+let audioCtx = null;
+function playPing() {
+  try {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audioCtx = new AC();
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const now = audioCtx.currentTime;
+    const notes = [880, 1320]; // A5 → E6, bright and cheerful
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      const start = now + i * 0.12;
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.25, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + 0.36);
+    });
+  } catch (e) {
+    // silent fail — audio not critical
+  }
+}
+
 export function useAppNotifications() {
   // Store known match IDs and message snapshots to detect new ones
   const knownMatchIds = useRef(null);
@@ -52,6 +82,8 @@ export function useAppNotifications() {
         // Detect new matches
         for (const match of matches) {
           if (!knownMatchIds.current.has(match.id)) {
+            // Always ping instantly so you never miss a new match
+            playPing();
             // Skip the browser notification when the user just swiped (the MatchModal is showing)
             // and the app is in the foreground — only notify when they're away/backgrounded.
             const createdMs = match.created_date ? new Date(match.created_date).getTime() : 0;
