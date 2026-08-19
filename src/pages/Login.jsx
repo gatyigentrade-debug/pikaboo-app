@@ -106,11 +106,11 @@ export default function Login() {
       <img
         src={EMBLEM_URL}
         alt="PikaBoo"
-        className="relative z-10 w-72 h-72 object-contain py-3 mb-1 mr-2"
+        className="relative z-10 w-72 h-72 object-contain py-3 mb-12"
         style={{ filter: "drop-shadow(0 0 18px rgba(212,175,55,0.35))" }} />
 
       {/* Body Text */}
-      <p className="text-center text-sm max-w-xs relative z-10 -mt-4 [font-family:'Merriweather',_serif]" style={{ color: "#F3E5AB" }}>
+      <p className="text-center text-sm max-w-xs relative z-10 -mt-4 [font-family:'Merriweather',_serif] mb-3 px-1 mr-1 mt-4" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
