@@ -111,7 +111,7 @@ export default function Login() {
       
 
       {/* Body Text */}
-      <p className="text-center text-sm max-w-xs relative z-10 px-1 [font-family:'Merriweather',_serif] mr-1 py-2" style={{ color: "#F3E5AB" }}>
+      <p className="text-center text-sm max-w-xs relative z-10 [font-family:'Merriweather',_serif] mr-1 py-2 px-2 ml-1" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
