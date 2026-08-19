@@ -108,15 +108,15 @@ function App() {
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              filter: "blur(3px)",
-              opacity: 0.6,
-              transform: "scale(1.05)",
+              filter: "blur(1px)",
+              opacity: 0.85,
+              transform: "scale(1.03)",
               zIndex: 0
             }}
           />
           <div
             className="fixed inset-0 pointer-events-none"
-            style={{ background: "rgba(5,3,0,0.45)", zIndex: 0 }}
+            style={{ background: "rgba(5,3,0,0.25)", zIndex: 0 }}
           />
           <AuthenticatedApp />
         </Router>
