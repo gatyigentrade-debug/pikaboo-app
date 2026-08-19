@@ -115,7 +115,7 @@ export default function Login() {
       </p>
 
       {/* Primary Buttons */}
-      <div className="w-full max-w-sm relative z-10 px-1">
+      <div className="w-full max-w-sm relative z-10 px-1 mx-1">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
