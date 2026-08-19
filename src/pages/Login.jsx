@@ -107,7 +107,7 @@ export default function Login() {
       <div className="absolute inset-0 pointer-events-none" style={{ background: FADE }} />
 
       {/* Body Text */}
-      <p className="text-center max-w-xs relative z-10 px-1 [font-family:'Merriweather',_serif] mx-8 text-base my-4" style={{ color: "#F3E5AB" }}>
+      <p className="text-center text-sm max-w-xs relative z-10 px-1 [font-family:'Merriweather',_serif] mx-8" style={{ color: "#F3E5AB" }}>
         <span style={{ color: "#FFFFFF" }}>Real people. </span>
         <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
         <br />
@@ -115,7 +115,7 @@ export default function Login() {
       </p>
 
       {/* Primary Buttons */}
-      <div className="w-full max-w-sm relative z-10">
+      <div className="w-full max-w-sm relative z-10 px-1">
         <Link
           to="/register"
           className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] text-black font-bold rounded-full text-center shadow-lg flex items-center justify-center active:scale-95 transition-transform">
