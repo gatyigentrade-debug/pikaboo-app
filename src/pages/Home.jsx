@@ -60,7 +60,8 @@ export default function Home() {
           Notification.requestPermission();
         }
         setMatchedProfile(currentProfile);
-        setShowMatch(true);
+        // Delay the match celebration so the card visibly advances to the next profile first
+        setTimeout(() => setShowMatch(true), 450);
       }
     }
 
