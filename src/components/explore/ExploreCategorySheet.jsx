@@ -5,12 +5,48 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const DEMO_PROFILES = [
-  { name: "Nomsa", age: 24, photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop&faces=1" },
-  { name: "Thabo", age: 27, photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop" },
-  { name: "Zanele", age: 22, photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop" },
-  { name: "Lebo", age: 25, photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop" },
-  { name: "Sipho", age: 29, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop" },
-  { name: "Ayanda", age: 23, photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=120&h=120&fit=crop" },
+  {
+    name: "Nomsa", age: 24, photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&h=120&fit=crop&faces=1",
+    bio: "Amapiano soul, kota connoisseur, and weekend hiker. Looking for someone to chase sunsets with.",
+    braai_starter: "If you could only eat one kota combo forever, what's on it?",
+    home_language: "isiZulu", braai_role: "Salady", spirit_animal: "Springbok", sports_team: "Kaizer Chiefs", looking_for: "relationship",
+    favorite_kota_spot: "Panyaza in Braamfontein", dream_date_location: "Sunset picnic at Walter Sisulu", cant_live_without: "Log drums & good coffee",
+  },
+  {
+    name: "Thabo", age: 27, photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&h=120&fit=crop",
+    bio: "Diski fanatic, braai master in training, and road-trip romantic. Let's chase the horizon.",
+    braai_starter: "Chiefs or Pirates — and defend your answer 🔥",
+    home_language: "Sesotho", braai_role: "Grill Master", spirit_animal: "Honey Badger", sports_team: "Orlando Pirates", looking_for: "casual",
+    favorite_kota_spot: "The corner spot in Soweto", dream_date_location: "Drive-in at the Top Star", cant_live_without: "My vrrr phanda playlist",
+  },
+  {
+    name: "Zanele", age: 22, photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop",
+    bio: "Creative spirit, foodie darling, and sunset chaser. I collect moments, not things.",
+    braai_starter: "Best shisanyama in Joburg — where we going first?",
+    home_language: "isiXhosa", braai_role: "Fire Maker", spirit_animal: "Hadeda", sports_team: "Mamelodi Sundowns", looking_for: "friendship",
+    favorite_kota_spot: "Kota Zone in Tembisa", dream_date_location: "Rooftop dinner in Maboneng", cant_live_without: "My film camera",
+  },
+  {
+    name: "Lebo", age: 25, photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=120&h=120&fit=crop",
+    bio: "Soft-life king, gym rat, and coffee snob. Building a life worth travelling for.",
+    braai_starter: "What's your ideal Sunday — braai or brunch?",
+    home_language: "Setswana", braai_role: "Braai Boss", spirit_animal: "Dassie", sports_team: "Springboks", looking_for: "relationship",
+    favorite_kota_spot: "Gourmet Kota in Sandton", dream_date_location: "Wine farm weekend in Stellenbosch", cant_live_without: "Espresso & gym sessions",
+  },
+  {
+    name: "Sipho", age: 29, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
+    bio: "Outdoorsy, easy-going, and big on family. Looking for something real and lasting.",
+    braai_starter: "Mountains or ocean — pick one for our first trip.",
+    home_language: "Sepedi", braai_role: "Grill Master", spirit_animal: "Pangolin", sports_team: "Springboks", looking_for: "relationship",
+    favorite_kota_spot: "Local tshisa nyama in Atteridgeville", dream_date_location: "Hiking the Drakensberg", cant_live_without: "My hiking boots",
+  },
+  {
+    name: "Ayanda", age: 23, photo: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=120&h=120&fit=crop",
+    bio: "Nightlife lover, amapiano DJ on the side, and serial foodie. Let's vibe.",
+    braai_starter: "What's the one song that gets you on the dance floor?",
+    home_language: "siSwati", braai_role: "Salady", spirit_animal: "Springbok", sports_team: "Kaizer Chiefs", looking_for: "not_sure",
+    favorite_kota_spot: "Late-night kota in Yeoville", dream_date_location: "Rooftop set at a club in Rosebank", cant_live_without: "My DJ headphones",
+  },
 ];
 
 export default function ExploreCategorySheet({ category, onClose }) {
