@@ -136,10 +136,16 @@ export default function Home() {
               <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-yellow-400 border-2 border-background" />
             )}
           </button>
-          <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button
+            onClick={() => navigate("/explore?filters=open")}
+            className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
             <SlidersHorizontal className="w-4 h-4" />
           </button>
-          <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button
+            onClick={() => setShowGold(true)}
+            className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
             <Flame className="w-4 h-4" />
           </button>
         </div>

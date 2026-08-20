@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Users, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ const DEMO_PROFILES = [
 
 export default function ExploreCategorySheet({ category, onClose }) {
   const navigate = useNavigate();
+  const [liked, setLiked] = useState({});
+  const toggleLike = (name) => setLiked((prev) => ({ ...prev, [name]: !prev[name] }));
   return (
     <AnimatePresence>
       <motion.div
@@ -80,10 +83,10 @@ export default function ExploreCategorySheet({ category, onClose }) {
                   </p>
                 </div>
                 <button
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center"
+                  onClick={(e) => { e.stopPropagation(); toggleLike(p.name); }}
+                  className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center active:scale-90 transition-transform"
                 >
-                  <Heart className="w-4 h-4 text-white" />
+                  <Heart className={`w-4 h-4 text-white ${liked[p.name] ? "fill-white" : ""}`} />
                 </button>
               </motion.div>
             ))}

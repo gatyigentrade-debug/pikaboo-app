@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Flame, Zap, SlidersHorizontal } from "lucide-react";
 import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
@@ -87,6 +87,7 @@ const ALL_CARDS = [...VIBES_CULTURE, ...SPORT_LIFESTYLE, ...TONIGHTS_VIBE];
 
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
   const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -118,7 +119,10 @@ export default function Explore() {
             <span className="text-xs font-heading font-bold text-white">3</span>
           </div>
           {/* Lightning */}
-          <button className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+          <button
+            onClick={() => navigate("/subscriptions")}
+            className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center active:scale-95 transition-transform"
+          >
             <Zap className="w-4 h-4 text-[#FFD700]" />
           </button>
           {/* Filter */}
