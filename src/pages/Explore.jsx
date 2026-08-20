@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Flame, Zap, SlidersHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
 import ExploreFilterSheet from "@/components/explore/ExploreFilterSheet";
@@ -114,10 +115,13 @@ export default function Explore() {
         <h1 className="text-2xl font-heading font-bold text-white">Explore</h1>
         <div className="flex items-center gap-2.5">
           {/* Streak / flame badge */}
-          <div className="flex items-center gap-1 bg-[#FF4500] rounded-full px-2 py-1">
+          <button
+            onClick={() => toast.info("🔥 3-day streak!", { description: "Keep swiping daily to grow your streak." })}
+            className="flex items-center gap-1 bg-[#FF4500] rounded-full px-2 py-1 active:scale-95 transition-transform"
+          >
             <Flame className="w-4 h-4 text-white" />
             <span className="text-xs font-heading font-bold text-white">3</span>
-          </div>
+          </button>
           {/* Lightning */}
           <button
             onClick={() => navigate("/subscriptions")}

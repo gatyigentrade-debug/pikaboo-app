@@ -74,9 +74,9 @@ export default function Home() {
   }, [currentProfile, currentIdx, profiles.length, outOfSwipes, user]);
 
   const handleAction = useCallback((actionId) => {
-    if (actionId === "boost") return;
-    if ((actionId === "like" || actionId === "dislike") && topCardRef.current) {
-      topCardRef.current.flyOff(actionId);
+    if (actionId === "boost") { setShowGold(true); return; }
+    if ((actionId === "like" || actionId === "dislike" || actionId === "super_like") && topCardRef.current) {
+      topCardRef.current.flyOff(actionId === "dislike" ? "dislike" : "like", actionId);
     } else {
       handleSwipe(actionId);
     }

@@ -22,7 +22,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   const photos = profile.photos || [];
   const photo = photos[imgIdx] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop";
 
-  const flyOff = async (direction) => {
+  const flyOff = async (direction, action) => {
     await controls.start({
       x: direction === "like" ? 700 : -700,
       y: -40,
@@ -31,7 +31,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
       opacity: 0,
       transition: { duration: 0.35, ease: "easeOut" },
     });
-    onSwipe(direction === "like" ? "like" : "dislike");
+    onSwipe(action || (direction === "like" ? "like" : "dislike"));
   };
 
   useImperativeHandle(ref, () => ({ flyOff }));
