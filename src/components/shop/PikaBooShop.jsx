@@ -84,7 +84,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
               {/* Section A: Free VIP Pass */}
               <div className="rounded-2xl border border-gold/30 bg-secondary/30 p-4 space-y-3">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[10px] font-heading font-bold">VIP</span>
+                  <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-heading font-bold">VIP</span>
                   <h3 className="text-sm font-heading font-bold text-foreground">Free 24-Hour VIP Pass 🎁</h3>
                 </div>
                 <p className="text-xs text-muted-foreground font-body leading-relaxed">
@@ -92,7 +92,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   {["⚡ Line Jump", "👁 4 Unblurs", "🥂 Date Guarantee"].map((chip) => (
-                    <span key={chip} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-[10px] font-body">
+                    <span key={chip} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-xs font-body">
                       {chip}
                     </span>
                   ))}
@@ -135,19 +135,19 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
                   {/* Pikaboo Plus Tier */}
                   <div className="rounded-2xl bg-secondary/30 border border-gold/40 p-4 relative">
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gold text-black text-[9px] font-heading font-bold">POPULAR</span>
+                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gold text-black text-xs font-heading font-bold">POPULAR</span>
                     <div className="flex items-center gap-2 mb-1">
                       <Star className="w-4 h-4 text-gold" fill="currentColor" />
                       <p className="text-sm font-heading font-bold text-gold">Pikaboo Plus</p>
                     </div>
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-gold/15 text-gold text-[10px] font-heading font-bold mb-3">
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-gold/15 text-gold text-xs font-heading font-bold mb-3">
                       3-Day FREE Trial
                     </span>
                     {/* Cycle toggle */}
                     <div className="flex gap-2 mb-3">
                       <button
                         onClick={() => setPlusCycle("week")}
-                        className={`flex-1 py-2 rounded-full text-xs font-heading font-bold transition-colors ${
+                        className={`flex-1 py-3 min-h-[44px] rounded-full text-xs font-heading font-bold transition-colors ${
                           plusCycle === "week" ? "bg-gold text-black" : "border border-gold/30 text-gold"
                         }`}
                       >
@@ -155,7 +155,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       </button>
                       <button
                         onClick={() => setPlusCycle("month")}
-                        className={`flex-1 py-2 rounded-full text-xs font-heading font-bold transition-colors ${
+                        className={`flex-1 py-3 min-h-[44px] rounded-full text-xs font-heading font-bold transition-colors ${
                           plusCycle === "month" ? "bg-gold text-black" : "border border-gold/30 text-gold"
                         }`}
                       >
@@ -180,7 +180,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
                   {/* Pikaboo Gold Tier */}
                   <div className="rounded-2xl bg-secondary/30 border-2 border-amber/50 p-4 relative">
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-amber text-black text-[9px] font-heading font-bold">GOLD</span>
+                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-amber text-black text-xs font-heading font-bold">GOLD</span>
                     <div className="flex items-center gap-2 mb-1">
                       <Crown className="w-4 h-4 text-amber" fill="currentColor" />
                       <p className="text-sm font-heading font-bold text-amber">Pikaboo Gold</p>
@@ -221,16 +221,16 @@ export default function PikaBooShop({ isOpen, onClose }) {
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-heading font-bold text-foreground">{item.name}</p>
                             {item.tag && (
-                              <span className={`px-1.5 py-0.5 rounded-full border text-[9px] font-heading font-bold ${item.tagColor}`}>
+                              <span className={`px-1.5 py-0.5 rounded-full border text-xs font-heading font-bold ${item.tagColor}`}>
                                 {item.tag}
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-muted-foreground font-body mt-0.5 line-clamp-2">{item.desc}</p>
+                          <p className="text-xs text-muted-foreground font-body mt-0.5 line-clamp-2">{item.desc}</p>
                         </div>
                         <button
                           onClick={() => triggerPurchase(item.productId)}
-                          className="flex-shrink-0 px-4 py-2 rounded-full border border-gold/40 text-gold text-xs font-heading font-bold hover:bg-gold/10 transition-colors"
+                          className="flex-shrink-0 min-h-[44px] px-4 py-2 rounded-full border border-gold/40 text-gold text-xs font-heading font-bold hover:bg-gold/10 transition-colors"
                         >
                           {item.price}
                         </button>
@@ -248,17 +248,17 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       <Wine className="w-5 h-5 text-gold" />
                       <div>
                         <h3 className="text-sm font-heading font-bold text-foreground">The Date Guarantee</h3>
-                        <p className="text-[10px] text-muted-foreground font-body">Gold exclusive</p>
+                        <p className="text-xs text-muted-foreground font-body">Gold exclusive</p>
                       </div>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full bg-amber text-black text-[9px] font-heading font-bold">GOLD EXCLUSIVE</span>
+                    <span className="px-2 py-0.5 rounded-full bg-amber text-black text-xs font-heading font-bold">GOLD EXCLUSIVE</span>
                   </div>
                   <p className="text-xs text-muted-foreground font-body leading-relaxed">
                     Once you and a match hit a 10-message streak and you fully unblur their profile, PikaBoo automatically drops a voucher for a partner venue — Marble, Shimmy Beach Club, The Rooftop Lounge, and more.
                   </p>
                   <div className="flex gap-2 flex-wrap">
                     {VENUES.map((v) => (
-                      <span key={v} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-[10px] font-body">
+                      <span key={v} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-xs font-body">
                         {v}
                       </span>
                     ))}

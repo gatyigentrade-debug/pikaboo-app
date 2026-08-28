@@ -35,6 +35,8 @@ export default function AppLayout() {
   const [activeMatch, setActiveMatch] = useState(null);
   // Track which tabs have been visited so we only mount them on first visit
   const [mounted, setMounted] = useState({ [location.pathname]: true });
+  // Remember the last sub-route for each tab so BottomNav can restore it
+  const [lastTabRoutes, setLastTabRoutes] = useState({});
 
   // Fetch match details for direct deep-links where router state is missing
   useEffect(() => {
@@ -50,10 +52,20 @@ export default function AppLayout() {
   }, [chatId, location.state?.match]);
 
   useEffect(() => {
-    setMounted((prev) => ({ ...prev, [location.pathname]: true }));
+    const currentPath = location.pathname;
+    setMounted((prev) => ({ ...prev, [currentPath]: true }));
     // For deep chat routes, ensure the chat tab is mounted underneath
-    if (location.pathname.startsWith("/chat/")) {
+    if (currentPath.startsWith("/chat/")) {
       setMounted((prev) => ({ ...prev, "/chat": true }));
+    }
+    // Remember the deepest visited path per tab so returning to that tab restores it
+    const tabBase = TABS.find(
+      (t) => t.path !== "/" && (currentPath === t.path || currentPath.startsWith(t.path + "/"))
+    );
+    if (tabBase) {
+      setLastTabRoutes((prev) =>
+        prev[tabBase.path] === currentPath ? prev : { ...prev, [tabBase.path]: currentPath }
+      );
     }
   }, [location.pathname]);
 
@@ -103,7 +115,7 @@ export default function AppLayout() {
         })}
       </main>
 
-      <BottomNav unreadMatches={unreadMatches} />
+      <BottomNav unreadMatches={unreadMatches} lastTabRoutes={lastTabRoutes} />
 
       {/* Deep-link ChatView overlay */}
       <AnimatePresence>

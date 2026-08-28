@@ -117,7 +117,7 @@ export default function Explore() {
           {/* Streak / flame badge */}
           <button
             onClick={() => toast.info("🔥 3-day streak!", { description: "Keep swiping daily to grow your streak." })}
-            className="flex items-center gap-1 bg-[#FF4500] rounded-full px-2 py-1 active:scale-95 transition-transform"
+            className="flex items-center gap-1 bg-[#FF4500] rounded-full px-3 py-2 min-h-[44px] active:scale-95 transition-transform"
           >
             <Flame className="w-4 h-4 text-white" />
             <span className="text-xs font-heading font-bold text-white">3</span>
@@ -125,12 +125,12 @@ export default function Explore() {
           {/* Lightning */}
           <button
             onClick={() => navigate("/subscriptions")}
-            className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center active:scale-95 transition-transform"
+            className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center active:scale-95 transition-transform"
           >
             <Zap className="w-4 h-4 text-[#FFD700]" />
           </button>
           {/* Filter */}
-          <button onClick={() => openSheet("filters", "open")} className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center">
+          <button onClick={() => openSheet("filters", "open")} className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center">
             <SlidersHorizontal className="w-4 h-4 text-white" />
           </button>
         </div>

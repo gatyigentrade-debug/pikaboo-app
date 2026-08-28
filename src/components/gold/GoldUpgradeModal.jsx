@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Star, Zap, Eye, Heart, RotateCcw, Crown } from "lucide-react";
 
@@ -45,7 +46,16 @@ const PLANS = [
   { id: "6m", label: "6 Months", price: "R79", per: "/mo", badge: "Best Value", popular: false },
 ];
 
-export default function GoldUpgradeModal({ isOpen, onClose, onUpgrade }) {
+export default function GoldUpgradeModal({ onUpgrade }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isOpen = searchParams.get("gold") === "true";
+
+  const handleClose = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("gold");
+    setSearchParams(next, { replace: true });
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -55,7 +65,7 @@ export default function GoldUpgradeModal({ isOpen, onClose, onUpgrade }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm"
-            onClick={onClose}
+            onClick={handleClose}
           />
           <motion.div
             initial={{ y: "100%", opacity: 0 }}
@@ -72,8 +82,8 @@ export default function GoldUpgradeModal({ isOpen, onClose, onUpgrade }) {
               <div className="absolute top-8 right-12 w-1.5 h-1.5 bg-white/50 rounded-full animate-sparkle" style={{ animationDelay: "0.5s" }} />
               <div className="absolute top-6 left-1/3 w-1 h-1 bg-white/40 rounded-full animate-sparkle" style={{ animationDelay: "1s" }} />
 
-              <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center">
-                <X className="w-4 h-4 text-white" />
+              <button onClick={handleClose} className="absolute top-4 right-4 w-11 h-11 rounded-full bg-black/20 flex items-center justify-center">
+                <X className="w-5 h-5 text-white" />
               </button>
 
               <div className="flex items-center justify-center gap-2 mb-2">
@@ -105,7 +115,7 @@ export default function GoldUpgradeModal({ isOpen, onClose, onUpgrade }) {
                 {PLANS.map((plan) => (
                   <button
                     key={plan.id}
-                    onClick={() => onUpgrade(plan)}
+                    onClick={() => onUpgrade?.(plan)}
                     className={`relative rounded-2xl border-2 p-3 text-center transition-all ${
                       plan.popular
                         ? "border-yellow-400 bg-yellow-400/10"
@@ -113,20 +123,20 @@ export default function GoldUpgradeModal({ isOpen, onClose, onUpgrade }) {
                     }`}
                   >
                     {plan.badge && (
-                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[9px] font-heading font-black px-2 py-0.5 rounded-full whitespace-nowrap">
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-xs font-heading font-black px-2 py-0.5 rounded-full whitespace-nowrap">
                         {plan.badge}
                       </span>
                     )}
                     <p className="text-xs text-muted-foreground font-body">{plan.label}</p>
                     <p className="text-xl font-heading font-black text-foreground mt-0.5">{plan.price}</p>
-                    <p className="text-[10px] text-muted-foreground font-body">{plan.per}</p>
+                    <p className="text-xs text-muted-foreground font-body">{plan.per}</p>
                   </button>
                 ))}
               </div>
 
               {/* CTA */}
               <button
-                onClick={() => onUpgrade(PLANS[1])}
+                onClick={() => onUpgrade?.(PLANS[1])}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 text-black font-heading font-black text-base shadow-lg shadow-yellow-500/30 hover:opacity-90 transition-opacity"
               >
                 ✨ Get PikaBoo Gold

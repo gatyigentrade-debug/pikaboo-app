@@ -67,10 +67,10 @@ export default function Matches() {
             <p className="text-xs text-muted-foreground font-body mt-0.5">3 people liked you back</p>
           </div>
           <Link to="/likes" className="relative">
-            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+            <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
               <Heart className="w-5 h-5 text-gold" fill="currentColor" />
             </div>
-            <div className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-gold text-black text-[10px] font-heading font-bold flex items-center justify-center">
+            <div className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-gold text-black text-xs font-heading font-bold flex items-center justify-center">
               8
             </div>
           </Link>
@@ -136,17 +136,17 @@ export default function Matches() {
                       {match.matched_name}, {match.matched_age}
                     </h3>
                     {match.likes_you && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-gold/20 text-gold text-[9px] font-heading font-bold">
+                      <span className="px-1.5 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-heading font-bold">
                         LIKES YOU
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <MapPin className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-[11px] text-muted-foreground font-body">{match.city}</span>
-                    <span className="text-[11px] text-muted-foreground">·</span>
+                    <span className="text-xs text-muted-foreground font-body">{match.city}</span>
+                    <span className="text-xs text-muted-foreground">·</span>
                     <Clock className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-[11px] text-muted-foreground font-body">{match.time_ago}</span>
+                    <span className="text-xs text-muted-foreground font-body">{match.time_ago}</span>
                   </div>
                   <p className={`text-xs font-body truncate mt-1 ${match.unread_count > 0 ? "text-foreground" : "text-muted-foreground"}`}>
                     {match.last_message}
@@ -155,7 +155,7 @@ export default function Matches() {
 
                 {/* Unread badge */}
                 {match.unread_count > 0 && (
-                  <div className="w-6 h-6 rounded-full bg-yellow-400 text-black text-[11px] font-bold flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-yellow-400 text-black text-xs font-bold flex items-center justify-center flex-shrink-0">
                     {match.unread_count}
                   </div>
                 )}

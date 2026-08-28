@@ -1,15 +1,25 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, X } from "lucide-react";
 import OpeningMoveComposer from "./OpeningMoveComposer";
 
-export default function MatchModal({ isOpen, matchedProfile, onClose, onChat }) {
+export default function MatchModal({ matchedProfile, onChat }) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showComposer, setShowComposer] = useState(false);
+  const isOpen = searchParams.get("match") === "true";
+
+  const handleClose = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("match");
+    setSearchParams(next, { replace: true });
+  };
 
   const handleSend = (message) => {
     setShowComposer(false);
-    onChat(message);
+    handleClose();
+    onChat?.(message);
   };
 
   return (
@@ -30,7 +40,10 @@ export default function MatchModal({ isOpen, matchedProfile, onClose, onChat }) 
               className="relative text-center px-8 py-10"
             >
               {/* Close */}
-              <button onClick={onClose} className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+              <button
+                onClick={handleClose}
+                className="absolute top-2 right-2 w-11 h-11 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground"
+              >
                 <X className="w-6 h-6" />
               </button>
 
@@ -70,7 +83,7 @@ export default function MatchModal({ isOpen, matchedProfile, onClose, onChat }) 
                   Send Opening Move 🔥
                 </Button>
                 <Button
-                  onClick={onClose}
+                  onClick={handleClose}
                   variant="outline"
                   className="border-border text-foreground rounded-full px-6 py-3"
                 >

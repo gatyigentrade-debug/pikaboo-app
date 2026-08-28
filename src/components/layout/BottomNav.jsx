@@ -10,27 +10,30 @@ const navItems = [
   { path: "/profile", icon: User, label: "Profile" },
 ];
 
-export default function BottomNav({ unreadMatches = 0 }) {
+export default function BottomNav({ unreadMatches = 0, lastTabRoutes = {} }) {
   const location = useLocation();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-card/90 backdrop-blur-xl border-t border-border/50">
       <div className="max-w-lg mx-auto flex items-center justify-around px-2 py-2">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive =
+            location.pathname === item.path ||
+            (item.path !== "/" && location.pathname.startsWith(item.path + "/"));
           const Icon = item.icon;
           const showBadge = item.path === "/chat" && unreadMatches > 0;
+          const target = lastTabRoutes[item.path] || item.path;
           return (
             <Link
               key={item.path}
-              to={item.path}
+              to={target}
               onClick={(e) => {
                 if (isActive) {
                   e.preventDefault();
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
-              className="relative flex flex-col items-center gap-0.5 px-3 py-1.5"
+              className="relative flex flex-col items-center justify-center gap-0.5 px-3 py-2 min-w-[44px] min-h-[44px]"
             >
               {isActive && (
                 <motion.div
@@ -46,13 +49,13 @@ export default function BottomNav({ unreadMatches = 0 }) {
                   }`}
                 />
                 {showBadge && (
-                  <div className="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-gold text-black text-[11px] font-bold flex items-center justify-center">
+                  <div className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-gold text-black text-xs font-bold flex items-center justify-center">
                     {unreadMatches > 9 ? "9+" : unreadMatches}
                   </div>
                 )}
               </div>
               <span
-                className={`text-[11px] font-body transition-colors ${
+                className={`text-xs font-body transition-colors ${
                   isActive
                     ? "text-gold font-semibold"
                     : "text-muted-foreground"

@@ -29,6 +29,13 @@ const AuthenticatedApp = () => {
 
   useEffect(() => {
     const onBackButton = (e) => {
+      // If an overlay is open via URL search params (match/gold/shop/filters/etc.),
+      // back should dismiss it rather than exit the app or switch tabs.
+      if (window.location.search) {
+        if (e && e.preventDefault) e.preventDefault();
+        navigate(-1);
+        return;
+      }
       if (location.pathname === "/") {
         if (window.navigator?.app?.exitApp) window.navigator.app.exitApp();
       } else if (ROOT_TABS.includes(location.pathname)) {

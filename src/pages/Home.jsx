@@ -9,7 +9,7 @@ import MatchModal from "@/components/swipe/MatchModal";
 import GoldUpgradeModal from "@/components/gold/GoldUpgradeModal";
 import WhoLikedYou from "@/components/gold/WhoLikedYou";
 import { useGold } from "@/hooks/useGold";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -17,15 +17,31 @@ const FREE_SWIPE_LIMIT = 20;
 
 export default function Home() {
   const [currentIdx, setCurrentIdx] = useState(0);
-  const [showMatch, setShowMatch] = useState(false);
   const [matchedProfile, setMatchedProfile] = useState(null);
-  const [showGold, setShowGold] = useState(false);
   const [showWhoLiked, setShowWhoLiked] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const { isGold, activateGold } = useGold();
   const topCardRef = useRef(null);
+
+  // URL-driven modals: opening pushes a history entry (so the hardware back
+  // button dismisses the modal naturally); closing replaces it away.
+  const openModal = useCallback((key) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set(key, "true");
+      return next;
+    });
+  }, [setSearchParams]);
+  const closeModal = useCallback((key) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete(key);
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ["profiles"],
@@ -41,7 +57,7 @@ export default function Home() {
     if (!currentProfile) return;
 
     if (outOfSwipes) {
-      setShowGold(true);
+      openModal("gold");
       return;
     }
 
@@ -61,7 +77,7 @@ export default function Home() {
         }
         setMatchedProfile(currentProfile);
         // Delay the match celebration so the card visibly advances to the next profile first
-        setTimeout(() => setShowMatch(true), 450);
+        setTimeout(() => openModal("match"), 450);
       }
     }
 
@@ -72,20 +88,20 @@ export default function Home() {
 
     setSwipeCount((c) => c + 1);
     setCurrentIdx((i) => Math.min(i + 1, profiles.length));
-  }, [currentProfile, currentIdx, profiles.length, outOfSwipes, user]);
+  }, [currentProfile, currentIdx, profiles.length, outOfSwipes, user, openModal]);
 
   const handleAction = useCallback((actionId) => {
-    if (actionId === "boost") { setShowGold(true); return; }
+    if (actionId === "boost") { openModal("gold"); return; }
     if ((actionId === "like" || actionId === "dislike" || actionId === "super_like") && topCardRef.current) {
       topCardRef.current.flyOff(actionId === "dislike" ? "dislike" : "like", actionId);
     } else {
       handleSwipe(actionId);
     }
-  }, [handleSwipe]);
+  }, [handleSwipe, openModal]);
 
   const handleUpgrade = async (plan) => {
     await activateGold();
-    setShowGold(false);
+    closeModal("gold");
     toast.success("Welcome to PikaBoo Gold! ✨", { description: `${plan.label} plan activated.` });
   };
 
@@ -119,8 +135,8 @@ export default function Home() {
             PikaBoo
           </h1>
           {isGold && (
-            <span className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-[10px] font-heading font-black">
-              <Crown className="w-2.5 h-2.5" /> GOLD
+            <span className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-xs font-heading font-black">
+              <Crown className="w-3 h-3" /> GOLD
             </span>
           )}
         </div>
@@ -128,7 +144,7 @@ export default function Home() {
           {/* Who Liked You button */}
           <button
             onClick={() => setShowWhoLiked((v) => !v)}
-            className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors ${
               showWhoLiked ? "bg-yellow-400 text-black" : "bg-secondary text-yellow-400"
             }`}
           >
@@ -139,15 +155,15 @@ export default function Home() {
           </button>
           <button
             onClick={() => navigate("/explore?filters=open")}
-            className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
-            <SlidersHorizontal className="w-4 h-4" />
+            <SlidersHorizontal className="w-5 h-5" />
           </button>
           <button
-            onClick={() => setShowGold(true)}
-            className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => openModal("gold")}
+            className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Flame className="w-4 h-4" />
+            <Flame className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -165,7 +181,7 @@ export default function Home() {
               <WhoLikedYou
                 isGold={isGold}
                 myProfileId={null}
-                onUpgrade={() => { setShowWhoLiked(false); setShowGold(true); }}
+                onUpgrade={() => { setShowWhoLiked(false); openModal("gold"); }}
               />
             </div>
           </motion.div>
@@ -178,7 +194,7 @@ export default function Home() {
           <p className="text-yellow-400 text-xs font-heading font-semibold">
             {swipesLeft} swipe{swipesLeft !== 1 ? "s" : ""} left today
           </p>
-          <button onClick={() => setShowGold(true)} className="text-xs font-heading font-black text-yellow-400 underline underline-offset-2">
+          <button onClick={() => openModal("gold")} className="text-xs font-heading font-black text-yellow-400 underline underline-offset-2">
             Get Gold
           </button>
         </div>
@@ -196,7 +212,7 @@ export default function Home() {
               You've used your {FREE_SWIPE_LIMIT} free swipes for today.
             </p>
             <button
-              onClick={() => setShowGold(true)}
+              onClick={() => openModal("gold")}
               className="px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-heading font-black shadow-lg shadow-yellow-400/20"
             >
               ✨ Get Unlimited Swipes
@@ -235,16 +251,12 @@ export default function Home() {
 
       {/* Match modal */}
       <MatchModal
-        isOpen={showMatch}
         matchedProfile={matchedProfile}
-        onClose={() => setShowMatch(false)}
-        onChat={() => { setShowMatch(false); navigate("/matches"); }}
+        onChat={() => navigate("/matches")}
       />
 
       {/* Gold upgrade modal */}
       <GoldUpgradeModal
-        isOpen={showGold}
-        onClose={() => setShowGold(false)}
         onUpgrade={handleUpgrade}
       />
     </div>

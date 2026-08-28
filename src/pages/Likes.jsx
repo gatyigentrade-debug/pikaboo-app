@@ -25,7 +25,7 @@ export default function Likes() {
     <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
-        <Link to="/matches" className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
+        <Link to="/matches" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </Link>
         <h1 className="text-2xl font-heading font-bold text-foreground">Likes</h1>
@@ -55,7 +55,7 @@ export default function Likes() {
 
       {/* Filter pills */}
       <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-hide">
-        <button className="flex-shrink-0 w-9 h-9 rounded-full border border-border flex items-center justify-center">
+        <button className="flex-shrink-0 w-11 h-11 rounded-full border border-border flex items-center justify-center">
           <SlidersHorizontal className="w-4 h-4 text-foreground" />
         </button>
         {FILTERS.map((f) => (
@@ -101,7 +101,7 @@ export default function Likes() {
             {card.active && (
               <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="text-[9px] text-green-400 font-body font-semibold">Recently Active</span>
+                <span className="text-xs text-green-400 font-body font-semibold">Recently Active</span>
               </div>
             )}
 
@@ -114,7 +114,7 @@ export default function Likes() {
 
             {/* Bottom info */}
             <div className="absolute bottom-2 left-2 right-2">
-              <p className="text-[10px] text-green-400 font-body font-semibold">8 · Recently Active</p>
+              <p className="text-xs text-green-400 font-body font-semibold">8 · Recently Active</p>
             </div>
           </motion.div>
         ))}
