@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ReportBlockSheet from "@/components/matches/ReportBlockSheet";
+import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 
 const QUICK_REPLIES = ["😍 Lekker!", "🔥 Howzit?", "Let's braai! 🥩", "Tell me more 👀", "You're funny 😂"];
 
@@ -35,10 +37,13 @@ const buildSample = (name) => [
 ];
 
 export default function ChatView({ match, onBack }) {
+  const { user } = useAuth();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState(() => buildSample(match.matched_name));
+  const [entityMessages, setEntityMessages] = useState([]);
+  const [reactions, setReactions] = useState({});
+  const [recipientId, setRecipientId] = useState(null);
   const [showEmoji, setShowEmoji] = useState(false);
-  const [showIcebreakers, setShowIcebreakers] = useState(messages.length === 0);
+  const [showIcebreakers, setShowIcebreakers] = useState(true);
   const [reactionTarget, setReactionTarget] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
@@ -46,43 +51,96 @@ export default function ChatView({ match, onBack }) {
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
+  const formatTime = (dateStr) => {
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit" });
+  };
+
+  // Derive UI messages from persisted entity records
+  const messages = entityMessages.map((m) => ({
+    ...m,
+    isMe: m.sender_id === user?.id,
+    time: formatTime(m.created_date),
+    reaction: reactions[m.id] || null,
+  }));
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [entityMessages]);
 
-  // Simulate typing indicator
+  // Resolve recipient, load existing messages, and subscribe to new ones
   useEffect(() => {
-    const t = setTimeout(() => setIsTyping(true), 1200);
-    const t2 = setTimeout(() => setIsTyping(false), 4000);
-    return () => { clearTimeout(t); clearTimeout(t2); };
-  }, []);
-
-  const handleSend = (text = message) => {
-    if (!text.trim()) return;
-    const newMsg = {
-      id: Date.now(),
-      sender: "me",
-      text: text.trim(),
-      time: makeTime(0),
-      read: false,
-      reaction: null,
+    let unsubscribe = () => {};
+    const init = async () => {
+      // Determine the recipient's user ID
+      try {
+        if (match.user_profile_id && user?.id === match.user_profile_id) {
+          const profile = await base44.entities.DatingProfile.get(match.matched_profile_id);
+          setRecipientId(profile?.created_by_id || null);
+        } else {
+          setRecipientId(match.user_profile_id || null);
+        }
+      } catch (e) {
+        setRecipientId(match.user_profile_id || null);
+      }
+      // Load existing messages for this match
+      try {
+        const existing = await base44.entities.Message.filter({ match_id: match.id }, 'created_date');
+        setEntityMessages(existing);
+      } catch (e) {
+        console.error("Failed to load messages:", e);
+      }
+      // Subscribe to real-time message updates
+      try {
+        const unsub = base44.entities.Message.subscribe((event) => {
+          if (event.data?.match_id !== match.id) return;
+          if (event.type === "create") {
+            setEntityMessages((prev) => [...prev, event.data]);
+          } else if (event.type === "update") {
+            setEntityMessages((prev) => prev.map((m) => (m.id === event.data.id ? event.data : m)));
+          } else if (event.type === "delete") {
+            setEntityMessages((prev) => prev.filter((m) => m.id !== event.data.id));
+          }
+        });
+        if (typeof unsub === "function") unsubscribe = unsub;
+      } catch (e) {
+        // realtime not critical
+      }
     };
-    setMessages((prev) => [...prev, newMsg]);
+    init();
+    return () => unsubscribe();
+  }, [match.id]);
+
+  const handleSend = async (text = message) => {
+    if (!text.trim() || !recipientId || !user?.id) return;
+    const textTrimmed = text.trim();
     setMessage("");
     setShowEmoji(false);
     setShowIcebreakers(false);
-    // Simulate read after 1.5s
-    setTimeout(() => {
-      setMessages((prev) =>
-        prev.map((m) => (m.id === newMsg.id ? { ...m, read: true } : m))
-      );
-    }, 1500);
+    try {
+      const created = await base44.entities.Message.create({
+        match_id: match.id,
+        sender_id: user.id,
+        recipient_id: recipientId,
+        text: textTrimmed,
+        read: false,
+      });
+      setEntityMessages((prev) => [...prev, created]);
+      // Update the match's last message info for the chat list + in-app notifications
+      base44.entities.Match.update(match.id, {
+        last_message: textTrimmed,
+        last_message_time: new Date().toISOString(),
+      }).catch(() => {});
+    } catch (e) {
+      console.error("Failed to send message:", e);
+    }
   };
 
   const handleReaction = (msgId, emoji) => {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === msgId ? { ...m, reaction: m.reaction === emoji ? null : emoji } : m))
-    );
+    setReactions((prev) => ({
+      ...prev,
+      [msgId]: prev[msgId] === emoji ? null : emoji,
+    }));
     setReactionTarget(null);
   };
 
@@ -181,8 +239,8 @@ export default function ChatView({ match, onBack }) {
 
         <AnimatePresence initial={false}>
           {messages.map((msg, idx) => {
-            const isMe = msg.sender === "me";
-            const showAvatar = !isMe && (idx === 0 || messages[idx - 1].sender === "me");
+            const isMe = msg.isMe;
+            const showAvatar = !isMe && (idx === 0 || messages[idx - 1].isMe);
             return (
               <motion.div
                 key={msg.id}
