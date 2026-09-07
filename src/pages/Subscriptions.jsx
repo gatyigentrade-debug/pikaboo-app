@@ -157,6 +157,14 @@ export default function Subscriptions() {
     }
   };
 
+  const handleNativePremium = () => {
+    if (window.PikaBooNative?.buyProduct) {
+      window.PikaBooNative.buyProduct("pikaboo_premium_monthly");
+    } else {
+      setError("Native billing is only available in the PikaBoo app.");
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-background flex flex-col">
       {/* Header */}
@@ -253,6 +261,15 @@ export default function Subscriptions() {
               Subscribe to VIP — {PLANS.find((p) => p.id === selectedPlan).price}
             </>
           )}
+        </button>
+
+        {/* Native Premium upgrade */}
+        <button
+          onClick={handleNativePremium}
+          className="w-full h-14 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 text-white font-heading font-black text-base shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+        >
+          <Zap className="w-5 h-5" />
+          Upgrade to Premium
         </button>
 
         <p className="text-center text-xs text-muted-foreground font-body pb-4">
