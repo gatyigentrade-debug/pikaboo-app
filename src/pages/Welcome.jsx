@@ -35,7 +35,7 @@ export default function Welcome() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="text-center mt-10 mb-8">
+          className="text-center mt-6 mb-8">
           <p className="text-sm font-body">
             <span style={{ color: "#FFFFFF" }}>Real people. </span>
             <span style={{ color: "#D4AF37", fontWeight: 700 }}>Real connections.</span>
