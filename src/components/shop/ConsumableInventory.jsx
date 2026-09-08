@@ -63,30 +63,35 @@ export default function ConsumableInventory() {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-2 mb-3">
-      {items.map((it) => {
-        const Icon = it.icon;
-        return (
-          <div
-            key={it.key}
-            className="rounded-xl bg-secondary/40 border border-border/40 p-2 flex flex-col items-center justify-center text-center min-h-[64px]"
-          >
-            <div className={`w-7 h-7 rounded-full ${it.bg} flex items-center justify-center mb-1`}>
-              <Icon className={`w-3.5 h-3.5 ${it.color}`} />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground leading-none mb-0.5">
-              {it.label}
-            </span>
-            <span
-              className={`text-xs font-heading font-bold leading-tight ${
-                it.active ? it.color : "text-foreground"
-              }`}
+    <div className="mb-4 rounded-2xl border border-gold/30 bg-secondary/60 p-3">
+      <p className="text-[11px] font-heading font-bold text-gold uppercase tracking-wider mb-2">
+        Your Power-Ups
+      </p>
+      <div className="grid grid-cols-4 gap-2">
+        {items.map((it) => {
+          const Icon = it.icon;
+          return (
+            <div
+              key={it.key}
+              className="rounded-xl bg-background/60 border border-border/60 p-2 flex flex-col items-center justify-center text-center min-h-[68px]"
             >
-              {it.value}
-            </span>
-          </div>
-        );
-      })}
+              <div className={`w-8 h-8 rounded-full ${it.bg} flex items-center justify-center mb-1`}>
+                <Icon className={`w-4 h-4 ${it.color}`} />
+              </div>
+              <span className="text-[10px] font-body text-muted-foreground leading-none mb-0.5">
+                {it.label}
+              </span>
+              <span
+                className={`text-sm font-heading font-bold leading-tight ${
+                  it.active ? it.color : "text-foreground"
+                }`}
+              >
+                {it.value}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
