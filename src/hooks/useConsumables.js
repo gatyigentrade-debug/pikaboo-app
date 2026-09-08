@@ -105,8 +105,12 @@ export function consumeUnblur() {
 if (typeof window !== "undefined" && !window.__pikabooConsumablesInit) {
   window.__pikabooConsumablesInit = true;
   window.addEventListener("pikaboo:purchase-success", (e) => {
-    const data = e?.detail || {};
-    const productId = data.productId || data.product_id || data.sku || data.id;
+    const data = e?.detail;
+    // Native bridges may pass a string productId or an object with it.
+    const productId =
+      typeof data === "string"
+        ? data
+        : data?.productId || data?.product_id || data?.sku || data?.id;
     if (productId) grantConsumable(productId);
   });
 }
