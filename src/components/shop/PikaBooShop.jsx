@@ -51,7 +51,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
   const [plusCycle, setPlusCycle] = useState("week"); // "week" | "month"
 
   const plusPrice = plusCycle === "week" ? "R39/week" : "R99/month";
-  const plusProductId = plusCycle === "week" ? BILLING_PRODUCTS.PLUS_WEEKLY : BILLING_PRODUCTS.PLUS_MONTHLY;
+  const plusProductId = plusCycle === "week" ? BILLING_PRODUCTS.PLUS_WEEKLY : BILLING_PRODUCTS.PREMIUM_MONTHLY;
 
   return (
     <AnimatePresence>
@@ -171,7 +171,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       ))}
                     </ul>
                     <button
-                      onClick={() => { onClose(); navigate("/subscriptions"); }}
+                      onClick={() => triggerPurchase(plusProductId)}
                       className="w-full h-11 rounded-full bg-gold text-black font-heading font-bold"
                     >
                       Upgrade to Plus — {plusPrice}
@@ -196,7 +196,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
                       ))}
                     </ul>
                     <button
-                      onClick={() => { onClose(); navigate("/subscriptions"); }}
+                      onClick={() => triggerPurchase(BILLING_PRODUCTS.GOLD_MONTHLY)}
                       className="w-full h-11 rounded-full bg-amber text-black font-heading font-bold"
                     >
                       Upgrade to Gold — R199/month

@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Crown, Check, Loader2, ArrowLeft, Zap, Eye, Heart, RotateCcw, Star } from "lucide-react";
 import { base44 } from "@/api/base44Client";
-import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
 import VipSuccessModal from "@/components/payment/VipSuccessModal";
 
 const PLANS = [
-  { id: "weekly", label: "Weekly VIP", price: "R49", amount: 4900, per: "/ week", popular: false },
-  { id: "monthly", label: "Monthly VIP", price: "R149", amount: 14900, per: "/ month", popular: true, badge: "Most Popular" },
-  { id: "quarterly", label: "3-Month Premium", price: "R349", amount: 34900, per: "/ 3 months", popular: false, badge: "Best Value" },
+  { id: "plus_weekly", label: "PikaBoo Plus", price: "R39", amount: 3900, per: "/ week", productId: "pikaboo_plus_weekly", popular: false },
+  { id: "premium_monthly", label: "PikaBoo Premium", price: "R99", amount: 9900, per: "/ month", productId: "pikaboo_premium_monthly", popular: true, badge: "Most Popular" },
+  { id: "gold_monthly", label: "PikaBoo Gold", price: "R199", amount: 19900, per: "/ month", productId: "pikaboo_gold_monthly", popular: false, badge: "Best Value" },
 ];
 
 const PERKS = [
@@ -23,16 +22,9 @@ const PERKS = [
 const genRef = (planId) =>
   `pikaboo_${planId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-// Map subscription plans to native Google Play Billing product IDs
-const PRODUCT_MAP = {
-  weekly: BILLING_PRODUCTS.PLUS_WEEKLY,
-  monthly: BILLING_PRODUCTS.PLUS_MONTHLY,
-  quarterly: BILLING_PRODUCTS.GOLD_MONTHLY,
-};
-
 export default function Subscriptions() {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState("monthly");
+  const [selectedPlan, setSelectedPlan] = useState("premium_monthly");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -72,24 +64,10 @@ export default function Subscriptions() {
     const plan = PLANS.find((p) => p.id === selectedPlan);
 
     // Native Android (Google Play Billing) flow
-    if (window.AndroidBilling?.launchPurchaseFlow) {
+    if (window.PikaBooNative?.buyProduct) {
+      setError("");
       setLoading(true);
-      try {
-        const result = await triggerPurchase(PRODUCT_MAP[selectedPlan]);
-        if (result?.success) {
-          setShowSuccess(true);
-          setTimeout(() => {
-            setShowSuccess(false);
-            navigate("/discover");
-          }, 2600);
-        } else {
-          setError(result?.error?.message || "Purchase was not completed.");
-        }
-      } catch (e) {
-        setError(e.message || "Purchase failed. Please try again.");
-      } finally {
-        setLoading(false);
-      }
+      window.PikaBooNative.buyProduct(plan.productId);
       return;
     }
 
@@ -154,16 +132,6 @@ export default function Subscriptions() {
     } catch (e) {
       setError(e.message || "Failed to start payment");
       setLoading(false);
-    }
-  };
-
-  const handleNativePremium = () => {
-    if (window.PikaBooNative?.buyProduct) {
-      setError("");
-      setLoading(true);
-      window.PikaBooNative.buyProduct("pikaboo_premium_monthly");
-    } else {
-      setError("Native billing is only available in the PikaBoo app.");
     }
   };
 
@@ -285,15 +253,6 @@ export default function Subscriptions() {
               Subscribe to VIP — {PLANS.find((p) => p.id === selectedPlan).price}
             </>
           )}
-        </button>
-
-        {/* Native Premium upgrade */}
-        <button
-          onClick={handleNativePremium}
-          className="w-full h-14 rounded-full bg-gradient-to-r from-violet-500 to-purple-600 text-white font-heading font-black text-base shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2 active:scale-95 transition-transform"
-        >
-          <Zap className="w-5 h-5" />
-          Upgrade to Premium
         </button>
 
         <p className="text-center text-xs text-muted-foreground font-body pb-4">

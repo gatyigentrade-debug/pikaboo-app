@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Star, Zap, Eye, Heart, RotateCcw, Crown } from "lucide-react";
@@ -41,13 +42,14 @@ const PERKS = [
 ];
 
 const PLANS = [
-  { id: "1m", label: "1 Month", price: "R149", per: "/mo", popular: false },
-  { id: "3m", label: "3 Months", price: "R99", per: "/mo", badge: "Save 33%", popular: true },
-  { id: "6m", label: "6 Months", price: "R79", per: "/mo", badge: "Best Value", popular: false },
+  { id: "plus_weekly", label: "Plus", price: "R39", per: "/week", productId: "pikaboo_plus_weekly", popular: false },
+  { id: "premium_monthly", label: "Premium", price: "R99", per: "/mo", productId: "pikaboo_premium_monthly", popular: true, badge: "Most Popular" },
+  { id: "gold_monthly", label: "Gold", price: "R199", per: "/mo", productId: "pikaboo_gold_monthly", badge: "Best Value", popular: false },
 ];
 
 export default function GoldUpgradeModal({ onUpgrade }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedPlan, setSelectedPlan] = useState(PLANS[1]);
   const isOpen = searchParams.get("gold") === "true";
 
   const handleClose = () => {
@@ -115,9 +117,9 @@ export default function GoldUpgradeModal({ onUpgrade }) {
                 {PLANS.map((plan) => (
                   <button
                     key={plan.id}
-                    onClick={() => onUpgrade?.(plan)}
+                    onClick={() => setSelectedPlan(plan)}
                     className={`relative rounded-2xl border-2 p-3 text-center transition-all ${
-                      plan.popular
+                      selectedPlan.id === plan.id
                         ? "border-yellow-400 bg-yellow-400/10"
                         : "border-border bg-secondary hover:border-yellow-400/50"
                     }`}
@@ -136,10 +138,16 @@ export default function GoldUpgradeModal({ onUpgrade }) {
 
               {/* CTA */}
               <button
-                onClick={() => onUpgrade?.(PLANS[1])}
+                onClick={() => {
+                  if (window.PikaBooNative?.buyProduct) {
+                    window.PikaBooNative.buyProduct(selectedPlan.productId);
+                  } else {
+                    onUpgrade?.(selectedPlan);
+                  }
+                }}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 text-black font-heading font-black text-base shadow-lg shadow-yellow-500/30 hover:opacity-90 transition-opacity"
               >
-                ✨ Get PikaBoo Gold
+                ✨ Get {selectedPlan.label} — {selectedPlan.price}{selectedPlan.per}
               </button>
 
               <p className="text-center text-xs text-muted-foreground font-body">

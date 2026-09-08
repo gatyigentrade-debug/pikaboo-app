@@ -2,13 +2,14 @@ import { toast } from "sonner";
 
 // Google Play Billing Product IDs
 export const BILLING_PRODUCTS = {
+  // Subscriptions
   PLUS_WEEKLY: "pikaboo_plus_weekly",
-  PLUS_MONTHLY: "pikaboo_plus_monthly",
+  PREMIUM_MONTHLY: "pikaboo_premium_monthly",
   GOLD_MONTHLY: "pikaboo_gold_monthly",
-  // Power-ups (consumable one-time purchases)
+  // Consumable power-ups (one-time purchases)
   BOOST: "pikaboo_boost_friday",
   DRINK: "pikaboo_drink_3pack",
-  UNBLUR: "pikaboo_unblur_single",
+  UNBLUR: "pikaboo_unblur_instant",
   SUPER_LIKES_5: "pikaboo_superlikes_5",
   SUPER_LIKES_20: "pikaboo_superlikes_20",
   SPOTLIGHT: "pikaboo_spotlight_24h",
@@ -20,8 +21,9 @@ export const BILLING_PRODUCTS = {
  */
 export async function triggerPurchase(productId) {
   try {
-    if (window.AndroidBilling?.launchPurchaseFlow) {
-      return await window.AndroidBilling.launchPurchaseFlow(productId);
+    if (window.PikaBooNative?.buyProduct) {
+      window.PikaBooNative.buyProduct(productId);
+      return { success: true, productId };
     }
     // Web fallback — simulate billing
     toast.success("Purchase initiated", {
