@@ -81,7 +81,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
 
           {/* Photo indicators */}
           {photos.length > 1 && (
-            <div className="absolute top-4 left-4 right-4 flex gap-1.5 z-20">
+            <div className="absolute top-4 left-4 right-4 pr-10 flex gap-1.5 z-20">
               {photos.map((_, i) => (
                 <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i === imgIdx ? "bg-white" : "bg-white/30"}`} />
               ))}
@@ -105,13 +105,13 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
           </motion.div>
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
           {/* Auto-expanding bio + details (inline, smooth) */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-            <div className="flex items-center gap-2">
-              <h2 className="text-3xl font-heading font-bold text-white drop-shadow-lg">{profile.name}</h2>
-              <span className="text-2xl font-heading font-light text-white/80 drop-shadow-lg">{profile.age}</span>
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white drop-shadow-lg leading-tight">{profile.name}</h2>
+              <span className="text-xl sm:text-2xl font-heading font-light text-white/80 drop-shadow-lg leading-tight">{profile.age}</span>
               {profile.is_verified && (
                 <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg" style={{boxShadow: '0 0 8px rgba(59,130,246,0.6)'}}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -121,10 +121,10 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
               )}
             </div>
 
-            <div className="flex items-center gap-1.5 text-white/80 text-sm mt-1 drop-shadow-lg">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>{profile.city}</span>
-              {profile.distance_km && <span className="text-white/50">· {profile.distance_km} km away</span>}
+            <div className="flex items-center gap-1.5 text-white/80 text-xs sm:text-sm mt-1 drop-shadow-lg">
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">{profile.city}</span>
+              {profile.distance_km && <span className="text-white/50 flex-shrink-0">· {profile.distance_km} km away</span>}
             </div>
 
             {/* Smoothly expanding details */}
