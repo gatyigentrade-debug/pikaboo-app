@@ -40,22 +40,24 @@ export default function ConsumableInventory() {
   const spotlightRemaining = spotlightActive ? new Date(spotlightActiveUntil).getTime() - now : 0;
 
   const items = [
-    { key: "super", icon: Heart, label: "Super Likes", value: String(superLikes), color: "text-pink-400", bg: "bg-pink-500/10" },
-    { key: "unblur", icon: Eye, label: "Unblurs", value: String(unblurs), color: "text-teal-400", bg: "bg-teal-500/10" },
+    { key: "super", icon: Heart, label: "Super Likes", value: String(superLikes), count: superLikes, color: "text-pink-400", bg: "bg-pink-500/10" },
+    { key: "unblur", icon: Eye, label: "Instant Unblurs", value: String(unblurs), count: unblurs, color: "text-teal-400", bg: "bg-teal-500/10" },
     {
       key: "boost",
       icon: Zap,
-      label: "Boost",
-      value: boostActive ? formatCountdown(boostRemaining) : "—",
+      label: "Friday Night Boost",
+      value: boostActive ? formatCountdown(boostRemaining) : "Inactive",
+      count: 0,
       color: "text-gold",
-      bg: "bg-gold/10",
+      bg: "bg-gold/15",
       active: boostActive,
     },
     {
       key: "spotlight",
       icon: Sparkles,
-      label: "Spotlight",
-      value: spotlightActive ? formatCountdown(spotlightRemaining) : "—",
+      label: "Sunday Spotlight",
+      value: spotlightActive ? formatCountdown(spotlightRemaining) : "Inactive",
+      count: 0,
       color: "text-yellow-400",
       bg: "bg-yellow-400/10",
       active: spotlightActive,
@@ -63,35 +65,40 @@ export default function ConsumableInventory() {
   ];
 
   return (
-    <div className="mb-4 rounded-2xl border border-gold/30 bg-secondary/60 p-3">
-      <p className="text-[11px] font-heading font-bold text-gold uppercase tracking-wider mb-2">
+    <div className="mb-4 space-y-2">
+      <p className="text-[11px] font-heading font-bold text-gold uppercase tracking-wider">
         Your Power-Ups
       </p>
-      <div className="grid grid-cols-4 gap-2">
-        {items.map((it) => {
-          const Icon = it.icon;
-          return (
-            <div
-              key={it.key}
-              className="rounded-xl bg-background/60 border border-border/60 p-2 flex flex-col items-center justify-center text-center min-h-[68px]"
-            >
-              <div className={`w-8 h-8 rounded-full ${it.bg} flex items-center justify-center mb-1`}>
-                <Icon className={`w-4 h-4 ${it.color}`} />
-              </div>
-              <span className="text-[10px] font-body text-muted-foreground leading-none mb-0.5">
-                {it.label}
-              </span>
-              <span
-                className={`text-sm font-heading font-bold leading-tight ${
-                  it.active ? it.color : "text-foreground"
-                }`}
-              >
-                {it.value}
-              </span>
+      {items.map((it) => {
+        const Icon = it.icon;
+        const owned = it.count > 0;
+        const statusPill = it.active
+          ? "bg-gold/15 border border-gold/40 text-gold"
+          : owned
+            ? "bg-foreground/10 border border-border/60 text-foreground"
+            : "bg-secondary border border-border/40 text-muted-foreground";
+        return (
+          <div
+            key={it.key}
+            className="flex items-center gap-3 rounded-2xl bg-secondary/30 border border-border/40 p-3"
+          >
+            <div className={`w-11 h-11 rounded-full ${it.bg} flex items-center justify-center flex-shrink-0`}>
+              <Icon className={`w-5 h-5 ${it.color}`} />
             </div>
-          );
-        })}
-      </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-heading font-bold text-foreground">{it.label}</p>
+              <p className="text-xs text-muted-foreground font-body mt-0.5">
+                {it.active ? "Active now" : owned ? "Ready to use" : "Not owned yet"}
+              </p>
+            </div>
+            <span
+              className={`flex-shrink-0 min-h-[36px] px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center justify-center ${statusPill}`}
+            >
+              {it.value}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
