@@ -140,6 +140,24 @@ export default function Profile() {
           </div>
         </div>
 
+        {/* Verification */}
+        <VerificationSection onVerified={setIsVerified} />
+
+        {/* PikaBoo Shop */}
+        <button
+          onClick={() => openSheet("shop")}
+          className="w-full rounded-2xl border border-gold/30 bg-secondary/30 p-4 flex items-center gap-3 hover:bg-secondary/50 transition-colors"
+        >
+          <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
+            <ShoppingBag className="w-5 h-5 text-gold" />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-sm font-heading font-bold text-foreground">PikaBoo Shop 🛍️</p>
+            <p className="text-xs text-muted-foreground font-body">Plus · Gold · Boosts · Drink Tokens</p>
+          </div>
+          <ChevronRight className="w-5 h-5 text-muted-foreground" />
+        </button>
+
         {/* Safety & Settings */}
         <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
           <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
@@ -159,24 +177,6 @@ export default function Profile() {
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
-
-        {/* Verification */}
-        <VerificationSection onVerified={setIsVerified} />
-
-        {/* PikaBoo Shop */}
-        <button
-          onClick={() => openSheet("shop")}
-          className="w-full rounded-2xl border border-gold/30 bg-secondary/30 p-4 flex items-center gap-3 hover:bg-secondary/50 transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
-            <ShoppingBag className="w-5 h-5 text-gold" />
-          </div>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-heading font-bold text-foreground">PikaBoo Shop 🛍️</p>
-            <p className="text-xs text-muted-foreground font-body">Plus · Gold · Boosts · Drink Tokens</p>
-          </div>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
-        </button>
       </div>
 
       {/* Shop Modal */}
