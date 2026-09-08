@@ -45,7 +45,7 @@ export default function ConsumableInventory() {
     {
       key: "boost",
       icon: Zap,
-      label: "Friday Night Boost",
+      label: "Boost",
       value: boostActive ? formatCountdown(boostRemaining) : "Inactive",
       count: 0,
       color: "text-gold",
