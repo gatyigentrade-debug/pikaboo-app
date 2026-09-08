@@ -12,6 +12,16 @@ if (typeof window !== 'undefined') {
   window.Median = Median
   // Global flag so any component can conditionally render mobile-only features.
   window.isMedianApp = isMedianApp
+
+  // Native In-App Purchase callbacks — the Android bridge calls these after
+  // window.PikaBooNative.buyProduct() completes. They dispatch DOM events so
+  // any component can react without coupling to the native layer.
+  window.onPurchaseSuccess = function (data) {
+    window.dispatchEvent(new CustomEvent('pikaboo:purchase-success', { detail: data }))
+  }
+  window.onPurchaseError = function (error) {
+    window.dispatchEvent(new CustomEvent('pikaboo:purchase-error', { detail: error }))
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

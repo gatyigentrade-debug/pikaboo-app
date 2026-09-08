@@ -159,11 +159,35 @@ export default function Subscriptions() {
 
   const handleNativePremium = () => {
     if (window.PikaBooNative?.buyProduct) {
+      setError("");
+      setLoading(true);
       window.PikaBooNative.buyProduct("pikaboo_premium_monthly");
     } else {
       setError("Native billing is only available in the PikaBoo app.");
     }
   };
+
+  // React to native IAP callbacks dispatched from main.jsx
+  useEffect(() => {
+    const onSuccess = () => {
+      setLoading(false);
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate("/discover");
+      }, 2600);
+    };
+    const onError = (e) => {
+      setLoading(false);
+      setError(e?.detail?.message || e?.detail || "Purchase failed. Please try again.");
+    };
+    window.addEventListener("pikaboo:purchase-success", onSuccess);
+    window.addEventListener("pikaboo:purchase-error", onError);
+    return () => {
+      window.removeEventListener("pikaboo:purchase-success", onSuccess);
+      window.removeEventListener("pikaboo:purchase-error", onError);
+    };
+  }, [navigate]);
 
   return (
     <div className="min-h-screen w-full bg-background flex flex-col">
