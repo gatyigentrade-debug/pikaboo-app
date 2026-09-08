@@ -25,10 +25,12 @@ export async function triggerPurchase(productId) {
       window.PikaBooNative.buyProduct(productId);
       return { success: true, productId };
     }
-    // Web fallback — simulate billing
-    toast.success("Purchase initiated", {
-      description: `Product: ${productId}`,
-    });
+    // Web fallback — simulate a successful native purchase so consumables
+    // grant immediately in the preview (the native bridge calls
+    // window.onPurchaseSuccess, which dispatches the same event).
+    window.dispatchEvent(
+      new CustomEvent("pikaboo:purchase-success", { detail: { productId } })
+    );
     return { success: true, productId };
   } catch (error) {
     toast.error("Purchase failed", { description: error.message });

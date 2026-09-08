@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Zap, Eye, Wine, Star, Crown, Check, Heart, Sparkles } from "lucide-react";
 import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
+import ConsumableInventory from "@/components/shop/ConsumableInventory";
 
 const VENUES = ["Marble JHB", "Shimmy CPT", "The Rooftop", "Ocean Basket"];
 
@@ -209,6 +210,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
               <section>
                 <h3 className="text-base font-heading font-bold text-foreground">Power-Ups</h3>
                 <p className="text-xs text-muted-foreground font-body mb-3">One-time boosts, no subscription needed</p>
+                <ConsumableInventory />
                 <div className="space-y-3">
                   {POWER_UPS.map((item) => {
                     const Icon = item.icon;
