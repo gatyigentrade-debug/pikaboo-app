@@ -19,6 +19,7 @@ import Likes from '@/pages/Likes';
 import Welcome from '@/pages/Welcome';
 import ProfileDetail from '@/pages/ProfileDetail';
 import Subscriptions from '@/pages/Subscriptions';
+import Privacy from '@/pages/Privacy';
 
 const ROOT_TABS = ["/explore", "/matches", "/chat", "/profile"];
 
@@ -88,6 +89,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/welcome" element={<Welcome />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

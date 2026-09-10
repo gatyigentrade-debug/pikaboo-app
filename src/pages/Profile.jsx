@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck } from "lucide-react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
@@ -19,6 +19,7 @@ const myProfile = {
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [deleting, setDeleting] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
@@ -163,6 +164,19 @@ export default function Profile() {
           <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
             Safety & Settings
           </h3>
+          <button
+            onClick={() => navigate("/privacy")}
+            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors text-left mb-2"
+          >
+            <div className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
+              <Shield className="w-4 h-4 text-gold" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-heading font-bold text-foreground">Privacy Policy</p>
+              <p className="text-xs text-muted-foreground font-body">How we handle your data</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </button>
           <button
             onClick={() => openSheet("delete_confirm")}
             className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-destructive/10 transition-colors text-left"
