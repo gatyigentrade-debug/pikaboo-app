@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Apple, Phone, Heart, ArrowRight, Shield } from "lucide-react";
+import { Apple, Phone, Heart, ArrowRight } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import GoogleIcon from "@/components/GoogleIcon";
 
@@ -116,15 +116,6 @@ export default function Welcome() {
           style={{ color: "rgba(212,175,55,0.85)" }}>
           Already have an account? <span className="font-bold">Sign In</span> <ArrowRight className="w-3.5 h-3.5" />
         </motion.button>
-
-        {/* Privacy Policy link */}
-        <button
-          onClick={() => navigate("/privacy")}
-          className="mt-4 flex items-center gap-1.5 text-xs font-body active:scale-95 transition-transform"
-          style={{ color: "rgba(212,175,55,0.65)" }}>
-          <Shield className="w-3 h-3" />
-          Privacy Policy
-        </button>
       </div>
     </div>);
 }
