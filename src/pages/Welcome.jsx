@@ -116,6 +116,16 @@ export default function Welcome() {
           style={{ color: "rgba(212,175,55,0.85)" }}>
           Already have an account? <span className="font-bold">Sign In</span> <ArrowRight className="w-3.5 h-3.5" />
         </motion.button>
+
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          onClick={() => navigate("/privacy")}
+          className="mt-4 text-xs font-body active:scale-95 transition-transform"
+          style={{ color: "rgba(212,175,55,0.6)" }}>
+          Privacy Policy
+        </motion.button>
       </div>
     </div>);
 }
