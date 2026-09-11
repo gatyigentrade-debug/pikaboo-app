@@ -88,7 +88,7 @@ export default function Privacy() {
           </div>
           <div>
             <h1 className="text-lg font-heading font-bold text-foreground">Privacy Policy</h1>
-            <p className="text-xs text-muted-foreground font-body">Last updated: September 2026</p>
+            <p className="text-sm text-muted-foreground font-body">Last updated: September 2026</p>
           </div>
         </div>
 
@@ -104,7 +104,7 @@ export default function Privacy() {
             <h2 className="text-sm font-heading font-bold text-gold mb-2">{s.title}</h2>
             <ul className="space-y-1.5">
               {s.body.map((line, i) => (
-                <li key={i} className="text-xs text-foreground/80 font-body leading-relaxed flex gap-2">
+                <li key={i} className="text-sm text-foreground/80 font-body leading-relaxed flex gap-2">
                   <span className="text-gold/60 flex-shrink-0">•</span>
                   <span>{line}</span>
                 </li>

@@ -19,7 +19,7 @@ export default function MatchCard({ match, onClick }) {
           />
         </div>
         {match.unread_count > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
             {match.unread_count}
           </div>
         )}
@@ -32,19 +32,19 @@ export default function MatchCard({ match, onClick }) {
             {match.matched_name}
           </h3>
           {match.status === "pending" && (
-            <div className="flex items-center gap-1 text-amber text-[10px]">
+            <div className="flex items-center gap-1 text-amber text-sm">
               <Clock className="w-3 h-3" />
               <span>24h</span>
             </div>
           )}
         </div>
-        <p className="text-xs text-muted-foreground font-body truncate mt-0.5">
+        <p className="text-sm text-muted-foreground font-body truncate mt-0.5">
           {match.last_message || "Start the vibe! Say howzit 👋"}
         </p>
       </div>
 
       {/* Time */}
-      <span className="text-[10px] text-muted-foreground flex-shrink-0">
+      <span className="text-sm text-muted-foreground flex-shrink-0">
         {match.last_message_time
           ? new Date(match.last_message_time).toLocaleDateString("en-ZA", { day: "numeric", month: "short" })
           : "New"}

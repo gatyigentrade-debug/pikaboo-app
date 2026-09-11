@@ -161,7 +161,7 @@ export default function Subscriptions() {
     <div className="min-h-screen w-full bg-background flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-4 border-b border-border/30">
-        <button onClick={() => navigate(-1)} className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+        <button onClick={() => navigate(-1)} aria-label="Back" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>
         <h1 className="text-lg font-heading font-bold text-foreground">PikaBoo VIP</h1>

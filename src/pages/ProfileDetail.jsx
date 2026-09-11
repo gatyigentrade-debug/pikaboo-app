@@ -55,7 +55,8 @@ export default function ProfileDetail() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform"
+          aria-label="Back"
+          className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform"
         >
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </button>

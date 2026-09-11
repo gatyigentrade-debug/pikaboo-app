@@ -121,7 +121,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
               )}
             </div>
 
-            <div className="flex items-center gap-1.5 text-white/80 text-xs sm:text-sm mt-1 drop-shadow-lg">
+            <div className="flex items-center gap-1.5 text-white/80 text-sm sm:text-sm mt-1 drop-shadow-lg">
               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="truncate">{profile.city}</span>
               {profile.distance_km && <span className="text-white/50 flex-shrink-0">· {profile.distance_km} km away</span>}
@@ -150,12 +150,12 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
 
                     {/* Interest pills */}
                     <div className="flex gap-2 flex-wrap mb-3">
-                      {profile.home_language && <Badge className="bg-primary/20 text-primary border-primary/30 border font-body text-xs">{profile.home_language}</Badge>}
-                      {profile.braai_role && <Badge className="bg-amber/20 text-amber border-amber/30 border font-body text-xs">🔥 {profile.braai_role}</Badge>}
-                      {profile.spirit_animal && <Badge className="bg-violet/20 text-violet border-violet/30 border font-body text-xs">{profile.spirit_animal}</Badge>}
-                      {profile.sports_team && <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-xs">⚽ {profile.sports_team}</Badge>}
+                      {profile.home_language && <Badge className="bg-primary/20 text-primary border-primary/30 border font-body text-sm">{profile.home_language}</Badge>}
+                      {profile.braai_role && <Badge className="bg-amber/20 text-amber border-amber/30 border font-body text-sm">🔥 {profile.braai_role}</Badge>}
+                      {profile.spirit_animal && <Badge className="bg-violet/20 text-violet border-violet/30 border font-body text-sm">{profile.spirit_animal}</Badge>}
+                      {profile.sports_team && <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-sm">⚽ {profile.sports_team}</Badge>}
                       {profile.looking_for && (
-                        <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-xs">
+                        <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-sm">
                           {profile.looking_for === "relationship" ? "💍 Relationship" : profile.looking_for === "friendship" ? "🤝 Friendship" : profile.looking_for === "casual" ? "✌️ Casual" : "🤔 Not Sure"}
                         </Badge>
                       )}
@@ -168,8 +168,8 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">📍</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
-                              <p className="text-white/90 text-xs font-body truncate">{profile.favorite_kota_spot}</p>
+                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
+                              <p className="text-white/90 text-sm font-body truncate">{profile.favorite_kota_spot}</p>
                             </div>
                           </div>
                         )}
@@ -177,8 +177,8 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">❤️</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
-                              <p className="text-white/90 text-xs font-body truncate">{profile.cant_live_without}</p>
+                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
+                              <p className="text-white/90 text-sm font-body truncate">{profile.cant_live_without}</p>
                             </div>
                           </div>
                         )}
@@ -186,8 +186,8 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">🌅</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-[10px] font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
-                              <p className="text-white/90 text-xs font-body truncate">{profile.dream_date_location}</p>
+                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
+                              <p className="text-white/90 text-sm font-body truncate">{profile.dream_date_location}</p>
                             </div>
                           </div>
                         )}
@@ -201,7 +201,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                     {onMessage && (
                       <button
                         onClick={(e) => { e.stopPropagation(); onMessage(profile); }}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-heading font-semibold hover:bg-white/25 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-heading font-semibold hover:bg-white/25 transition-colors"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
                         Message {profile.name}
@@ -215,7 +215,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
             {/* Expand toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}
-              className="mt-2 flex items-center gap-1 text-white/70 text-xs font-heading font-semibold"
+              className="mt-2 flex items-center gap-1 text-white/70 text-sm font-heading font-semibold"
             >
               <ChevronDown className={`w-4 h-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
               {showDetails ? "Less" : "More about " + profile.name}

@@ -25,10 +25,10 @@ export default function Chat() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-heading font-bold text-foreground">Chat</h1>
           <div className="flex items-center gap-2">
-            <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
+            <button aria-label="Safety" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
               <Shield className="w-4 h-4" />
             </button>
-            <button className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
+            <button aria-label="Settings" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
               <Settings className="w-4 h-4" />
             </button>
           </div>
@@ -45,7 +45,7 @@ export default function Chat() {
             >
               <p className="text-2xl font-heading font-black text-gold">17</p>
               <p className="text-lg">🐝🐝</p>
-              <p className="text-[10px] text-muted-foreground font-body mt-1">Likes</p>
+              <p className="text-sm text-muted-foreground font-body mt-1">Likes</p>
             </Link>
             {/* User tiles */}
             {newMatches.map((m) => (
@@ -56,7 +56,7 @@ export default function Chat() {
                 style={{ backgroundColor: m.color }}
               >
                 <span className="text-3xl font-heading font-black text-white mb-1">{m.initial}</span>
-                <span className="text-[10px] text-white/70 font-body">{m.matched_name}</span>
+                <span className="text-sm text-white/70 font-body">{m.matched_name}</span>
               </button>
             ))}
           </div>
@@ -92,12 +92,12 @@ export default function Chat() {
                   <div className="flex items-center gap-2">
                     <h3 className="font-heading font-bold text-foreground text-sm">{msg.name}</h3>
                     {msg.likes_you && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-gold/20 text-gold text-[9px] font-heading font-bold">
+                      <span className="px-1.5 py-0.5 rounded-full bg-gold/20 text-gold text-sm font-heading font-bold">
                         LIKES YOU
                       </span>
                     )}
                   </div>
-                  <p className={`text-xs font-body truncate mt-0.5 flex items-center gap-1 ${
+                  <p className={`text-sm font-body truncate mt-0.5 flex items-center gap-1 ${
                     msg.is_active ? "text-yellow-400" : "text-muted-foreground"
                   }`}>
                     {msg.is_voice && <Mic className="w-3 h-3 flex-shrink-0" />}
@@ -107,9 +107,9 @@ export default function Chat() {
 
                 {/* Right side */}
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span className="text-[10px] text-muted-foreground font-body">{msg.time}</span>
+                  <span className="text-sm text-muted-foreground font-body">{msg.time}</span>
                   {msg.unread > 0 && (
-                    <div className="w-5 h-5 rounded-full bg-yellow-400 text-black text-[10px] font-bold flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-yellow-400 text-black text-sm font-bold flex items-center justify-center">
                       {msg.unread}
                     </div>
                   )}

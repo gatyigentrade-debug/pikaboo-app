@@ -3,23 +3,30 @@ import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider } from 'next-themes';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import ForgotPassword from '@/pages/ForgotPassword';
-import ResetPassword from '@/pages/ResetPassword';
 import AppLayout from '@/components/layout/AppLayout';
 import Chat from '@/pages/Chat';
 import Likes from '@/pages/Likes';
 import Welcome from '@/pages/Welcome';
-import ProfileDetail from '@/pages/ProfileDetail';
-import Subscriptions from '@/pages/Subscriptions';
-import Privacy from '@/pages/Privacy';
+
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const ForgotPassword = lazy(() => import('@/pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const ProfileDetail = lazy(() => import('@/pages/ProfileDetail'));
+const Subscriptions = lazy(() => import('@/pages/Subscriptions'));
+const Privacy = lazy(() => import('@/pages/Privacy'));
+
+const PageLoader = () => (
+  <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "#0A0A0C" }}>
+    <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const ROOT_TABS = ["/explore", "/matches", "/chat", "/profile"];
 
@@ -88,12 +95,12 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><Privacy /></Suspense>} />
       <Route path="/welcome" element={<Welcome />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/login" element={<Suspense fallback={<PageLoader />}><Login /></Suspense>} />
+      <Route path="/register" element={<Suspense fallback={<PageLoader />}><Register /></Suspense>} />
+      <Route path="/forgot-password" element={<Suspense fallback={<PageLoader />}><ForgotPassword /></Suspense>} />
+      <Route path="/reset-password" element={<Suspense fallback={<PageLoader />}><ResetPassword /></Suspense>} />
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/welcome" replace />} />}>
         <Route path="/" element={<AppLayout />} />
         <Route path="/explore" element={<AppLayout />} />
@@ -103,8 +110,8 @@ const AuthenticatedApp = () => {
         <Route path="/chat" element={<AppLayout />} />
         <Route path="/chat/:id" element={<AppLayout />} />
         <Route path="/likes" element={<AppLayout />} />
-        <Route path="/subscriptions" element={<Subscriptions />} />
-        <Route path="/profile/:id" element={<ProfileDetail />} />
+        <Route path="/subscriptions" element={<Suspense fallback={<PageLoader />}><Subscriptions /></Suspense>} />
+        <Route path="/profile/:id" element={<Suspense fallback={<PageLoader />}><ProfileDetail /></Suspense>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag } from "lucide-react";
+import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag, RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ReportBlockSheet from "@/components/matches/ReportBlockSheet";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import { toast } from "sonner";
 
 const QUICK_REPLIES = ["😍 Lekker!", "🔥 Howzit?", "Let's braai! 🥩", "Tell me more 👀", "You're funny 😂"];
 
@@ -95,7 +96,20 @@ export default function ChatView({ match, onBack }) {
         const unsub = base44.entities.Message.subscribe((event) => {
           if (event.data?.match_id !== match.id) return;
           if (event.type === "create") {
-            setEntityMessages((prev) => [...prev, event.data]);
+            setEntityMessages((prev) => {
+              // Dedupe: if this is the realtime echo of our own optimistic message, replace it
+              if (event.data?.sender_id === user?.id) {
+                const pendingIdx = prev.findIndex((m) => m._pending && m.text === event.data.text);
+                if (pendingIdx !== -1) {
+                  const updated = [...prev];
+                  updated[pendingIdx] = event.data;
+                  return updated;
+                }
+              }
+              // Skip if already present (e.g. create response landed first)
+              if (prev.some((m) => m.id === event.data.id)) return prev;
+              return [...prev, event.data];
+            });
           } else if (event.type === "update") {
             setEntityMessages((prev) => prev.map((m) => (m.id === event.data.id ? event.data : m)));
           } else if (event.type === "delete") {
@@ -111,12 +125,55 @@ export default function ChatView({ match, onBack }) {
     return () => unsubscribe();
   }, [match.id]);
 
+  const retrySend = async (failedId, text) => {
+    // Set back to pending
+    setEntityMessages((prev) =>
+      prev.map((m) => (m.id === failedId ? { ...m, _pending: true, _failed: false } : m))
+    );
+    try {
+      const created = await base44.entities.Message.create({
+        match_id: match.id,
+        sender_id: user.id,
+        recipient_id: recipientId,
+        text,
+        read: false,
+      });
+      setEntityMessages((prev) => prev.map((m) => (m.id === failedId ? created : m)));
+    } catch (e) {
+      setEntityMessages((prev) =>
+        prev.map((m) => (m.id === failedId ? { ...m, _pending: false, _failed: true } : m))
+      );
+      toast.error("Still failed to send", { description: "Check your connection and try again." });
+    }
+  };
+
   const handleSend = async (text = message) => {
     if (!text.trim() || !recipientId || !user?.id) return;
     const textTrimmed = text.trim();
     setMessage("");
     setShowEmoji(false);
     setShowIcebreakers(false);
+
+    // Optimistic: append immediately with a temp id
+    const tempId = `temp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const optimisticMsg = {
+      id: tempId,
+      match_id: match.id,
+      sender_id: user.id,
+      recipient_id: recipientId,
+      text: textTrimmed,
+      read: false,
+      created_date: new Date().toISOString(),
+      _pending: true,
+    };
+    setEntityMessages((prev) => [...prev, optimisticMsg]);
+
+    // Update the match's last message info for the chat list + in-app notifications
+    base44.entities.Match.update(match.id, {
+      last_message: textTrimmed,
+      last_message_time: new Date().toISOString(),
+    }).catch(() => {});
+
     try {
       const created = await base44.entities.Message.create({
         match_id: match.id,
@@ -125,14 +182,16 @@ export default function ChatView({ match, onBack }) {
         text: textTrimmed,
         read: false,
       });
-      setEntityMessages((prev) => [...prev, created]);
-      // Update the match's last message info for the chat list + in-app notifications
-      base44.entities.Match.update(match.id, {
-        last_message: textTrimmed,
-        last_message_time: new Date().toISOString(),
-      }).catch(() => {});
+      // Replace the optimistic message with the real one
+      setEntityMessages((prev) => prev.map((m) => (m.id === tempId ? created : m)));
     } catch (e) {
-      console.error("Failed to send message:", e);
+      // Mark as failed with a retry affordance
+      setEntityMessages((prev) =>
+        prev.map((m) => (m.id === tempId ? { ...m, _pending: false, _failed: true } : m))
+      );
+      toast.error("Failed to send message", {
+        action: { label: "Retry", onClick: () => retrySend(tempId, textTrimmed) },
+      });
     }
   };
 
@@ -154,7 +213,7 @@ export default function ChatView({ match, onBack }) {
     >
       {/* ── Header ── */}
       <div className="flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-3 border-b border-border/40 bg-card/90 backdrop-blur-xl">
-        <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors -ml-1">
+        <button onClick={onBack} aria-label="Back" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors -ml-1">
           <ArrowLeft className="w-5 h-5" />
         </button>
 
@@ -168,20 +227,21 @@ export default function ChatView({ match, onBack }) {
 
         <div className="flex-1 min-w-0">
           <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{match.matched_name}</h3>
-          <p className="text-[11px] text-green-400 font-body">Active now</p>
+          <p className="text-sm text-green-400 font-body">Active now</p>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button aria-label="Call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <Phone className="w-4 h-4" />
           </button>
-          <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button aria-label="Video call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <Video className="w-4 h-4" />
           </button>
           <div className="relative">
             <button
               onClick={() => setShowMoreMenu((v) => !v)}
-              className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="More options"
+              className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
@@ -219,7 +279,7 @@ export default function ChatView({ match, onBack }) {
                 <div key={i} className={`w-1.5 h-1.5 rounded-full ${i===1 ? 'bg-primary scale-125' : 'bg-primary/50'}`} />
               ))}
             </div>
-            <span className="text-[10px] text-primary font-heading font-bold mt-1">It's a Match!</span>
+            <span className="text-sm text-primary font-heading font-bold mt-1">It's a Match!</span>
           </div>
           <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-primary/50 glow-orange">
             <img src={match.matched_photo || ""} alt={match.matched_name} className="w-full h-full object-cover" />
@@ -272,7 +332,7 @@ export default function ChatView({ match, onBack }) {
                   >
                     <p className="text-sm font-body leading-relaxed">{msg.text}</p>
                     <div className={`flex items-center gap-1 mt-0.5 ${isMe ? "justify-end" : "justify-start"}`}>
-                      <span className={`text-[10px] ${isMe ? "text-primary-foreground/55" : "text-muted-foreground"}`}>
+                      <span className={`text-sm ${isMe ? "text-primary-foreground/55" : "text-muted-foreground"}`}>
                         {msg.time}
                       </span>
                       {isMe && (
@@ -282,6 +342,25 @@ export default function ChatView({ match, onBack }) {
                       )}
                     </div>
                   </div>
+
+                  {/* Failed send — retry affordance */}
+                  {isMe && msg._failed && (
+                    <button
+                      onClick={() => retrySend(msg.id, msg.text)}
+                      aria-label="Retry sending message"
+                      className="flex items-center gap-1 mt-1 text-destructive text-sm font-body font-semibold"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Tap to retry
+                    </button>
+                  )}
+
+                  {/* Pending indicator */}
+                  {isMe && msg._pending && (
+                    <div className="flex items-center gap-1 mt-1 text-muted-foreground/50">
+                      <span className="text-sm">Sending...</span>
+                    </div>
+                  )}
 
                   {/* Emoji reaction bubble */}
                   {msg.reaction && (
@@ -302,8 +381,9 @@ export default function ChatView({ match, onBack }) {
                         {EMOJI_REACTIONS.map((e) => (
                           <button
                             key={e}
+                            aria-label={`React with ${e}`}
                             onClick={(ev) => { ev.stopPropagation(); handleReaction(msg.id, e); }}
-                            className="text-lg hover:scale-125 transition-transform"
+                            className="text-lg min-w-[44px] min-h-[44px] flex items-center justify-center hover:scale-125 transition-transform"
                           >
                             {e}
                           </button>
@@ -358,10 +438,10 @@ export default function ChatView({ match, onBack }) {
             <div className="px-4 py-3 border-t border-border/40 bg-secondary/30 space-y-3">
               <div className="flex items-center gap-2">
                 <Lightbulb className="w-4 h-4 text-amber" />
-                <span className="text-xs font-heading font-semibold text-foreground">Icebreaker ideas</span>
+                <span className="text-sm font-heading font-semibold text-foreground">Icebreaker ideas</span>
                 <button
                   onClick={() => setShowIcebreakers(false)}
-                  className="text-[10px] text-muted-foreground hover:text-foreground ml-auto"
+                  className="text-sm text-muted-foreground hover:text-foreground ml-auto"
                 >
                   ✕
                 </button>
@@ -371,7 +451,7 @@ export default function ChatView({ match, onBack }) {
                   <button
                     key={ice}
                     onClick={() => handleSend(ice)}
-                    className="text-xs font-body px-2.5 py-1.5 rounded-full border border-amber/30 text-amber bg-amber/5 hover:bg-amber/15 transition-colors text-left"
+                    className="text-sm font-body px-2.5 py-1.5 rounded-full border border-amber/30 text-amber bg-amber/5 hover:bg-amber/15 transition-colors text-left"
                   >
                     {ice}
                   </button>
@@ -388,7 +468,7 @@ export default function ChatView({ match, onBack }) {
           <button
             key={qr}
             onClick={() => handleSend(qr)}
-            className="flex-shrink-0 text-xs font-body px-3 py-1.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/15 transition-colors"
+            className="flex-shrink-0 text-sm font-body px-3 py-1.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/15 transition-colors"
           >
             {qr}
           </button>
@@ -398,7 +478,7 @@ export default function ChatView({ match, onBack }) {
       {/* ── Input Bar ── */}
       <div className="px-4 py-3 border-t border-border/40 bg-card/90 backdrop-blur-xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)" }}>
         <div className="flex items-center gap-2">
-          <button className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+          <button aria-label="Attach image" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
             <ImagePlus className="w-5 h-5" />
           </button>
           <div className="flex-1 relative">
@@ -412,7 +492,8 @@ export default function ChatView({ match, onBack }) {
             />
             <button
               onClick={() => setShowEmoji((v) => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Emoji"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
             >
               <Smile className="w-4 h-4" />
             </button>
@@ -422,12 +503,13 @@ export default function ChatView({ match, onBack }) {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               onClick={() => handleSend()}
-              className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 glow-orange"
+              aria-label="Send message"
+              className="w-11 h-11 rounded-full bg-primary flex items-center justify-center flex-shrink-0 glow-orange"
             >
               <Send className="w-4 h-4 text-primary-foreground" />
             </motion.button>
           ) : (
-            <button className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+            <button aria-label="Voice message" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
               <Mic className="w-5 h-5" />
             </button>
           )}
@@ -446,8 +528,9 @@ export default function ChatView({ match, onBack }) {
                 {["😍","🔥","😂","❤️","🤙","🥩","😎","🌶️","🤣","👀","🥰","😘","🤝","🎉","💪"].map((e) => (
                   <button
                     key={e}
+                    aria-label={`Add ${e} emoji`}
                     onClick={() => setMessage((m) => m + e)}
-                    className="text-xl hover:scale-125 transition-transform flex-shrink-0"
+                    className="text-xl min-w-[44px] min-h-[44px] flex items-center justify-center hover:scale-125 transition-transform flex-shrink-0"
                   >
                     {e}
                   </button>

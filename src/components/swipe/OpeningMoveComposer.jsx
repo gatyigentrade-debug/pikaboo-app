@@ -25,7 +25,7 @@ function ProfileChips({ profile }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {chips.map((c, i) => (
-        <span key={i} className="text-[11px] font-body px-2 py-0.5 rounded-full bg-secondary border border-border/40 text-muted-foreground">
+        <span key={i} className="text-sm font-body px-2 py-0.5 rounded-full bg-secondary border border-border/40 text-muted-foreground">
           {c.label}
         </span>
       ))}
@@ -163,10 +163,10 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
               <p className="text-sm font-heading font-bold text-foreground leading-tight">
                 Opening Move for {matchedProfile?.name}
               </p>
-              <p className="text-[11px] text-muted-foreground font-body">Answer their question to start chatting</p>
+              <p className="text-sm text-muted-foreground font-body">Answer their question to start chatting</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={onClose} aria-label="Close" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -176,7 +176,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
 
           {/* Their question */}
           <div className="bg-gradient-to-br from-primary/10 to-violet/10 rounded-2xl px-4 py-3.5 border border-primary/20">
-            <p className="text-[10px] text-primary font-heading font-bold uppercase tracking-widest mb-1.5">🔥 Their Opening Move</p>
+            <p className="text-sm text-primary font-heading font-bold uppercase tracking-widest mb-1.5">🔥 Their Opening Move</p>
             <p className="text-sm font-body text-foreground italic leading-relaxed">"{prompt}"</p>
           </div>
 
@@ -210,8 +210,8 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                 <div className="flex items-start gap-3 bg-yellow-400/10 border border-yellow-400/30 rounded-2xl px-4 py-3">
                   <Lock className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-heading font-bold text-yellow-400">Verify your selfie to unlock AI Wingman</p>
-                    <p className="text-[11px] text-muted-foreground font-body mt-0.5">Get 3 personalised icebreakers generated just for this match.</p>
+                    <p className="text-sm font-heading font-bold text-yellow-400">Verify your selfie to unlock AI Wingman</p>
+                    <p className="text-sm text-muted-foreground font-body mt-0.5">Get 3 personalised icebreakers generated just for this match.</p>
                   </div>
                 </div>
               )}
@@ -222,13 +222,13 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
-                      <span className="text-[11px] text-green-400 font-heading font-semibold">AI Wingman</span>
-                      <span className="text-[11px] text-muted-foreground font-body">· personalised for {matchedProfile?.name}</span>
+                      <span className="text-sm text-green-400 font-heading font-semibold">AI Wingman</span>
+                      <span className="text-sm text-muted-foreground font-body">· personalised for {matchedProfile?.name}</span>
                     </div>
                     <button
                       onClick={generate}
                       disabled={loading}
-                      className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors disabled:opacity-40"
+                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors disabled:opacity-40"
                     >
                       <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
                       Refresh
@@ -241,7 +241,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                         <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
                           <Sparkles className="w-4 h-4 text-violet" />
                         </motion.div>
-                        <p className="text-xs text-muted-foreground font-body">AI Wingman is cooking something lekker... 🍖</p>
+                        <p className="text-sm text-muted-foreground font-body">AI Wingman is cooking something lekker... 🍖</p>
                       </div>
                       <IcebreakerSkeleton />
                     </>
@@ -262,12 +262,12 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                             }`}
                           >
                             {/* Tone badge */}
-                            <span className={`inline-flex items-center gap-1 text-[10px] font-heading font-bold px-2 py-0.5 rounded-full border mb-1.5 ${TONE_COLOR[ice.tone]}`}>
+                            <span className={`inline-flex items-center gap-1 text-sm font-heading font-bold px-2 py-0.5 rounded-full border mb-1.5 ${TONE_COLOR[ice.tone]}`}>
                               {TONE_EMOJI[ice.tone]} {TONE_LABEL[ice.tone]}
                             </span>
                             <p className="text-sm font-body text-foreground leading-snug">{ice.text}</p>
                             {ice.why && (
-                              <p className="text-[10px] text-muted-foreground font-body mt-1 opacity-70">↳ {ice.why}</p>
+                              <p className="text-sm text-muted-foreground font-body mt-1 opacity-70">↳ {ice.why}</p>
                             )}
                             {selected?.text === ice.text && (
                               <div className="absolute right-3 top-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
@@ -285,7 +285,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
               {/* Divider */}
               <div className="relative flex items-center gap-2">
                 <div className="flex-1 h-px bg-border/40" />
-                <span className="text-[11px] text-muted-foreground font-body flex-shrink-0">or write your own</span>
+                <span className="text-sm text-muted-foreground font-body flex-shrink-0">or write your own</span>
                 <div className="flex-1 h-px bg-border/40" />
               </div>
 
@@ -302,7 +302,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                   }`}
                 />
                 {custom.trim().length > 0 && (
-                  <span className="absolute bottom-3 right-3 text-[10px] text-muted-foreground font-body">
+                  <span className="absolute bottom-3 right-3 text-sm text-muted-foreground font-body">
                     {custom.trim().length}/280
                   </span>
                 )}

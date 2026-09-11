@@ -25,7 +25,7 @@ export default function Likes() {
     <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
-        <Link to="/matches" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+        <Link to="/matches" aria-label="Back" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </Link>
         <h1 className="text-2xl font-heading font-bold text-foreground">Likes</h1>

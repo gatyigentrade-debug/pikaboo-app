@@ -15,7 +15,7 @@ export default function Discover() {
     queryKey: ["profiles"],
     queryFn: async () => {
       try {
-        return await withTimeout(base44.entities.DatingProfile.list(), 8000, []);
+        return await withTimeout(base44.entities.DatingProfile.list('-created_date', 30), 8000, []);
       } catch {
         return [];
       }

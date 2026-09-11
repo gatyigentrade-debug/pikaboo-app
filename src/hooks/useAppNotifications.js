@@ -54,6 +54,7 @@ export function useAppNotifications() {
   // Store known match IDs and message snapshots to detect new ones
   const knownMatchIds = useRef(null);
   const knownMessageSigs = useRef(null); // map of matchId -> last_message_time
+  const lastWatermark = useRef(null); // ISO timestamp of newest match/message seen
 
   useEffect(() => {
     const hasNotifications = typeof Notification !== "undefined";
@@ -64,22 +65,46 @@ export function useAppNotifications() {
 
     const handleMatchEvent = async () => {
       try {
-        const matches = await base44.entities.Match.list();
+        let matches;
+        if (knownMatchIds.current === null) {
+          // First load — fetch all to establish baseline
+          matches = await base44.entities.Match.list();
+        } else {
+          // Subsequent events — fetch only new/changed matches since last watermark
+          const watermark = lastWatermark.current || new Date(0).toISOString();
+          try {
+            matches = await base44.entities.Match.filter({
+              $or: [
+                { created_date: { $gt: watermark } },
+                { last_message_time: { $gt: watermark } },
+              ],
+            }, '-created_date', 50);
+          } catch {
+            // Fallback to full list if filtered query is unsupported
+            matches = await base44.entities.Match.list();
+          }
+        }
 
         const currentIds = new Set(matches.map((m) => m.id));
         const currentSigs = {};
+        let maxTs = 0;
         matches.forEach((m) => {
           currentSigs[m.id] = m.last_message_time || null;
+          const c = m.created_date ? new Date(m.created_date).getTime() : 0;
+          const l = m.last_message_time ? new Date(m.last_message_time).getTime() : 0;
+          if (c > maxTs) maxTs = c;
+          if (l > maxTs) maxTs = l;
         });
 
         if (knownMatchIds.current === null) {
           // First load — just record baseline, no notification
           knownMatchIds.current = currentIds;
           knownMessageSigs.current = currentSigs;
+          lastWatermark.current = new Date(maxTs || Date.now()).toISOString();
           return;
         }
 
-        // Detect new matches
+        // Detect new matches and new messages only among fetched (new/changed) records
         for (const match of matches) {
           if (!knownMatchIds.current.has(match.id)) {
             // Always ping instantly so you never miss a new match
@@ -95,30 +120,30 @@ export function useAppNotifications() {
               match.matched_photo,
               "/matches"
             );
+          } else {
+            // Existing match — check for new message
+            const prevSig = knownMessageSigs.current[match.id];
+            const newSig = match.last_message_time || null;
+            if (newSig && newSig !== prevSig && match.last_message) {
+              sendNotification(
+                `💬 New message from ${match.matched_name}`,
+                match.last_message,
+                match.matched_photo,
+                "/chat"
+              );
+            }
           }
         }
 
-        // Detect new messages on existing matches
-        for (const match of matches) {
-          const prevSig = knownMessageSigs.current[match.id];
-          const newSig = match.last_message_time || null;
-          if (
-            prevSig !== undefined && // known match
-            newSig &&
-            newSig !== prevSig &&
-            match.last_message
-          ) {
-            sendNotification(
-              `💬 New message from ${match.matched_name}`,
-              match.last_message,
-              match.matched_photo,
-              "/chat"
-            );
-          }
+        // Merge fetched records into known state
+        matches.forEach((m) => {
+          knownMatchIds.current.add(m.id);
+          knownMessageSigs.current[m.id] = m.last_message_time || null;
+        });
+        if (maxTs > 0) {
+          const prevWatermarkMs = lastWatermark.current ? new Date(lastWatermark.current).getTime() : 0;
+          if (maxTs > prevWatermarkMs) lastWatermark.current = new Date(maxTs).toISOString();
         }
-
-        knownMatchIds.current = currentIds;
-        knownMessageSigs.current = currentSigs;
       } catch (e) {
         // silent fail
       }

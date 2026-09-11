@@ -66,7 +66,7 @@ export default function ConsumableInventory() {
 
   return (
     <div className="mb-4 space-y-2">
-      <p className="text-[11px] font-heading font-bold text-gold uppercase tracking-wider">
+      <p className="text-sm font-heading font-bold text-gold uppercase tracking-wider">
         Your Power-Ups
       </p>
       {items.map((it) => {
@@ -87,12 +87,12 @@ export default function ConsumableInventory() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-heading font-bold text-foreground">{it.label}</p>
-              <p className="text-xs text-muted-foreground font-body mt-0.5">
+              <p className="text-sm text-muted-foreground font-body mt-0.5">
                 {it.active ? "Active now" : owned ? "Ready to use" : "Not owned yet"}
               </p>
             </div>
             <span
-              className={`flex-shrink-0 min-h-[36px] px-3 py-1.5 rounded-full text-xs font-heading font-bold flex items-center justify-center ${statusPill}`}
+              className={`flex-shrink-0 min-h-[36px] px-3 py-1.5 rounded-full text-sm font-heading font-bold flex items-center justify-center ${statusPill}`}
             >
               {it.value}
             </span>

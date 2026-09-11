@@ -45,7 +45,7 @@ export default function Home() {
 
   const { data: profiles = [], isLoading } = useQuery({
     queryKey: ["profiles"],
-    queryFn: () => base44.entities.DatingProfile.list(),
+    queryFn: () => base44.entities.DatingProfile.list('-created_date', 30),
   });
 
   const currentProfile = profiles[currentIdx];
@@ -144,6 +144,7 @@ export default function Home() {
           {/* Who Liked You button */}
           <button
             onClick={() => setShowWhoLiked((v) => !v)}
+            aria-label="Who liked you"
             className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors ${
               showWhoLiked ? "bg-yellow-400 text-black" : "bg-secondary text-yellow-400"
             }`}
@@ -155,12 +156,14 @@ export default function Home() {
           </button>
           <button
             onClick={() => navigate("/explore?filters=open")}
+            aria-label="Filters"
             className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
             <SlidersHorizontal className="w-5 h-5" />
           </button>
           <button
             onClick={() => openModal("gold")}
+            aria-label="Boost"
             className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
           >
             <Flame className="w-5 h-5" />
