@@ -62,7 +62,9 @@ export default function AppLayout() {
     const tabBase = TABS.find(
       (t) => t.path !== "/" && (currentPath === t.path || currentPath.startsWith(t.path + "/"))
     );
-    if (tabBase) {
+    // Don't save deep chat routes (/chat/:id) — they're overlays, not sub-pages.
+    // Clicking the Chat tab should always show the chat list first.
+    if (tabBase && !(tabBase.path === "/chat" && currentPath !== "/chat")) {
       setLastTabRoutes((prev) =>
         prev[tabBase.path] === currentPath ? prev : { ...prev, [tabBase.path]: currentPath }
       );
