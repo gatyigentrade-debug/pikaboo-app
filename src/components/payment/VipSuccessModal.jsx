@@ -45,7 +45,7 @@ export default function VipSuccessModal({ isOpen, plan, onClose }) {
                   <Check className="w-4 h-4 text-green-400" />
                 </div>
                 <p className="font-heading font-bold">
-                  {plan === "weekly" ? "Weekly" : plan === "monthly" ? "Monthly" : "3-Month"} VIP activated
+                  {plan === "plus_weekly" ? "Plus" : plan === "premium_monthly" ? "Premium" : plan === "gold_monthly" ? "Gold" : "VIP"} VIP activated
                 </p>
               </div>
               <p className="text-muted-foreground font-body text-xs">

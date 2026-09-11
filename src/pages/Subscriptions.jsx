@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Crown, Check, Loader2, ArrowLeft, Zap, Eye, Heart, RotateCcw, Star } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import VipSuccessModal from "@/components/payment/VipSuccessModal";
 
 const PLANS = [
-  { id: "plus_weekly", label: "PikaBoo Plus", price: "R39", amount: 3900, per: "/ week", productId: "pikaboo_plus_weekly", popular: false },
-  { id: "premium_monthly", label: "PikaBoo Premium", price: "R99", amount: 9900, per: "/ month", productId: "pikaboo_premium_monthly", popular: true, badge: "Most Popular" },
-  { id: "gold_monthly", label: "PikaBoo Gold", price: "R199", amount: 19900, per: "/ month", productId: "pikaboo_gold_monthly", popular: false, badge: "Best Value" },
+  { id: "plus_weekly", label: "PikaBoo Plus", price: "R39", per: "/ week", productId: "pikaboo_plus_weekly", popular: false },
+  { id: "premium_monthly", label: "PikaBoo Premium", price: "R99", per: "/ month", productId: "pikaboo_premium_monthly", popular: true, badge: "Most Popular" },
+  { id: "gold_monthly", label: "PikaBoo Gold", price: "R199", per: "/ month", productId: "pikaboo_gold_monthly", popular: false, badge: "Best Value" },
 ];
 
 const PERKS = [
@@ -19,130 +18,32 @@ const PERKS = [
   { icon: Heart, title: "VIP Badge", color: "text-pink-400", bg: "bg-pink-400/10" },
 ];
 
-const genRef = (planId) =>
-  `pikaboo_${planId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-
 export default function Subscriptions() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState("premium_monthly");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
-  const [publicKey, setPublicKey] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userId, setUserId] = useState("");
 
-  useEffect(() => {
-    // Load Paystack Inline V2 SDK
-    if (!document.getElementById("paystack-inline-v2")) {
-      const script = document.createElement("script");
-      script.id = "paystack-inline-v2";
-      script.src = "https://js.paystack.co/v2/inline.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-    // Fetch public key + user email
-    (async () => {
-      try {
-        const cfg = await base44.functions.invoke("getPaystackConfig", {});
-        setPublicKey(cfg.data.public_key);
-      } catch (e) {
-        setError("Payment config unavailable. Try again later.");
-      }
-      try {
-        const me = await base44.auth.me();
-        if (me?.email) setUserEmail(me.email);
-        if (me?.id) setUserId(me.id);
-      } catch (e) {
-        /* ignore */
-      }
-    })();
-  }, []);
-
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     setError("");
     const plan = PLANS.find((p) => p.id === selectedPlan);
-
-    // Native Android (Google Play Billing) flow
-    if (window.PikaBooNative?.buyProduct) {
-      setError("");
-      setLoading(true);
-      window.PikaBooNative.buyProduct(plan.productId);
-      // Failsafe: clear loading if the native bridge never calls back
-      setTimeout(() => {
-        setLoading((prev) => {
-          if (prev) {
-            setError("Purchase timed out. Please try again.");
-            return false;
-          }
-          return prev;
-        });
-      }, 30000);
+    if (!window.PikaBooNative?.buyProduct) {
+      setError("Google Play billing is not available. Please use the PikaBoo app on Android.");
       return;
     }
-
-    // Web Paystack Inline flow
-    if (!window.PaystackPop) {
-      setError("Payment SDK still loading, please try again in a moment.");
-      return;
-    }
-    if (!publicKey) {
-      setError("Payment config unavailable. Try again later.");
-      return;
-    }
-    if (!userEmail) {
-      setError("We couldn't load your email. Please re-open the app and try again.");
-      return;
-    }
-    const reference = genRef(selectedPlan);
     setLoading(true);
-    try {
-      const paystack = new window.PaystackPop();
-      paystack.newTransaction({
-        key: publicKey,
-        email: userEmail,
-        amount: plan.amount,
-        currency: "ZAR",
-        ref: reference,
-        metadata: {
-          user_id: userId,
-          plan: selectedPlan,
-          custom_fields: [
-            { display_name: "User ID", variable_name: "user_id", value: userId },
-            { display_name: "Plan", variable_name: "plan", value: selectedPlan },
-          ],
-        },
-        onSuccess: async (transaction) => {
-          try {
-            const verifyRes = await base44.functions.invoke("verifyPaystackPayment", {
-              reference: transaction.reference || reference,
-            });
-            if (verifyRes.data.success) {
-              setLoading(false);
-              setShowSuccess(true);
-              setTimeout(() => {
-                setShowSuccess(false);
-                navigate("/discover");
-              }, 2600);
-            } else {
-              setError(verifyRes.data.error || "Verification failed. If you were charged, contact support.");
-              setLoading(false);
-            }
-          } catch (e) {
-            setError(e.message || "Verification failed. If you were charged, contact support.");
-            setLoading(false);
-          }
-        },
-        onCancel: () => setLoading(false),
-        onError: (err) => {
-          setError(err?.message || "Payment failed. Please try again.");
-          setLoading(false);
-        },
+    window.PikaBooNative.buyProduct(plan.productId);
+    // Failsafe: clear loading if the native bridge never calls back
+    setTimeout(() => {
+      setLoading((prev) => {
+        if (prev) {
+          setError("Purchase timed out. Please try again.");
+          return false;
+        }
+        return prev;
       });
-    } catch (e) {
-      setError(e.message || "Failed to start payment");
-      setLoading(false);
-    }
+    }, 30000);
   };
 
   // React to native IAP callbacks dispatched from main.jsx
@@ -270,7 +171,7 @@ export default function Subscriptions() {
         </button>
 
         <p className="text-center text-xs text-muted-foreground font-body pb-4">
-          Secure payment via Paystack · Cancel anytime · ZAR
+          Secure payment via Google Play · Cancel anytime · ZAR
         </p>
       </div>
 
