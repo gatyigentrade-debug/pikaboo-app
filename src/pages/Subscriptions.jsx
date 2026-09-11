@@ -155,7 +155,7 @@ export default function Subscriptions() {
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          className="w-full h-14 rounded-full bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 text-black font-heading font-black text-base shadow-lg shadow-amber/30 disabled:opacity-60 flex items-center justify-center gap-2"
+          className="w-full h-14 rounded-full bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 text-black font-heading font-black text-base shadow-xl shadow-amber/50 glow-gold disabled:opacity-70 flex items-center justify-center gap-2"
         >
           {loading ? (
             <>

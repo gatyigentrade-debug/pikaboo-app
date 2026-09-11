@@ -1,50 +1,9 @@
 import { motion } from "framer-motion";
-import { Heart, ChevronRight, BadgeCheck, MapPin, Clock } from "lucide-react";
+import { Heart, ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
-
-const demoMatches = [
-  {
-    id: "m1",
-    matched_name: "Zintle",
-    matched_photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop",
-    matched_age: 24,
-    city: "Cape Town",
-    status: "matched",
-    last_message: "Hey! Your voice note was so nice 😍",
-    last_message_time: "10:30",
-    unread_count: 2,
-    is_verified: true,
-    time_ago: "3m ago",
-  },
-  {
-    id: "m2",
-    matched_name: "Anele",
-    matched_photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop",
-    matched_age: 27,
-    city: "Johannesburg",
-    status: "matched",
-    last_message: "Recently active, match now!",
-    last_message_time: "09:11",
-    unread_count: 0,
-    is_verified: true,
-    likes_you: true,
-    time_ago: "12m ago",
-  },
-  {
-    id: "m3",
-    matched_name: "Mpho",
-    matched_photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop",
-    matched_age: 25,
-    city: "Durban",
-    status: "matched",
-    last_message: "Voice note",
-    last_message_time: "Yesterday",
-    unread_count: 0,
-    is_verified: false,
-    time_ago: "1d ago",
-  },
-];
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 
 const blurredAvatars = [
   { color: "#4A1A5A", initial: "Z" },
@@ -55,7 +14,13 @@ const blurredAvatars = [
 
 export default function Matches() {
   const navigate = useNavigate();
-  const handleRefresh = () => new Promise((res) => setTimeout(res, 1000));
+
+  const { data: matches = [], refetch } = useQuery({
+    queryKey: ["matches"],
+    queryFn: () => base44.entities.Match.filter({ status: "matched" }, '-updated_date'),
+  });
+
+  const handleRefresh = async () => { await refetch(); };
 
   return (
     <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
@@ -64,7 +29,7 @@ export default function Matches() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-heading font-bold text-foreground">Matches</h1>
-            <p className="text-xs text-muted-foreground font-body mt-0.5">3 people liked you back</p>
+            <p className="text-xs text-muted-foreground font-body mt-0.5">{matches.length} people liked you back</p>
           </div>
           <Link to="/likes" className="relative">
             <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
@@ -108,63 +73,55 @@ export default function Matches() {
           <h2 className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-3">
             Your Matches
           </h2>
-          <div className="space-y-2.5">
-            {demoMatches.map((match) => (
-              <motion.button
-                key={match.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                onClick={() => navigate(`/chat/${match.id}`, { state: { match } })}
-                className="w-full flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 hover:bg-secondary/60 transition-colors text-left"
-              >
-                {/* Avatar */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gold/40">
-                    <img src={match.matched_photo} alt={match.matched_name} className="w-full h-full object-cover" />
+          {matches.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <p className="text-sm text-muted-foreground font-body">No matches yet. Keep swiping to find your Boo! 🔥</p>
+            </div>
+          ) : (
+            <div className="space-y-2.5">
+              {matches.map((match) => (
+                <motion.button
+                  key={match.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={() => navigate(`/chat/${match.id}`, { state: { match } })}
+                  className="w-full flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 hover:bg-secondary/60 transition-colors text-left"
+                >
+                  {/* Avatar */}
+                  <div className="relative flex-shrink-0">
+                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gold/40">
+                      {match.matched_photo ? (
+                        <img src={match.matched_photo} alt={match.matched_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-secondary">
+                          <span className="text-lg font-heading font-bold text-foreground">{match.matched_name?.[0] || "?"}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  {match.is_verified && (
-                    <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-gold flex items-center justify-center border-2 border-background">
-                      <BadgeCheck className="w-3 h-3 text-black" />
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-heading font-bold text-foreground text-sm">
+                      {match.matched_name}
+                    </h3>
+                    <p className="text-xs font-body truncate mt-1 text-muted-foreground">
+                      {match.last_message || "Say hi! 👋"}
+                    </p>
+                  </div>
+
+                  {/* Unread badge */}
+                  {match.unread_count > 0 && (
+                    <div className="w-6 h-6 rounded-full bg-yellow-400 text-black text-xs font-bold flex items-center justify-center flex-shrink-0">
+                      {match.unread_count}
                     </div>
                   )}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-heading font-bold text-foreground text-sm">
-                      {match.matched_name}, {match.matched_age}
-                    </h3>
-                    {match.likes_you && (
-                      <span className="px-1.5 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-heading font-bold">
-                        LIKES YOU
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <MapPin className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground font-body">{match.city}</span>
-                    <span className="text-xs text-muted-foreground">·</span>
-                    <Clock className="w-3 h-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground font-body">{match.time_ago}</span>
-                  </div>
-                  <p className={`text-xs font-body truncate mt-1 ${match.unread_count > 0 ? "text-foreground" : "text-muted-foreground"}`}>
-                    {match.last_message}
-                  </p>
-                </div>
-
-                {/* Unread badge */}
-                {match.unread_count > 0 && (
-                  <div className="w-6 h-6 rounded-full bg-yellow-400 text-black text-xs font-bold flex items-center justify-center flex-shrink-0">
-                    {match.unread_count}
-                  </div>
-                )}
-              </motion.button>
-            ))}
-          </div>
+                </motion.button>
+              ))}
+            </div>
+          )}
         </section>
       </div>
-
     </PullToRefreshWrapper>
   );
 }

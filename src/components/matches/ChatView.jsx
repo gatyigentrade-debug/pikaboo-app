@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag, RotateCcw, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -37,8 +38,9 @@ const buildSample = (name) => [
   { id: 5, sender: "them", text: `So what are you up to this weekend?`, time: makeTime(1), read: false, reaction: null },
 ];
 
-export default function ChatView({ match, onBack }) {
+export default function ChatView({ match, onBack, openingMessage }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [entityMessages, setEntityMessages] = useState([]);
   const [reactions, setReactions] = useState({});
@@ -53,6 +55,7 @@ export default function ChatView({ match, onBack }) {
   const inputRef = useRef(null);
   const imageInputRef = useRef(null);
   const [imageUploading, setImageUploading] = useState(false);
+  const openingSentRef = useRef(false);
 
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
@@ -126,6 +129,24 @@ export default function ChatView({ match, onBack }) {
     init();
     return () => unsubscribe();
   }, [match.id]);
+
+  // Send opening message (from match celebration) once recipient is resolved
+  useEffect(() => {
+    if (openingMessage && recipientId && !openingSentRef.current) {
+      openingSentRef.current = true;
+      handleSend(openingMessage);
+    }
+  }, [openingMessage, recipientId]);
+
+  const handleCall = () => {
+    toast.info("Voice calls coming soon! 📞", { description: "We're cooking something lekker for you." });
+  };
+  const handleVideoCall = () => {
+    toast.info("Video calls coming soon! 📹", { description: "We're cooking something lekker for you." });
+  };
+  const handleViewProfile = () => {
+    if (match.matched_profile_id) navigate(`/profile/${match.matched_profile_id}`);
+  };
 
   const retrySend = async (failedId, text) => {
     // Set back to pending
@@ -263,24 +284,26 @@ export default function ChatView({ match, onBack }) {
           <ArrowLeft className="w-5 h-5" />
         </button>
 
-        {/* Avatar */}
-        <div className="relative">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/40">
-            <img src={match.matched_photo || ""} alt={match.matched_name} className="w-full h-full object-cover" />
+        <button onClick={handleViewProfile} className="flex items-center gap-3 flex-1 min-w-0 text-left">
+          {/* Avatar */}
+          <div className="relative flex-shrink-0">
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/40">
+              <img src={match.matched_photo || ""} alt={match.matched_name} className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
           </div>
-          <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
-        </div>
 
-        <div className="flex-1 min-w-0">
-          <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{match.matched_name}</h3>
-          <p className="text-sm text-green-400 font-body">Active now</p>
-        </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{match.matched_name}</h3>
+            <p className="text-sm text-green-400 font-body">Active now</p>
+          </div>
+        </button>
 
         <div className="flex items-center gap-1.5">
-          <button aria-label="Call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={handleCall} aria-label="Call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <Phone className="w-4 h-4" />
           </button>
-          <button aria-label="Video call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={handleVideoCall} aria-label="Video call" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <Video className="w-4 h-4" />
           </button>
           <div className="relative">

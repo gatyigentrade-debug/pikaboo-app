@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, X } from "lucide-react";
 import OpeningMoveComposer from "./OpeningMoveComposer";
 
-export default function MatchModal({ matchedProfile, onChat }) {
+export default function MatchModal({ matchedProfile, createdMatch, onChat }) {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showComposer, setShowComposer] = useState(false);
   const isOpen = searchParams.get("match") === "true";
@@ -19,7 +20,11 @@ export default function MatchModal({ matchedProfile, onChat }) {
   const handleSend = (message) => {
     setShowComposer(false);
     handleClose();
-    onChat?.(message);
+    if (createdMatch?.id) {
+      navigate(`/chat/${createdMatch.id}`, { state: { match: createdMatch, openingMessage: message } });
+    } else {
+      onChat?.(message);
+    }
   };
 
   return (

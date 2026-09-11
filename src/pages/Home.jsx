@@ -18,6 +18,7 @@ const FREE_SWIPE_LIMIT = 20;
 export default function Home() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [matchedProfile, setMatchedProfile] = useState(null);
+  const [createdMatch, setCreatedMatch] = useState(null);
   const [showWhoLiked, setShowWhoLiked] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export default function Home() {
           matched_name: currentProfile.name,
           matched_photo: currentProfile.photos?.[0] || "",
           status: "matched",
-        }).catch(() => {});
+        }).then((m) => setCreatedMatch(m)).catch(() => {});
         // Ask for notification permission on this user-initiated gesture
         if (typeof Notification !== "undefined" && Notification.permission === "default") {
           Notification.requestPermission();
@@ -255,6 +256,7 @@ export default function Home() {
       {/* Match modal */}
       <MatchModal
         matchedProfile={matchedProfile}
+        createdMatch={createdMatch}
         onChat={() => navigate("/matches")}
       />
 

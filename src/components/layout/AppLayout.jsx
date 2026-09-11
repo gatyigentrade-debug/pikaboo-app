@@ -120,7 +120,7 @@ export default function AppLayout() {
       {/* Deep-link ChatView overlay */}
       <AnimatePresence>
         {(chatMatch || activeMatch) && (
-          <ChatView match={chatMatch || activeMatch} onBack={() => navigate(-1)} />
+          <ChatView match={chatMatch || activeMatch} openingMessage={location.state?.openingMessage} onBack={() => navigate(-1)} />
         )}
       </AnimatePresence>
     </div>
