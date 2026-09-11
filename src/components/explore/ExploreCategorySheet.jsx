@@ -119,8 +119,9 @@ export default function ExploreCategorySheet({ category, onClose }) {
                   </p>
                 </div>
                 <button
-                  onClick={(e) => { e.stopPropagation(); toggleLike(p.name); }}
-                  className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center active:scale-90 transition-transform"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleLike(p.name); }}
+                  aria-label={`Like ${p.name}`}
+                  className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center active:scale-90 transition-transform z-10"
                 >
                   <Heart className={`w-4 h-4 text-white ${liked[p.name] ? "fill-white" : ""}`} />
                 </button>

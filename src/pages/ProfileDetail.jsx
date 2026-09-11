@@ -102,7 +102,7 @@ export default function ProfileDetail() {
               You've seen all the Boos here. Come back later for fresh faces.
             </p>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/explore")}
               className="px-5 py-2.5 rounded-full bg-gradient-to-r from-yellow-400 to-gold text-black font-heading font-bold text-sm shadow-lg active:scale-95 transition-transform"
             >
               Back to Explore

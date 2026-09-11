@@ -37,9 +37,18 @@ export default function ForgotPassword() {
       }
     >
       {sent ? (
-        <p className="text-sm text-white text-center">
-          If an account exists with that email, you'll receive a password reset link shortly.
-        </p>
+        <div className="space-y-4">
+          <p className="text-sm text-white text-center">
+            If an account exists with that email, you'll receive a password reset link shortly.
+          </p>
+          <Button
+            variant="outline"
+            className="w-full h-12 border-amber-500/40 text-amber-400 hover:bg-amber-500/10"
+            onClick={() => { setSent(false); setEmail(""); }}
+          >
+            Try a different email
+          </Button>
+        </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

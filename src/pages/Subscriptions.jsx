@@ -68,6 +68,16 @@ export default function Subscriptions() {
       setError("");
       setLoading(true);
       window.PikaBooNative.buyProduct(plan.productId);
+      // Failsafe: clear loading if the native bridge never calls back
+      setTimeout(() => {
+        setLoading((prev) => {
+          if (prev) {
+            setError("Purchase timed out. Please try again.");
+            return false;
+          }
+          return prev;
+        });
+      }, 30000);
       return;
     }
 
@@ -137,7 +147,11 @@ export default function Subscriptions() {
 
   // React to native IAP callbacks dispatched from main.jsx
   useEffect(() => {
-    const onSuccess = () => {
+    const onSuccess = (e) => {
+      const productId = typeof e?.detail === "string" ? e.detail : e?.detail?.productId;
+      const subscriptionIds = PLANS.map((p) => p.productId);
+      // Only handle subscription products — ignore consumable purchase events
+      if (productId && !subscriptionIds.includes(productId)) return;
       setLoading(false);
       setShowSuccess(true);
       setTimeout(() => {

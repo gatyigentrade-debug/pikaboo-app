@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag, RotateCcw } from "lucide-react";
+import { ArrowLeft, Phone, Video, Send, Smile, Mic, MoreVertical, ImagePlus, Check, CheckCheck, Lightbulb, Flag, RotateCcw, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import ReportBlockSheet from "@/components/matches/ReportBlockSheet";
 import { base44 } from "@/api/base44Client";
@@ -51,6 +51,8 @@ export default function ChatView({ match, onBack }) {
   const [showReportSheet, setShowReportSheet] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const imageInputRef = useRef(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
@@ -203,6 +205,50 @@ export default function ChatView({ match, onBack }) {
     setReactionTarget(null);
   };
 
+  const handleImageSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    if (!recipientId || !user?.id) return;
+
+    setImageUploading(true);
+    setShowIcebreakers(false);
+
+    // Optimistic: append a placeholder message with a spinner
+    const tempId = `temp_img_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const optimisticMsg = {
+      id: tempId,
+      match_id: match.id,
+      sender_id: user.id,
+      recipient_id: recipientId,
+      text: "",
+      image_url: null,
+      read: false,
+      created_date: new Date().toISOString(),
+      _pending: true,
+      _uploading: true,
+    };
+    setEntityMessages((prev) => [...prev, optimisticMsg]);
+
+    try {
+      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
+      const created = await base44.entities.Message.create({
+        match_id: match.id,
+        sender_id: user.id,
+        recipient_id: recipientId,
+        text: "",
+        image_url: file_url,
+        read: false,
+      });
+      setEntityMessages((prev) => prev.map((m) => (m.id === tempId ? created : m)));
+    } catch (err) {
+      setEntityMessages((prev) => prev.filter((m) => m.id !== tempId));
+      toast.error("Failed to upload image", { description: "Please try again." });
+    } finally {
+      setImageUploading(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ x: "100%" }}
@@ -330,7 +376,15 @@ export default function ChatView({ match, onBack }) {
                         : "bg-secondary text-foreground rounded-bl-sm"
                     }`}
                   >
-                    <p className="text-sm font-body leading-relaxed">{msg.text}</p>
+                    {msg._uploading ? (
+                      <div className="flex items-center justify-center py-3">
+                        <Loader2 className="w-4 h-4 animate-spin text-primary-foreground/70" />
+                      </div>
+                    ) : msg.image_url ? (
+                      <img src={msg.image_url} alt="Shared image" className="rounded-xl max-w-full max-h-60 object-cover mb-1" />
+                    ) : (
+                      <p className="text-sm font-body leading-relaxed">{msg.text}</p>
+                    )}
                     <div className={`flex items-center gap-1 mt-0.5 ${isMe ? "justify-end" : "justify-start"}`}>
                       <span className={`text-sm ${isMe ? "text-primary-foreground/55" : "text-muted-foreground"}`}>
                         {msg.time}
@@ -428,7 +482,7 @@ export default function ChatView({ match, onBack }) {
 
       {/* ── Icebreakers (first message only) ── */}
       <AnimatePresence>
-        {showIcebreakers && messages.length === 0 && (
+        {showIcebreakers && messages.length === 0 && recipientId && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -468,7 +522,8 @@ export default function ChatView({ match, onBack }) {
           <button
             key={qr}
             onClick={() => handleSend(qr)}
-            className="flex-shrink-0 text-sm font-body px-3 py-1.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/15 transition-colors"
+            disabled={!recipientId}
+            className="flex-shrink-0 text-sm font-body px-3 py-1.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/15 transition-colors disabled:opacity-40"
           >
             {qr}
           </button>
@@ -478,9 +533,10 @@ export default function ChatView({ match, onBack }) {
       {/* ── Input Bar ── */}
       <div className="px-4 py-3 border-t border-border/40 bg-card/90 backdrop-blur-xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)" }}>
         <div className="flex items-center gap-2">
-          <button aria-label="Attach image" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
-            <ImagePlus className="w-5 h-5" />
+          <button aria-label="Attach image" onClick={() => imageInputRef.current?.click()} disabled={imageUploading || !recipientId} className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0 disabled:opacity-40">
+            {imageUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
           </button>
+          <input ref={imageInputRef} type="file" accept="image/*" onChange={handleImageSelect} className="hidden" />
           <div className="flex-1 relative">
             <Input
               ref={inputRef}

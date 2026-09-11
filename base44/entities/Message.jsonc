@@ -17,6 +17,10 @@
     "text": {
       "type": "string"
     },
+    "image_url": {
+      "type": "string",
+      "description": "URL of an attached image (optional)"
+    },
     "read": {
       "type": "boolean",
       "default": false
@@ -25,8 +29,7 @@
   "required": [
     "match_id",
     "sender_id",
-    "recipient_id",
-    "text"
+    "recipient_id"
   ],
   "rls": {
     "create": {
