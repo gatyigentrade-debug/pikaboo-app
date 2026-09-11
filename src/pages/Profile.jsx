@@ -3,27 +3,29 @@ import { useSearchParams } from "react-router-dom";
 import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import PikaBooShop from "@/components/shop/PikaBooShop";
 import VerificationSection from "@/components/profile/VerificationSection";
-
-const myProfile = {
-  name: "Nemza",
-  age: 25,
-  city: "Johannesburg",
-  vibe: "Chill Vibe",
-  bio: "Testing the waters",
-  interests: ["Amapiano", "Soccer", "Road Trips", "Braai"],
-  photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"],
-};
+import EditProfileDialog from "@/components/profile/EditProfileDialog";
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [deleting, setDeleting] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
+  const { data: profile, refetch } = useQuery({
+    queryKey: ["myProfile"],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      const profiles = await base44.entities.DatingProfile.filter({ created_by_id: user.id });
+      return profiles[0] || null;
+    },
+  });
+
   const showShop = searchParams.get("shop") === "open";
   const showDeleteDialog = searchParams.get("delete_confirm") === "open";
+  const showEdit = searchParams.get("edit") === "open";
 
   const openSheet = (key) => {
     const next = new URLSearchParams(searchParams);
@@ -70,7 +72,7 @@ export default function Profile() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-[calc(1.25rem+env(safe-area-inset-top))]">
         <h1 className="text-xl font-heading font-bold text-foreground">My Profile</h1>
-        <button className="flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full border border-gold/40 text-gold text-sm font-heading font-bold">
+        <button onClick={() => openSheet("edit")} className="flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full border border-gold/40 text-gold text-sm font-heading font-bold">
           <Pencil className="w-3 h-3" />
           Edit
         </button>
@@ -80,23 +82,20 @@ export default function Profile() {
       <div className="flex flex-col items-center pt-6 pb-5">
         <div className="relative">
           <div className="w-28 h-28 rounded-full border-4 border-gold overflow-hidden glow-gold">
-            <img src={myProfile.photos[0]} alt={myProfile.name} className="w-full h-full object-cover" />
+            <img src={profile?.photos?.[0] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"} alt={profile?.name || "Profile"} className="w-full h-full object-cover" />
           </div>
-          <button className="absolute bottom-0 right-0 w-11 h-11 rounded-full bg-gold flex items-center justify-center border-2 border-background">
+          <button onClick={() => openSheet("edit")} className="absolute bottom-0 right-0 w-11 h-11 rounded-full bg-gold flex items-center justify-center border-2 border-background">
             <Camera className="w-4 h-4 text-black" />
           </button>
         </div>
         <h2 className="text-xl font-heading font-bold text-foreground mt-3 flex items-center gap-1.5">
-          {myProfile.name}, {myProfile.age}
+          {profile?.name || "Your Name"}{profile?.age ? `, ${profile.age}` : ""}
           {isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
         </h2>
         <div className="flex items-center gap-1 text-muted-foreground text-sm font-body mt-0.5">
           <MapPin className="w-3.5 h-3.5" />
-          {myProfile.city}
+          {profile?.city || "Add your city"}
         </div>
-        <span className="mt-2 px-3 py-1 rounded-full border border-gold/40 text-gold text-sm font-body font-semibold">
-          {myProfile.vibe}
-        </span>
       </div>
 
       {/* Cards */}
@@ -104,16 +103,18 @@ export default function Profile() {
         {/* Photos */}
         <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
           <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
-            Photos (1/6)
+            Photos ({profile?.photos?.length || 0}/6)
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            <div className="aspect-square rounded-xl overflow-hidden">
-              <img src={myProfile.photos[0]} alt="" className="w-full h-full object-cover" />
-            </div>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="aspect-square rounded-xl border-2 border-dashed border-border/40 flex items-center justify-center">
-                <Camera className="w-5 h-5 text-muted-foreground/40" />
+            {(profile?.photos || []).map((photo, i) => (
+              <div key={i} className="aspect-square rounded-xl overflow-hidden">
+                <img src={photo} alt="" className="w-full h-full object-cover" />
               </div>
+            ))}
+            {Array.from({ length: Math.max(0, 6 - (profile?.photos?.length || 0)) }).map((_, i) => (
+              <button key={`empty-${i}`} onClick={() => openSheet("edit")} className="aspect-square rounded-xl border-2 border-dashed border-border/40 flex items-center justify-center">
+                <Camera className="w-5 h-5 text-muted-foreground/40" />
+              </button>
             ))}
           </div>
         </div>
@@ -123,7 +124,7 @@ export default function Profile() {
           <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-2">
             About Me
           </h3>
-          <p className="text-sm text-foreground/80 font-body">{myProfile.bio}</p>
+          <p className="text-sm text-foreground/80 font-body">{profile?.bio || "Add a bio to let people know about you..."}</p>
         </div>
 
         {/* Interests */}
@@ -132,7 +133,7 @@ export default function Profile() {
             Interests
           </h3>
           <div className="flex flex-wrap gap-2">
-            {myProfile.interests.map((interest) => (
+            {["Amapiano", "Soccer", "Road Trips", "Braai"].map((interest) => (
               <span key={interest} className="px-3 py-1.5 rounded-full border border-gold/30 text-gold text-sm font-body">
                 {interest}
               </span>
@@ -191,6 +192,14 @@ export default function Profile() {
           </button>
         </div>
       </div>
+
+      {/* Edit Profile Dialog */}
+      <EditProfileDialog
+        isOpen={showEdit}
+        profile={profile}
+        onClose={() => closeSheet("edit")}
+        onSaved={() => refetch()}
+      />
 
       {/* Shop Modal */}
       <PikaBooShop isOpen={showShop} onClose={() => closeSheet("shop")} />

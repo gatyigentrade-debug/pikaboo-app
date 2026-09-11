@@ -53,7 +53,7 @@ export default function VerificationSection({ onVerified }) {
     handleClose();
     setSubmitting(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: selectedFile });
+      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file: selectedFile });
 
       if (previousProfile) {
         await base44.entities.DatingProfile.update(previousProfile.id, {

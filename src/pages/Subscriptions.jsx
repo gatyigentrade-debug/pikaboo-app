@@ -155,7 +155,11 @@ export default function Subscriptions() {
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          className="w-full h-14 rounded-full bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 text-black font-heading font-black text-base shadow-xl shadow-amber/50 glow-gold disabled:opacity-70 flex items-center justify-center gap-2"
+          style={{
+            background: "linear-gradient(90deg, #FDE047 0%, #FBBF24 50%, #FB923C 100%)",
+            boxShadow: "0 0 28px rgba(251,191,36,0.65), 0 4px 16px rgba(251,146,60,0.45)"
+          }}
+          className="w-full h-14 rounded-full text-black font-heading font-black text-base disabled:opacity-70 flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
