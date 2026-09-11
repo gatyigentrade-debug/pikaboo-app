@@ -1,6 +1,9 @@
 import { toast } from "sonner";
 
 // Google Play Billing Product IDs
+// IMPORTANT: These must match exactly the product IDs configured in the
+// Google Play Console (Monetize → Products). If a product is "not found",
+// verify the ID here matches the Console entry (case-sensitive, no spaces).
 export const BILLING_PRODUCTS = {
   // Subscriptions
   PLUS_WEEKLY: "pikaboo_plus_weekly",
@@ -36,4 +39,25 @@ export async function triggerPurchase(productId) {
     toast.error("Purchase failed", { description: error.message });
     return { success: false, error };
   }
+}
+
+// Global purchase-error listener — catches native "product not found" and
+// other billing errors for ALL purchase points (Shop, Gold modal, Subscriptions).
+// Subscriptions.jsx also shows an inline error; this toast covers the rest.
+if (typeof window !== "undefined" && !window.__pikabooPurchaseErrorInit) {
+  window.__pikabooPurchaseErrorInit = true;
+  window.addEventListener("pikaboo:purchase-error", (e) => {
+    const raw = e?.detail;
+    const msg = typeof raw === "string" ? raw : raw?.message || raw?.error || "";
+    const lower = (msg || "").toLowerCase();
+    if (lower.includes("not found") || lower.includes("unavailable") || lower.includes("not available") || lower.includes("item not found")) {
+      toast.error("Product not available", {
+        description: "This item isn't available yet. Please try again later or contact support.",
+      });
+    } else if (lower.includes("cancel") || lower.includes("user")) {
+      // User cancelled — no toast needed
+    } else {
+      toast.error("Purchase failed", { description: msg || "Please try again." });
+    }
+  });
 }

@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Zap, Eye, Wine, Star, Crown, Check, Heart, Sparkles } from "lucide-react";
+import { X, Zap, Eye, Wine, Star, Crown, Check, Heart, Sparkles, Loader2 } from "lucide-react";
 import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 import ConsumableInventory from "@/components/shop/ConsumableInventory";
+
+const FREE_PASS_KEY = "pikaboo_free_pass_claimed";
 
 const VENUES = ["Marble JHB", "Shimmy CPT", "The Rooftop", "Ocean Basket"];
 
@@ -50,6 +54,32 @@ const POWER_UPS = [
 export default function PikaBooShop({ isOpen, onClose }) {
   const navigate = useNavigate();
   const [plusCycle, setPlusCycle] = useState("week"); // "week" | "month"
+  const [passClaimed, setPassClaimed] = useState(() => {
+    try { return localStorage.getItem(FREE_PASS_KEY) === "true"; } catch { return false; }
+  });
+  const [claiming, setClaiming] = useState(false);
+
+  const handleClaimPass = async () => {
+    if (passClaimed || claiming) return;
+    setClaiming(true);
+    try {
+      const expires = new Date();
+      expires.setHours(expires.getHours() + 24);
+      await base44.auth.updateMe({
+        is_gold: true,
+        gold_expires_at: expires.toISOString(),
+      });
+      try { localStorage.setItem(FREE_PASS_KEY, "true"); } catch { /* ignore */ }
+      setPassClaimed(true);
+      toast.success("🎉 Free VIP Pass activated!", {
+        description: "Enjoy 24 hours of premium perks!",
+      });
+    } catch (error) {
+      toast.error("Failed to activate pass", { description: error.message });
+    } finally {
+      setClaiming(false);
+    }
+  };
 
   const plusPrice = plusCycle === "week" ? "R39/week" : "R99/month";
   const plusProductId = plusCycle === "week" ? BILLING_PRODUCTS.PLUS_WEEKLY : BILLING_PRODUCTS.PREMIUM_MONTHLY;
@@ -98,8 +128,20 @@ export default function PikaBooShop({ isOpen, onClose }) {
                     </span>
                   ))}
                 </div>
-                <button className="w-full h-11 rounded-full bg-gold text-black font-heading font-bold flex items-center justify-center gap-2">
-                  ⚡ Claim Free VIP Pass
+                <button
+                  onClick={handleClaimPass}
+                  disabled={passClaimed || claiming}
+                  className={`w-full h-11 rounded-full font-heading font-bold flex items-center justify-center gap-2 transition-colors ${
+                    passClaimed
+                      ? "bg-secondary text-muted-foreground"
+                      : "bg-gold text-black active:scale-95"
+                  }`}
+                >
+                  {passClaimed
+                    ? "✓ VIP Pass Claimed"
+                    : claiming
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Activating...</>
+                      : "⚡ Claim Free VIP Pass"}
                 </button>
               </div>
 

@@ -62,7 +62,16 @@ export default function Subscriptions() {
     };
     const onError = (e) => {
       setLoading(false);
-      setError(e?.detail?.message || e?.detail || "Purchase failed. Please try again.");
+      const raw = e?.detail;
+      const msg = typeof raw === "string" ? raw : raw?.message || raw?.error || "";
+      const lower = (msg || "").toLowerCase();
+      if (lower.includes("not found") || lower.includes("unavailable") || lower.includes("not available") || lower.includes("item not found")) {
+        setError("This product isn't available yet. Please verify it's configured in Google Play Console.");
+      } else if (lower.includes("cancel") || lower.includes("user")) {
+        // User cancelled — silently clear loading
+      } else {
+        setError(msg || "Purchase failed. Please try again.");
+      }
     };
     window.addEventListener("pikaboo:purchase-success", onSuccess);
     window.addEventListener("pikaboo:purchase-error", onError);

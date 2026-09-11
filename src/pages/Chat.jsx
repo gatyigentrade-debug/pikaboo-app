@@ -1,4 +1,5 @@
-import { Shield, Settings } from "lucide-react";
+import { Shield, Bell } from "lucide-react";
+import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { base44 } from "@/api/base44Client";
@@ -27,8 +28,12 @@ export default function Chat() {
             <button aria-label="Safety" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
               <Shield className="w-4 h-4" />
             </button>
-            <button aria-label="Settings" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground">
-              <Settings className="w-4 h-4" />
+            <button
+              onClick={() => toast.info("No new notifications", { description: "You're all caught up! 🎉" })}
+              aria-label="Notifications"
+              className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Bell className="w-4 h-4" />
             </button>
           </div>
         </div>

@@ -79,7 +79,7 @@ const SECTIONS = [
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen pb-16" style={{ textShadow: "none" }}>
       {/* Header */}
       <div className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-4">
         <div className="flex items-center gap-2 mb-4">
