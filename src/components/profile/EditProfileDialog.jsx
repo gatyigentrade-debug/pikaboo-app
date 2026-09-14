@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Loader2, Camera, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,6 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
   const [photos, setPhotos] = useState([]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && profile) {
@@ -37,6 +36,7 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
     }
 
     setUploading(true);
+    toast.info(`Uploading ${files.length} photo${files.length > 1 ? "s" : ""}...`);
     try {
       const uploaded = [];
       for (const file of files) {
@@ -47,7 +47,10 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
         const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
         uploaded.push(file_url);
       }
-      if (uploaded.length) setPhotos((prev) => [...prev, ...uploaded]);
+      if (uploaded.length) {
+        setPhotos((prev) => [...prev, ...uploaded]);
+        toast.success(`${uploaded.length} photo${uploaded.length > 1 ? "s" : ""} added`);
+      }
     } catch (error) {
       toast.error("Failed to upload photo", { description: error.message });
     } finally {
@@ -113,10 +116,8 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
                 </div>
               ))}
               {photos.length < 6 && (
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                  className="aspect-square rounded-xl border-2 border-dashed border-border/40 flex flex-col items-center justify-center gap-1 hover:bg-secondary/30 transition-colors disabled:opacity-50"
+                <label
+                  className={`aspect-square rounded-xl border-2 border-dashed border-border/40 flex flex-col items-center justify-center gap-1 hover:bg-secondary/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
                 >
                   {uploading ? <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" /> : (
                     <>
@@ -124,23 +125,22 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
                       <span className="text-xs text-muted-foreground font-body">Add</span>
                     </>
                   )}
-                </button>
+                  {/* Nested inside <label> so the native click forwards to the input
+                      without JavaScript .click() — Android WebView treats label clicks
+                      as trusted user gestures and reliably fires onShowFileChooser. */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoSelect}
+                    disabled={uploading}
+                    className="sr-only"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  />
+                </label>
               )}
             </div>
-            {/* Visually hidden but NOT display:none — display:none causes Android WebView
-                to silently skip WebChromeClient.onShowFileChooser when .click() is called.
-                Keeping the element rendered (opacity:0, absolute) ensures the native file
-                picker bridge fires reliably. */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handlePhotoSelect}
-              style={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px", opacity: 0, pointerEvents: "none" }}
-              tabIndex={-1}
-              aria-hidden="true"
-            />
           </div>
 
           <div>
