@@ -11,7 +11,6 @@ export const BILLING_PRODUCTS = {
   GOLD_MONTHLY: "pikaboo_gold_monthly",
   // Consumable power-ups (one-time purchases)
   BOOST: "pikaboo_boost_friday",
-  DRINK: "pikaboo_drink_3pack",
   UNBLUR: "pikaboo_unblur_instant",
   SUPER_LIKES_5: "pikaboo_superlikes_5",
   SUPER_LIKES_20: "pikaboo_superlikes_20",

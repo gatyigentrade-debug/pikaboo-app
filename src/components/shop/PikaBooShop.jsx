@@ -44,7 +44,6 @@ const GOLD_PERKS = [
 
 const POWER_UPS = [
   { id: "boost", icon: Zap, name: "Friday Night Boost ⚡", tag: "WEEKEND ONLY", tagColor: "text-gold border-gold/40", desc: "Hyper-boost your profile in a category between 6 PM–midnight tonight", price: "R19", productId: BILLING_PRODUCTS.BOOST, iconBg: "bg-gold/15", iconColor: "text-gold" },
-  { id: "drink", icon: Wine, name: "Buy a Drink 🥂", tag: "3-PACK", tagColor: "text-violet border-violet/40", desc: "3 premium animated icebreakers — pins your message to the top of their inbox", price: "R29", productId: BILLING_PRODUCTS.DRINK, iconBg: "bg-violet/15", iconColor: "text-violet" },
   { id: "unblur", icon: Eye, name: "Instant Unblur 👁️", desc: "Reveal a blurred profile without a match — one use", price: "R9", productId: BILLING_PRODUCTS.UNBLUR, iconBg: "bg-teal-500/15", iconColor: "text-teal-400" },
   { id: "super5", icon: Heart, name: "5 Super Likes", desc: "Stand out and triple your chances of matching", price: "R29", productId: BILLING_PRODUCTS.SUPER_LIKES_5, iconBg: "bg-pink-500/15", iconColor: "text-pink-400" },
   { id: "super20", icon: Heart, name: "20 Super Likes", tag: "BEST VALUE", tagColor: "text-amber border-amber/40", desc: "Bulk super likes for the serious swiper", price: "R99", productId: BILLING_PRODUCTS.SUPER_LIKES_20, iconBg: "bg-amber/15", iconColor: "text-amber" },
