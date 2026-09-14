@@ -40,11 +40,14 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
     try {
       const uploaded = [];
       for (const file of files) {
-        if (!file.type.startsWith("image/")) continue;
+        if (!file.type.startsWith("image/")) {
+          toast.error("Only image files are supported", { description: file.name });
+          continue;
+        }
         const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
         uploaded.push(file_url);
       }
-      setPhotos((prev) => [...prev, ...uploaded]);
+      if (uploaded.length) setPhotos((prev) => [...prev, ...uploaded]);
     } catch (error) {
       toast.error("Failed to upload photo", { description: error.message });
     } finally {
@@ -124,13 +127,19 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
                 </button>
               )}
             </div>
+            {/* Visually hidden but NOT display:none — display:none causes Android WebView
+                to silently skip WebChromeClient.onShowFileChooser when .click() is called.
+                Keeping the element rendered (opacity:0, absolute) ensures the native file
+                picker bridge fires reliably. */}
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               multiple
               onChange={handlePhotoSelect}
-              className="hidden"
+              style={{ position: "absolute", top: 0, left: 0, width: "1px", height: "1px", opacity: 0, pointerEvents: "none" }}
+              tabIndex={-1}
+              aria-hidden="true"
             />
           </div>
 
