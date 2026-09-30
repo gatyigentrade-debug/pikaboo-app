@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { dedupeMatches } from "@/utils/dedupeProfiles";
 
 const blurredAvatars = [
   { color: "#4A1A5A", initial: "Z" },
@@ -15,10 +16,14 @@ const blurredAvatars = [
 export default function Matches() {
   const navigate = useNavigate();
 
-  const { data: matches = [], refetch } = useQuery({
+  const { data: rawMatches = [], refetch } = useQuery({
     queryKey: ["matches"],
     queryFn: () => base44.entities.Match.filter({ status: "matched" }, '-updated_date'),
   });
+
+  // One row per person — the feed can hold more than one match record
+  // pointing at the same profile.
+  const matches = dedupeMatches(rawMatches);
 
   const handleRefresh = async () => { await refetch(); };
 

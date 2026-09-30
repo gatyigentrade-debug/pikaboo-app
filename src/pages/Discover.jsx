@@ -5,13 +5,14 @@ import NearbyMap from "@/components/discover/NearbyMap";
 import OnlineBubbles from "@/components/discover/OnlineBubbles";
 import EncounterCard from "@/components/discover/EncounterCard";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
+import { dedupeProfiles } from "@/utils/dedupeProfiles";
 
 const DEFAULT_RADIUS_KM = 50;
 const withTimeout = (promise, ms, fallback) =>
   Promise.race([promise, new Promise((resolve) => setTimeout(() => resolve(fallback), ms))]);
 
 export default function Discover() {
-  const { data: profiles = [], isLoading, refetch, isError } = useQuery({
+  const { data: rawProfiles = [], isLoading, refetch, isError } = useQuery({
     queryKey: ["profiles"],
     queryFn: async () => {
       try {
@@ -23,6 +24,9 @@ export default function Discover() {
     retry: 1,
     staleTime: 60_000,
   });
+
+  // One card per person — a profile record can exist more than once per account.
+  const profiles = dedupeProfiles(rawProfiles);
 
   const handleRefresh = async () => { await refetch(); };
 
