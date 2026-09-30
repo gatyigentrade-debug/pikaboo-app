@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import PikaBooShop from "@/components/shop/PikaBooShop";
 import VerificationSection from "@/components/profile/VerificationSection";
 import EditProfileDialog from "@/components/profile/EditProfileDialog";
+import InterestsEditorDialog from "@/components/profile/InterestsEditorDialog";
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +27,7 @@ export default function Profile() {
   const showShop = searchParams.get("shop") === "open";
   const showDeleteDialog = searchParams.get("delete_confirm") === "open";
   const showEdit = searchParams.get("edit") === "open";
+  const showInterests = searchParams.get("interests") === "open";
 
   const openSheet = (key) => {
     const next = new URLSearchParams(searchParams);
@@ -129,16 +131,34 @@ export default function Profile() {
 
         {/* Interests */}
         <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
-            Interests
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {["Amapiano", "Soccer", "Road Trips", "Braai"].map((interest) => (
-              <span key={interest} className="px-3 py-1.5 rounded-full border border-gold/30 text-gold text-sm font-body">
-                {interest}
-              </span>
-            ))}
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider">
+              Interests
+            </h3>
+            <button
+              onClick={() => openSheet("interests")}
+              className="flex items-center gap-1 px-3 min-h-[44px] rounded-full border border-gold/40 text-gold text-xs font-heading font-bold"
+            >
+              <Pencil className="w-3 h-3" />
+              Edit
+            </button>
           </div>
+          {profile?.interests?.length ? (
+            <div className="flex flex-wrap gap-2">
+              {profile.interests.map((interest) => (
+                <span key={interest} className="px-3 py-1.5 rounded-full border border-gold/30 text-gold text-sm font-body">
+                  {interest}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <button
+              onClick={() => openSheet("interests")}
+              className="w-full py-3 rounded-xl border border-dashed border-border/50 text-sm font-body text-muted-foreground"
+            >
+              Tap to add your interests
+            </button>
+          )}
         </div>
 
         {/* Verification */}
@@ -198,6 +218,14 @@ export default function Profile() {
         isOpen={showEdit}
         profile={profile}
         onClose={() => closeSheet("edit")}
+        onSaved={() => refetch()}
+      />
+
+      {/* Interests Editor */}
+      <InterestsEditorDialog
+        isOpen={showInterests}
+        profile={profile}
+        onClose={() => closeSheet("interests")}
         onSaved={() => refetch()}
       />
 

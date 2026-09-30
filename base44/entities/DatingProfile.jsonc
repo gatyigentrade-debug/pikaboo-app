@@ -28,6 +28,13 @@
       "type": "string",
       "description": "Short bio"
     },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Interest tags the user picked for their profile"
+    },
     "braai_starter": {
       "type": "string",
       "description": "One-line braai starter conversation piece"
