@@ -9,6 +9,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import { ensureMyProfile } from '@/hooks/useMyProfile';
 import AppLayout from '@/components/layout/AppLayout';
 import Chat from '@/pages/Chat';
 import Likes from '@/pages/Likes';
@@ -31,7 +32,15 @@ const PageLoader = () => (
 const ROOT_TABS = ["/explore", "/matches", "/chat", "/profile"];
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin, user } = useAuth();
+
+  // As soon as the user is signed in, make sure a dating profile exists so it
+  // can never be missing later in the app. Failure is silent — the profile
+  // page shows its own create prompt if this did not go through.
+  useEffect(() => {
+    if (!user?.id) return;
+    ensureMyProfile().catch(() => {});
+  }, [user?.id]);
   const location = useLocation();
   const navigate = useNavigate();
 

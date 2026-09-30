@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield } from "lucide-react";
+import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield, UserRound } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useMyProfile } from "@/hooks/useMyProfile";
 import { toast } from "sonner";
 import PikaBooShop from "@/components/shop/PikaBooShop";
 import VerificationSection from "@/components/profile/VerificationSection";
@@ -15,14 +15,8 @@ export default function Profile() {
   const [deleting, setDeleting] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
 
-  const { data: profile, refetch } = useQuery({
-    queryKey: ["myProfile"],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      const profiles = await base44.entities.DatingProfile.filter({ created_by_id: user.id });
-      return profiles[0] || null;
-    },
-  });
+  const { profile, isLoading, refetch } = useMyProfile();
+  const showVerified = isVerified || profile?.is_verified === true;
 
   const showShop = searchParams.get("shop") === "open";
   const showDeleteDialog = searchParams.get("delete_confirm") === "open";
@@ -69,6 +63,49 @@ export default function Profile() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 py-32">
+        <Loader2 className="w-7 h-7 text-gold animate-spin" />
+        <p className="text-sm text-muted-foreground font-body">Loading your profile...</p>
+      </div>
+    );
+  }
+
+  // Fallback: signed in, but there is no profile record to render yet.
+  if (!profile) {
+    return (
+      <div className="pb-28">
+        <div className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))]">
+          <h1 className="text-xl font-heading font-bold text-foreground">My Profile</h1>
+        </div>
+        <div className="px-4 mt-6">
+          <div className="rounded-2xl bg-secondary/30 border border-border/40 p-6 text-center">
+            <div className="w-14 h-14 rounded-full bg-gold/15 flex items-center justify-center mx-auto mb-3">
+              <UserRound className="w-6 h-6 text-gold" />
+            </div>
+            <p className="text-base font-heading font-bold text-foreground">Your profile isn't set up yet</p>
+            <p className="text-sm text-muted-foreground font-body mt-1 mb-5">
+              Add your name, a photo and a few details so other Boos can find you.
+            </p>
+            <button
+              onClick={() => openSheet("edit")}
+              className="w-full min-h-[44px] rounded-full bg-gold text-black font-heading font-bold text-sm"
+            >
+              Create my profile
+            </button>
+          </div>
+        </div>
+        <EditProfileDialog
+          isOpen={showEdit}
+          profile={profile}
+          onClose={() => closeSheet("edit")}
+          onSaved={() => refetch()}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="pb-28">
       {/* Header */}
@@ -92,7 +129,7 @@ export default function Profile() {
         </div>
         <h2 className="text-xl font-heading font-bold text-foreground mt-3 flex items-center gap-1.5">
           {profile?.name || "Your Name"}{profile?.age ? `, ${profile.age}` : ""}
-          {isVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
+          {showVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
         </h2>
         <div className="flex items-center gap-1 text-muted-foreground text-sm font-body mt-0.5">
           <MapPin className="w-3.5 h-3.5" />
