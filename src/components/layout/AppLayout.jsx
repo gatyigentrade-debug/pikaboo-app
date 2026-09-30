@@ -101,7 +101,10 @@ export default function AppLayout() {
       <div className="fixed inset-0 pointer-events-none campfire-glow z-0" />
 
       {/* Keep-alive tab panels */}
-      <main className="relative z-10 pb-20 max-w-lg mx-auto">
+      <main
+        className="relative z-10 max-w-lg mx-auto"
+        style={{ paddingBottom: "calc(7rem + env(safe-area-inset-bottom))" }}
+      >
         {TABS.map(({ path, Component }) => {
           const isActive = currentPath === path || (path === "/chat" && currentPath.startsWith("/chat/"));
           if (!mounted[path]) return null;

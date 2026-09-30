@@ -121,7 +121,10 @@ export default function Likes() {
       </div>
 
       {/* Sticky bottom CTA */}
-      <div className="fixed bottom-20 left-0 right-0 px-4 z-30">
+      <div
+        className="fixed left-0 right-0 px-4 z-30"
+        style={{ bottom: "calc(6rem + env(safe-area-inset-bottom))" }}
+      >
         <button
           onClick={() => navigate("/subscriptions")}
           className="w-full max-w-lg mx-auto h-12 rounded-full bg-gold text-black font-heading font-bold flex items-center justify-center gap-2 glow-gold active:scale-95 transition-transform"
