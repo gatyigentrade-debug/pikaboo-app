@@ -84,10 +84,10 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[85vh] overflow-y-auto overscroll-y-contain"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[88vh] flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-border/30">
+            <div className="shrink-0 bg-background/95 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-border/30">
               <button onClick={onClose} className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform">
                 <X className="w-5 h-5 text-foreground" />
               </button>
@@ -97,7 +97,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
               </button>
             </div>
 
-            <div className="px-4 py-5 space-y-6">
+            <div className="flex-1 overflow-y-auto overscroll-y-contain px-4 py-5 pb-6 space-y-6">
               {/* Distance */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -168,14 +168,14 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
               </div>
             </div>
 
-            {/* Apply button */}
+            {/* Apply button — pinned below the scrollable body */}
             <div
-              className="sticky bottom-0 bg-background/90 backdrop-blur-xl px-4 py-4 border-t border-border/30"
+              className="shrink-0 bg-background/95 backdrop-blur-xl px-4 pt-3 border-t border-border/30"
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
             >
               <button
                 onClick={handleApply}
-                className="w-full h-12 rounded-full bg-primary text-primary-foreground font-heading font-bold text-sm"
+                className="w-full h-14 min-h-[44px] rounded-full bg-gradient-to-r from-primary to-amber text-primary-foreground font-heading font-bold text-base tracking-wide shadow-[0_8px_28px_hsla(25,95%,55%,0.45)] active:scale-[0.98] transition-transform"
               >
                 Apply Filters
               </button>
