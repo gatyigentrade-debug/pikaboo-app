@@ -4,10 +4,16 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "First name"
+      "description": "Display name \u2014 only the first name is ever shown to other users"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth. Age is always derived from this, never entered directly"
     },
     "age": {
-      "type": "number"
+      "type": "number",
+      "description": "Age derived from date_of_birth when the profile is saved"
     },
     "gender": {
       "type": "string",
@@ -22,7 +28,7 @@
       "items": {
         "type": "string"
       },
-      "description": "Photo URLs"
+      "description": "URLs of photos the user uploaded \u2014 never seeded or default images"
     },
     "bio": {
       "type": "string",
@@ -91,7 +97,8 @@
     },
     "is_verified": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "description": "Set only by the real verification flow, together with verification_status = verified"
     },
     "verification_status": {
       "type": "string",
@@ -126,10 +133,6 @@
         "not_sure"
       ]
     },
-    "distance_km": {
-      "type": "number",
-      "default": 50
-    },
     "is_vip": {
       "type": "boolean",
       "default": false,
@@ -153,8 +156,7 @@
     }
   },
   "required": [
-    "name",
-    "age"
+    "name"
   ],
   "rls": {
     "create": {
@@ -165,7 +167,16 @@
       "created_by_id": "{{user.id}}"
     },
     "delete": {
-      "created_by_id": "{{user.id}}"
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
     }
   }
 }
