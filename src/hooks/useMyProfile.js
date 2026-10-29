@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { ageFromDob } from "@/utils/profile";
 
 /**
- * Builds a safe starter profile for a user who has none yet. Only the fields
- * the schema requires (name, age) get real values — everything else is left
- * empty so the user can fill it in from the Edit dialog.
+ * Builds a starter profile for a user who has none yet. No age, gender or
+ * photo is invented: the profile stays hidden from feeds until the user adds
+ * their real details in the Edit dialog.
  */
 function buildDefaultProfile(user) {
   const name =
@@ -14,7 +15,6 @@ function buildDefaultProfile(user) {
 
   return {
     name,
-    age: 18,
     bio: "",
     city: "",
     photos: [],
@@ -54,6 +54,19 @@ export async function ensureMyProfile() {
   } finally {
     inFlight = null;
   }
+}
+
+/**
+ * Stores the date of birth captured at sign-up on the signed-in user's profile
+ * (creating the profile first if needed) and keeps the derived age in sync.
+ */
+export async function saveDateOfBirth(dateOfBirth) {
+  const profile = await ensureMyProfile();
+  if (!profile?.id) return null;
+  return await base44.entities.DatingProfile.update(profile.id, {
+    date_of_birth: dateOfBirth,
+    age: ageFromDob(dateOfBirth),
+  });
 }
 
 /**
