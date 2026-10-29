@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { firstName } from "@/utils/profile";
 
 export default function MatchCard({ match, onClick }) {
+  const name = firstName(match.matched_name);
+
   return (
     <motion.button
       initial={{ opacity: 0, y: 10 }}
@@ -12,10 +16,11 @@ export default function MatchCard({ match, onClick }) {
       {/* Avatar */}
       <div className="relative flex-shrink-0">
         <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/30">
-          <img
-            src={match.matched_photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"}
-            alt={match.matched_name}
+          <ProfilePhoto
+            src={match.matched_photo}
+            alt={name}
             className="w-full h-full object-cover"
+            iconClassName="w-6 h-6"
           />
         </div>
         {match.unread_count > 0 && (
@@ -29,7 +34,7 @@ export default function MatchCard({ match, onClick }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <h3 className="font-heading font-semibold text-foreground text-sm truncate">
-            {match.matched_name}
+            {name}
           </h3>
           {match.status === "pending" && (
             <div className="flex items-center gap-1 text-amber text-sm">

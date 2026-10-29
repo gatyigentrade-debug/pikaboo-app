@@ -5,6 +5,8 @@ import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { dedupeMatches } from "@/utils/dedupeProfiles";
+import { firstName } from "@/utils/profile";
+import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
 
 const blurredAvatars = [
   { color: "#4A1A5A", initial: "Z" },
@@ -16,14 +18,19 @@ const blurredAvatars = [
 export default function Matches() {
   const navigate = useNavigate();
 
-  const { data: rawMatches = [], refetch } = useQuery({
+  const { eligibleIds, isLoading: profilesLoading } = useDiscoverableProfiles();
+
+  const { data: rawMatches = [], refetch, isLoading: matchesLoading } = useQuery({
     queryKey: ["matches"],
     queryFn: () => base44.entities.Match.filter({ status: "matched" }, '-updated_date'),
   });
 
-  // One row per person — the feed can hold more than one match record
-  // pointing at the same profile.
-  const matches = dedupeMatches(rawMatches);
+  // One row per person, and only for profiles that are complete. Names are
+  // reduced to the first name because surnames are never shared.
+  const matches = dedupeMatches(rawMatches)
+    .filter((m) => eligibleIds.has(m.matched_profile_id))
+    .map((m) => ({ ...m, matched_name: firstName(m.matched_name) }));
+  const loading = matchesLoading || profilesLoading;
 
   const handleRefresh = async () => { await refetch(); };
 
@@ -78,7 +85,11 @@ export default function Matches() {
           <h2 className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-3">
             Your Matches
           </h2>
-          {matches.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-7 h-7 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : matches.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <p className="text-sm text-muted-foreground font-body">No matches yet. Keep swiping to find your Boo! 🔥</p>
             </div>

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, X } from "lucide-react";
 import OpeningMoveComposer from "./OpeningMoveComposer";
+import { isVerifiedProfile } from "@/utils/profile";
 
 export default function MatchModal({ matchedProfile, createdMatch, onChat }) {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ export default function MatchModal({ matchedProfile, createdMatch, onChat }) {
         {showComposer && matchedProfile && (
           <OpeningMoveComposer
             matchedProfile={matchedProfile}
-            isVerified={matchedProfile.is_verified ?? true}
+            isVerified={isVerifiedProfile(matchedProfile)}
             onSend={handleSend}
             onClose={() => setShowComposer(false)}
           />

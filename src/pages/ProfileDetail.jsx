@@ -4,23 +4,23 @@ import { ArrowLeft, Users } from "lucide-react";
 import SwipeCard from "@/components/swipe/SwipeCard";
 import SwipeActions from "@/components/swipe/SwipeActions";
 import MatchModal from "@/components/swipe/MatchModal";
+import { realPhotos } from "@/utils/profile";
 
 const normalize = (p) => ({
   ...p,
-  photos: p.photos || (p.photo ? [p.photo] : []),
-  city: p.city || "Nearby",
+  photos: realPhotos(p),
 });
 
 export default function ProfileDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { profiles: raw = [], startName, category } = location.state || {};
+  const { profiles: raw = [], startId, category } = location.state || {};
 
   // Build the deck: start at the tapped profile, then the rest. Fall back to a single passed profile.
   const ordered = (() => {
     const list = raw.length ? raw : location.state?.profile ? [location.state.profile] : [];
-    if (!startName) return list;
-    const idx = list.findIndex((p) => p.name === startName);
+    if (!startId) return list;
+    const idx = list.findIndex((p) => p.id === startId);
     if (idx <= 0) return list;
     return [list[idx], ...list.slice(0, idx), ...list.slice(idx + 1)];
   })();
@@ -81,7 +81,7 @@ export default function ProfileDetail() {
                 const isTop = i === arr.length - 1;
                 return (
                   <SwipeCard
-                    key={p.name}
+                    key={p.id || p.name}
                     ref={isTop ? topCardRef : null}
                     profile={p}
                     isTop={isTop}

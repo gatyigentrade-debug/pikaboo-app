@@ -3,6 +3,7 @@ import { ShieldCheck, BadgeCheck, Loader2, Camera, Upload, ChevronRight, Clock, 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { ensureMyProfile } from "@/hooks/useMyProfile";
 
 export default function VerificationSection({ onVerified }) {
   const [profile, setProfile] = useState(null);
@@ -49,7 +50,7 @@ export default function VerificationSection({ onVerified }) {
     if (!selectedFile) return;
     // Optimistically toggle to pending immediately for smooth UX
     const previousProfile = profile;
-    setProfile(prev => prev ? { ...prev, verification_status: "pending" } : { id: "temp", name: "User", age: 18, verification_status: "pending" });
+    setProfile(prev => prev ? { ...prev, verification_status: "pending" } : prev);
     handleClose();
     setSubmitting(true);
     try {
@@ -61,12 +62,14 @@ export default function VerificationSection({ onVerified }) {
           verification_photo: file_url,
         });
       } else {
-        await base44.entities.DatingProfile.create({
-          name: "User",
-          age: 18,
-          verification_status: "pending",
-          verification_photo: file_url,
-        });
+        // No profile record yet — create the real one for this user, never a placeholder person
+        const created = await ensureMyProfile();
+        if (created?.id) {
+          await base44.entities.DatingProfile.update(created.id, {
+            verification_status: "pending",
+            verification_photo: file_url,
+          });
+        }
       }
 
       toast.success("Verification photo submitted!", {

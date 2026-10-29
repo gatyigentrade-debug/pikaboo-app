@@ -8,7 +8,11 @@ export function firstName(name) {
 /** Age in whole years from a date of birth, or null when it can't be derived. */
 export function ageFromDob(dateOfBirth) {
   if (!dateOfBirth) return null;
-  const birth = new Date(dateOfBirth);
+  // Parse yyyy-mm-dd as a local date so birthday boundaries stay exact
+  const parts = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(dateOfBirth));
+  const birth = parts
+    ? new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]))
+    : new Date(dateOfBirth);
   if (Number.isNaN(birth.getTime())) return null;
   const now = new Date();
   let age = now.getFullYear() - birth.getFullYear();

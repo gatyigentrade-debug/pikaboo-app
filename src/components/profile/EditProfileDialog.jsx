@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Camera, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { ageFromDob, MIN_AGE } from "@/utils/profile";
+
+const maxDateOfBirth = () => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - MIN_AGE);
+  return d.toISOString().slice(0, 10);
+};
 
 export default function EditProfileDialog({ isOpen, profile, onClose, onSaved }) {
-  const [form, setForm] = useState({ name: "", age: "", bio: "", city: "" });
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({ name: "", date_of_birth: "", gender: "", bio: "", city: "" });
   const [photos, setPhotos] = useState([]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -15,13 +24,14 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
     if (isOpen && profile) {
       setForm({
         name: profile.name || "",
-        age: profile.age?.toString() || "",
+        date_of_birth: profile.date_of_birth || "",
+        gender: profile.gender || "",
         bio: profile.bio || "",
         city: profile.city || "",
       });
       setPhotos(profile.photos || []);
     } else if (isOpen && !profile) {
-      setForm({ name: "", age: "", bio: "", city: "" });
+      setForm({ name: "", date_of_birth: "", gender: "", bio: "", city: "" });
       setPhotos([]);
     }
   }, [isOpen, profile]);
@@ -63,20 +73,42 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
   };
 
   const handleSave = async () => {
+    const name = form.name.trim();
+    if (!name) {
+      toast.error("Add your name to save your profile");
+      return;
+    }
+    if (!form.date_of_birth) {
+      toast.error("Add your date of birth");
+      return;
+    }
+    const age = ageFromDob(form.date_of_birth);
+    if (age === null || age < MIN_AGE) {
+      toast.error("You must be 18 or older to use PikaBoo");
+      return;
+    }
+
     setSaving(true);
     try {
       const data = {
-        name: form.name.trim() || "User",
-        age: parseInt(form.age) || 18,
+        name,
+        date_of_birth: form.date_of_birth,
+        age,
         bio: form.bio.trim(),
         city: form.city.trim(),
         photos,
       };
+      if (form.gender) data.gender = form.gender;
       if (profile?.id) {
         await base44.entities.DatingProfile.update(profile.id, data);
       } else {
         await base44.entities.DatingProfile.create(data);
       }
+      // Refresh the profile and every feed built from it
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["myProfile"] }),
+        queryClient.invalidateQueries({ queryKey: ["allProfiles"] }),
+      ]);
       toast.success("Profile updated!");
       onSaved?.();
       onClose();
@@ -148,8 +180,29 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
             <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" />
           </div>
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">Age</label>
-            <Input type="number" value={form.age} onChange={(e) => setForm({ ...form, age: e.target.value })} placeholder="Your age" />
+            <label className="text-sm font-body text-muted-foreground mb-1 block">Date of birth</label>
+            <Input
+              type="date"
+              value={form.date_of_birth}
+              max={maxDateOfBirth()}
+              onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
+            />
+            {form.date_of_birth && (
+              <p className="text-xs text-muted-foreground font-body mt-1">Age: {ageFromDob(form.date_of_birth) ?? "—"}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm font-body text-muted-foreground mb-1 block">Gender</label>
+            <select
+              value={form.gender}
+              onChange={(e) => setForm({ ...form, gender: e.target.value })}
+              className="w-full h-9 rounded-md bg-secondary border border-border/40 px-3 text-sm font-body text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            >
+              <option value="">Select</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="non-binary">Non-binary</option>
+            </select>
           </div>
           <div>
             <label className="text-sm font-body text-muted-foreground mb-1 block">City</label>

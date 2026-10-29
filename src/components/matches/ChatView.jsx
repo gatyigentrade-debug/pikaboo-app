@@ -7,6 +7,9 @@ import ReportBlockSheet from "@/components/matches/ReportBlockSheet";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { firstName } from "@/utils/profile";
+import { useMyProfile } from "@/hooks/useMyProfile";
 
 const QUICK_REPLIES = ["😍 Lekker!", "🔥 Howzit?", "Let's braai! 🥩", "Tell me more 👀", "You're funny 😂"];
 
@@ -40,6 +43,8 @@ const buildSample = (name) => [
 
 export default function ChatView({ match, onBack, openingMessage }) {
   const { user } = useAuth();
+  const { profile: myProfile } = useMyProfile();
+  const partnerName = firstName(match.matched_name);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [entityMessages, setEntityMessages] = useState([]);
@@ -288,13 +293,13 @@ export default function ChatView({ match, onBack, openingMessage }) {
           {/* Avatar */}
           <div className="relative flex-shrink-0">
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/40">
-              <img src={match.matched_photo || ""} alt={match.matched_name} className="w-full h-full object-cover" />
+              <ProfilePhoto src={match.matched_photo} alt={partnerName} className="w-full h-full object-cover" iconClassName="w-5 h-5" />
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
           </div>
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{match.matched_name}</h3>
+            <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{partnerName}</h3>
             <p className="text-sm text-green-400 font-body">Active now</p>
           </div>
         </button>
@@ -340,7 +345,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
       <div className="flex justify-center py-4">
         <div className="flex items-center gap-3">
           <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-primary/50 glow-orange">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="You" className="w-full h-full object-cover" />
+            <ProfilePhoto src={myProfile?.photos?.[0]} alt="You" className="w-full h-full object-cover" iconClassName="w-7 h-7" />
           </div>
           <div className="flex flex-col items-center">
             <div className="flex gap-0.5">
@@ -351,7 +356,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
             <span className="text-sm text-primary font-heading font-bold mt-1">It's a Match!</span>
           </div>
           <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-primary/50 glow-orange">
-            <img src={match.matched_photo || ""} alt={match.matched_name} className="w-full h-full object-cover" />
+            <ProfilePhoto src={match.matched_photo} alt={partnerName} className="w-full h-full object-cover" iconClassName="w-7 h-7" />
           </div>
         </div>
       </div>
@@ -383,7 +388,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
                   <div className="w-6 h-6 flex-shrink-0">
                     {showAvatar && (
                       <div className="w-6 h-6 rounded-full overflow-hidden">
-                        <img src={match.matched_photo || ""} alt="" className="w-full h-full object-cover" />
+                        <ProfilePhoto src={match.matched_photo} alt="" className="w-full h-full object-cover" iconClassName="w-4 h-4" />
                       </div>
                     )}
                   </div>
@@ -484,7 +489,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
               className="flex items-end gap-2"
             >
               <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
-                <img src={match.matched_photo || ""} alt="" className="w-full h-full object-cover" />
+                <ProfilePhoto src={match.matched_photo} alt="" className="w-full h-full object-cover" iconClassName="w-4 h-4" />
               </div>
               <div className="bg-secondary rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1 items-center">
                 {[0, 1, 2].map((i) => (
@@ -566,7 +571,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-              placeholder={`Message ${match.matched_name}...`}
+              placeholder={`Message ${partnerName}...`}
               className="bg-secondary border-none rounded-full text-sm font-body placeholder:text-muted-foreground pr-10"
             />
             <button
@@ -623,7 +628,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
       {/* Report / Block Sheet */}
       {showReportSheet && (
         <ReportBlockSheet
-          matchName={match.matched_name}
+          matchName={partnerName}
           onClose={() => setShowReportSheet(false)}
         />
       )}

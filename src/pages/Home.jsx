@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { Flame, SlidersHorizontal, Crown } from "lucide-react";
 import SwipeCard from "@/components/swipe/SwipeCard";
@@ -12,6 +11,7 @@ import { useGold } from "@/hooks/useGold";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
+import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
 
 const FREE_SWIPE_LIMIT = 20;
 
@@ -44,10 +44,8 @@ export default function Home() {
     }, { replace: true });
   }, [setSearchParams]);
 
-  const { data: profiles = [], isLoading } = useQuery({
-    queryKey: ["profiles"],
-    queryFn: () => base44.entities.DatingProfile.list('-created_date', 30),
-  });
+  // Only complete, adult profiles with a real photo reach the deck
+  const { discoverable: profiles, isLoading } = useDiscoverableProfiles();
 
   const currentProfile = profiles[currentIdx];
   const nextProfile = profiles[currentIdx + 1];

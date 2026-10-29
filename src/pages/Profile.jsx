@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield, UserRound } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
@@ -9,14 +9,18 @@ import PikaBooShop from "@/components/shop/PikaBooShop";
 import VerificationSection from "@/components/profile/VerificationSection";
 import EditProfileDialog from "@/components/profile/EditProfileDialog";
 import InterestsEditorDialog from "@/components/profile/InterestsEditorDialog";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { useAuth } from "@/lib/AuthContext";
+import { ageFromDob, firstName, isVerifiedProfile } from "@/utils/profile";
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [deleting, setDeleting] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
+  const { user } = useAuth();
 
   const { profile, isLoading, refetch } = useMyProfile();
-  const showVerified = isVerified || profile?.is_verified === true;
+  const age = ageFromDob(profile?.date_of_birth);
+  const showVerified = isVerifiedProfile(profile);
 
   const showShop = searchParams.get("shop") === "open";
   const showDeleteDialog = searchParams.get("delete_confirm") === "open";
@@ -121,14 +125,14 @@ export default function Profile() {
       <div className="flex flex-col items-center pt-6 pb-5">
         <div className="relative">
           <div className="w-28 h-28 rounded-full border-4 border-gold overflow-hidden glow-gold">
-            <img src={profile?.photos?.[0] || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop"} alt={profile?.name || "Profile"} className="w-full h-full object-cover" />
+            <ProfilePhoto src={profile?.photos?.[0]} alt={profile?.name || "Your profile"} className="w-full h-full object-cover" iconClassName="w-10 h-10" />
           </div>
           <button onClick={() => openSheet("edit")} className="absolute bottom-0 right-0 w-11 h-11 rounded-full bg-gold flex items-center justify-center border-2 border-background">
             <Camera className="w-4 h-4 text-black" />
           </button>
         </div>
         <h2 className="text-xl font-heading font-bold text-foreground mt-3 flex items-center gap-1.5">
-          {profile?.name || "Your Name"}{profile?.age ? `, ${profile.age}` : ""}
+          {firstName(profile?.name) || "Your name"}{age ? `, ${age}` : ""}
           {showVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
         </h2>
         <div className="flex items-center gap-1 text-muted-foreground text-sm font-body mt-0.5">
@@ -199,7 +203,7 @@ export default function Profile() {
         </div>
 
         {/* Verification */}
-        <VerificationSection onVerified={setIsVerified} />
+        <VerificationSection />
 
         {/* PikaBoo Shop */}
         <button
@@ -234,6 +238,21 @@ export default function Profile() {
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </a>
+          {user?.role === "admin" && (
+            <Link
+              to="/admin/data-quality"
+              className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors mb-1"
+            >
+              <div className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
+                <ShieldAlert className="w-4 h-4 text-gold" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-heading font-bold text-foreground">Data quality review</p>
+                <p className="text-sm text-muted-foreground font-body">Profiles missing details, admins only</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            </Link>
+          )}
           <button
             onClick={() => openSheet("delete_confirm")}
             className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-destructive/10 transition-colors text-left"

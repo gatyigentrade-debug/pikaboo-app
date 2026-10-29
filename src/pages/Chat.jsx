@@ -4,16 +4,25 @@ import { Link, useNavigate } from "react-router-dom";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { dedupeMatches } from "@/utils/dedupeProfiles";
+import { firstName } from "@/utils/profile";
+import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
 
 export default function Chat() {
   const navigate = useNavigate();
+  const { eligibleIds } = useDiscoverableProfiles();
 
-  const { data: matches = [], refetch } = useQuery({
+  const { data: rawMatches = [], refetch } = useQuery({
     queryKey: ["matches"],
     queryFn: () => base44.entities.Match.filter({ status: "matched" }, '-updated_date'),
   });
 
   const handleRefresh = async () => { await refetch(); };
+
+  // Complete profiles only, one row per person, first names only
+  const matches = dedupeMatches(rawMatches)
+    .filter((m) => eligibleIds.has(m.matched_profile_id))
+    .map((m) => ({ ...m, matched_name: firstName(m.matched_name) }));
 
   const newMatches = matches.filter((m) => !m.last_message);
   const conversations = matches.filter((m) => m.last_message);

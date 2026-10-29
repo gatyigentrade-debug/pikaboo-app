@@ -9,11 +9,20 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
+import { saveDateOfBirth } from "@/hooks/useMyProfile";
+import { ageFromDob, MIN_AGE } from "@/utils/profile";
+
+const maxDateOfBirth = () => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - MIN_AGE);
+  return d.toISOString().slice(0, 10);
+};
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
@@ -24,6 +33,15 @@ export default function Register() {
     setError("");
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      return;
+    }
+    const age = ageFromDob(dateOfBirth);
+    if (!dateOfBirth || age === null) {
+      setError("Please add your date of birth");
+      return;
+    }
+    if (age < MIN_AGE) {
+      setError("You must be 18 or older to join PikaBoo");
       return;
     }
     setLoading(true);
@@ -45,6 +63,8 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
+      // Save the date of birth captured at sign-up onto the new profile
+      await saveDateOfBirth(dateOfBirth).catch(() => {});
       window.location.href = "/";
     } catch (err) {
       setError(err.message || "Invalid verification code");
@@ -195,6 +215,19 @@ export default function Register() {
               required
             />
           </div>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="dob" className="text-slate-200">Date of birth</Label>
+          <Input
+            id="dob"
+            type="date"
+            max={maxDateOfBirth()}
+            value={dateOfBirth}
+            onChange={(e) => setDateOfBirth(e.target.value)}
+            className="h-12 bg-black/40 border-amber-500/40 text-white"
+            required
+          />
+          <p className="text-xs text-slate-300">You must be 18 or older to join.</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="confirm" className="text-slate-200">Confirm Password</Label>

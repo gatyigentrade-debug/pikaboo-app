@@ -3,6 +3,8 @@ import { motion, AnimatePresence, useMotionValue, useTransform, useAnimation, us
 import { MapPin, Flame, ChevronDown, MessageCircle, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ReportUserSheet from "@/components/common/ReportUserSheet";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { firstName, isVerifiedProfile, realPhotos } from "@/utils/profile";
 
 const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMessage }, ref) {
   const [imgIdx, setImgIdx] = useState(0);
@@ -19,8 +21,11 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   const nopeGlow = useTransform(x, [-150, -20], [0.55, 0]);
   const boxShadow = useMotionTemplate`0 0 40px rgba(74, 222, 128, ${likeGlow}), 0 0 40px rgba(248, 113, 113, ${nopeGlow})`;
 
-  const photos = profile.photos || [];
-  const photo = photos[imgIdx] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=800&fit=crop";
+  // Only real uploaded photos — no stock fallback that could pass as this person
+  const photos = realPhotos(profile);
+  const photo = photos[imgIdx] || null;
+  const displayName = firstName(profile.name);
+  const verified = isVerifiedProfile(profile);
 
   const flyOff = (direction, action) => {
     controls.start({
@@ -59,7 +64,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   if (!isTop) {
     return (
       <div className="absolute inset-0 rounded-3xl overflow-hidden bg-secondary scale-[0.95] opacity-60">
-        <img src={photo} alt="" className="w-full h-full object-cover" />
+        <ProfilePhoto src={photo} alt="" className="w-full h-full object-cover" iconClassName="w-24 h-24" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
       </div>
     );
@@ -81,7 +86,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
       >
         {/* Photo */}
         <div className="relative w-full h-full" onClick={handleTapPhoto}>
-          <img src={photo} alt={profile.name} className="w-full h-full object-cover" />
+          <ProfilePhoto src={photo} alt={displayName} className="w-full h-full object-cover" iconClassName="w-24 h-24" />
 
           {/* Photo indicators */}
           {photos.length > 1 && (
@@ -114,9 +119,11 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
           {/* Auto-expanding bio + details (inline, smooth) */}
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
             <div className="flex items-baseline gap-2 flex-wrap">
-              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white drop-shadow-lg leading-tight">{profile.name}</h2>
-              <span className="text-xl sm:text-2xl font-heading font-light text-white/80 drop-shadow-lg leading-tight">{profile.age}</span>
-              {profile.is_verified && (
+              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white drop-shadow-lg leading-tight">{displayName}</h2>
+              {profile.age ? (
+                <span className="text-xl sm:text-2xl font-heading font-light text-white/80 drop-shadow-lg leading-tight">{profile.age}</span>
+              ) : null}
+              {verified && (
                 <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg" style={{boxShadow: '0 0 8px rgba(59,130,246,0.6)'}}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -128,7 +135,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
             <div className="flex items-center gap-1.5 text-white/80 text-sm sm:text-sm mt-1 drop-shadow-lg">
               <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="truncate">{profile.city}</span>
-              {profile.distance_km && <span className="text-white/50 flex-shrink-0">· {profile.distance_km} km away</span>}
+              {profile.distanceKm != null && <span className="text-white/50 flex-shrink-0">· {profile.distanceKm} km away</span>}
             </div>
 
             {/* Smoothly expanding details */}
@@ -208,7 +215,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-heading font-semibold hover:bg-white/25 transition-colors"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        Message {profile.name}
+                        Message {displayName}
                       </button>
                     )}
                   </div>
@@ -222,7 +229,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
               className="mt-2 flex items-center gap-1 text-white/70 text-sm font-heading font-semibold"
             >
               <ChevronDown className={`w-4 h-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
-              {showDetails ? "Less" : "More about " + profile.name}
+              {showDetails ? "Less" : "More about " + displayName}
             </button>
           </div>
         </div>
@@ -231,7 +238,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
       {/* Report sheet */}
       <AnimatePresence>
         {showReport && (
-          <ReportUserSheet profileName={profile.name} onClose={() => setShowReport(false)} />
+          <ReportUserSheet profileName={displayName} onClose={() => setShowReport(false)} />
         )}
       </AnimatePresence>
     </>

@@ -22,6 +22,7 @@ const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const ProfileDetail = lazy(() => import('@/pages/ProfileDetail'));
 const Subscriptions = lazy(() => import('@/pages/Subscriptions'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
+const AdminDataQuality = lazy(() => import('@/pages/AdminDataQuality'));
 
 const PageLoader = () => (
   <div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: "#0A0A0C" }}>
@@ -121,6 +122,7 @@ const AuthenticatedApp = () => {
         <Route path="/likes" element={<AppLayout />} />
         <Route path="/subscriptions" element={<Suspense fallback={<PageLoader />}><Subscriptions /></Suspense>} />
         <Route path="/profile/:id" element={<Suspense fallback={<PageLoader />}><ProfileDetail /></Suspense>} />
+        <Route path="/admin/data-quality" element={<Suspense fallback={<PageLoader />}><AdminDataQuality /></Suspense>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

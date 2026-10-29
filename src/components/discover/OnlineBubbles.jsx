@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { firstName } from "@/utils/profile";
 
 export default function OnlineBubbles({ profiles }) {
   const onlineProfiles = profiles.filter((p) => p.is_online);
@@ -15,16 +17,17 @@ export default function OnlineBubbles({ profiles }) {
         >
           <div className="relative">
             <div className="w-16 h-16 rounded-full border-2 border-primary/50 p-0.5">
-              <img
+              <ProfilePhoto
                 src={profile.photos?.[0]}
-                alt={profile.name}
+                alt={firstName(profile.name)}
                 className="w-full h-full rounded-full object-cover"
+                iconClassName="w-6 h-6"
               />
             </div>
             <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-background" />
           </div>
           <span className="text-xs font-body text-muted-foreground truncate w-16 text-center">
-            {profile.name}
+            {firstName(profile.name)}
           </span>
         </motion.div>
       ))}

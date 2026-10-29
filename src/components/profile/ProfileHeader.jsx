@@ -1,4 +1,6 @@
 import { Camera, Settings, Shield } from "lucide-react";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { isVerifiedProfile } from "@/utils/profile";
 
 export default function ProfileHeader({ profile }) {
   return (
@@ -10,16 +12,17 @@ export default function ProfileHeader({ profile }) {
       <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
         <div className="relative">
           <div className="w-28 h-28 rounded-full border-4 border-background overflow-hidden glow-orange">
-            <img
-              src={profile?.photos?.[0] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop"}
+            <ProfilePhoto
+              src={profile?.photos?.[0]}
               alt="You"
               className="w-full h-full object-cover"
+              iconClassName="w-10 h-10"
             />
           </div>
           <button className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
             <Camera className="w-4 h-4 text-primary-foreground" />
           </button>
-          {profile?.is_verified && (
+          {isVerifiedProfile(profile) && (
             <div className="absolute top-0 right-0 w-7 h-7 rounded-full bg-green-500/20 border-2 border-background flex items-center justify-center">
               <Shield className="w-3.5 h-3.5 text-green-400" />
             </div>

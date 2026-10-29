@@ -3,6 +3,7 @@ import { Loader2, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { ensureMyProfile } from "@/hooks/useMyProfile";
 
 const INTEREST_OPTIONS = [
   "Amapiano", "Soccer", "Braai", "Road Trips", "Foodie",
@@ -36,15 +37,12 @@ export default function InterestsEditorDialog({ isOpen, profile, onClose, onSave
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (profile?.id) {
-        await base44.entities.DatingProfile.update(profile.id, { interests: selected });
-      } else {
-        await base44.entities.DatingProfile.create({
-          name: profile?.name || "User",
-          age: profile?.age || 18,
-          interests: selected,
-        });
+      const target = profile?.id ? profile : await ensureMyProfile();
+      if (!target?.id) {
+        toast.error("Add your name and date of birth first");
+        return;
       }
+      await base44.entities.DatingProfile.update(target.id, { interests: selected });
       toast.success("Interests updated!");
       onSaved?.();
       onClose();

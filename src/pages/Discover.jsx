@@ -1,34 +1,18 @@
-import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Compass, Zap, Users, Grid3X3 } from "lucide-react";
 import NearbyMap from "@/components/discover/NearbyMap";
 import OnlineBubbles from "@/components/discover/OnlineBubbles";
 import EncounterCard from "@/components/discover/EncounterCard";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
-import { dedupeProfiles } from "@/utils/dedupeProfiles";
-
-const DEFAULT_RADIUS_KM = 50;
-const withTimeout = (promise, ms, fallback) =>
-  Promise.race([promise, new Promise((resolve) => setTimeout(() => resolve(fallback), ms))]);
+import CompleteProfileGate from "@/components/profile/CompleteProfileGate";
+import EditProfileDialog from "@/components/profile/EditProfileDialog";
+import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
 
 export default function Discover() {
-  const { data: rawProfiles = [], isLoading, refetch, isError } = useQuery({
-    queryKey: ["profiles"],
-    queryFn: async () => {
-      try {
-        return await withTimeout(base44.entities.DatingProfile.list('-created_date', 30), 8000, []);
-      } catch {
-        return [];
-      }
-    },
-    retry: 1,
-    staleTime: 60_000,
-  });
+  const { myProfile, myIssues, isLoading, discoverable, refresh } = useDiscoverableProfiles();
+  const [editing, setEditing] = useState(false);
 
-  // One card per person — a profile record can exist more than once per account.
-  const profiles = dedupeProfiles(rawProfiles);
-
-  const handleRefresh = async () => { await refetch(); };
+  const handleRefresh = async () => { await refresh(); };
 
   if (isLoading) {
     return (
@@ -38,6 +22,22 @@ export default function Discover() {
     );
   }
 
+  // Nobody reaches Discover until their own profile is complete and 18+
+  if (myIssues.length > 0) {
+    return (
+      <>
+        <CompleteProfileGate issues={myIssues} onComplete={() => setEditing(true)} />
+        <EditProfileDialog
+          isOpen={editing}
+          profile={myProfile}
+          onClose={() => setEditing(false)}
+          onSaved={refresh}
+        />
+      </>
+    );
+  }
+
+  const profiles = discoverable;
   const isEmpty = profiles.length === 0;
 
   return (
@@ -73,16 +73,18 @@ export default function Discover() {
         <div className="flex items-center gap-2 mb-3">
           <Grid3X3 className="w-4 h-4 text-gold" />
           <h2 className="text-sm font-heading font-semibold text-foreground">Encounters</h2>
-          <span className="text-xs text-muted-foreground font-body ml-auto">within {DEFAULT_RADIUS_KM} km</span>
+          <span className="text-xs text-muted-foreground font-body ml-auto">
+            {profiles.length} {profiles.length === 1 ? "person" : "people"} nearby
+          </span>
         </div>
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center text-center py-10 px-4 rounded-2xl border border-border/40 bg-secondary/30">
             <Grid3X3 className="w-8 h-8 text-muted-foreground mb-3" />
-            <p className="text-sm font-heading font-bold text-foreground">No profiles nearby yet</p>
-            <p className="text-xs text-muted-foreground font-body mt-1 mb-4 max-w-[220px]">
-              {isError ? "Couldn't load profiles right now." : "Try expanding your filters or check back soon."}
+            <p className="text-sm font-heading font-bold text-foreground">No complete profiles nearby yet</p>
+            <p className="text-xs text-muted-foreground font-body mt-1 mb-4 max-w-[240px]">
+              People appear here once they've added a photo, date of birth, gender and city.
             </p>
-            <button onClick={() => refetch()} className="px-5 py-3 min-h-[44px] rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold active:scale-95 transition-transform">
+            <button onClick={() => refresh()} className="px-5 py-3 min-h-[44px] rounded-full bg-primary text-primary-foreground text-xs font-heading font-bold active:scale-95 transition-transform">
               Retry
             </button>
           </div>
