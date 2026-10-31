@@ -110,7 +110,7 @@ export default function Home() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-          className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full"
+          className="w-10 h-10 border-3 border-gold border-t-transparent rounded-full"
         />
         <p className="text-muted-foreground font-body text-sm">Finding your vibes...</p>
       </div>
@@ -122,19 +122,19 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between px-5 pt-[calc(1rem+env(safe-area-inset-top))] pb-2 z-20">
+      <header className="flex items-center justify-between px-5 pt-[calc(1rem+env(safe-area-inset-top))] pb-3 z-20">
         <div className="flex items-center gap-2">
           <img
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
             alt="PikaBoo"
             className="w-9 h-9 object-contain"
-            style={{ filter: "drop-shadow(0 0 6px rgba(251, 191, 36, 0.8)) brightness(1.2) hue-rotate(25deg)" }}
+            style={{ filter: "drop-shadow(0 0 8px rgba(212,175,55,0.6)) brightness(1.05)" }}
           />
-          <h1 className="text-xl font-heading font-bold bg-gradient-to-r from-primary via-amber to-gold bg-clip-text text-transparent">
+          <h1 className="text-xl font-heading font-bold tracking-tight text-gradient-gold">
             PikaBoo
           </h1>
           {isGold && (
-            <span className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 text-black text-xs font-heading font-black">
+            <span className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black text-xs font-heading font-black tracking-wide">
               <Crown className="w-3 h-3" /> GOLD
             </span>
           )}
@@ -144,26 +144,28 @@ export default function Home() {
           <button
             onClick={() => setShowWhoLiked((v) => !v)}
             aria-label="Who liked you"
-            className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors ${
-              showWhoLiked ? "bg-yellow-400 text-black" : "bg-secondary text-yellow-400"
+            className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors border ${
+              showWhoLiked
+                ? "bg-gold text-black border-gold"
+                : "bg-white/5 text-gold border-gold/30 hover:border-gold/50"
             }`}
           >
             <Crown className="w-4 h-4" />
             {!isGold && (
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-yellow-400 border-2 border-background" />
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-gold border-2 border-background" />
             )}
           </button>
           <button
             onClick={() => navigate("/explore?filters=open")}
             aria-label="Filters"
-            className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-gold hover:border-gold/40 transition-colors"
           >
             <SlidersHorizontal className="w-5 h-5" />
           </button>
           <button
             onClick={() => openModal("gold")}
             aria-label="Boost"
-            className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-gold hover:border-gold/40 transition-colors"
           >
             <Flame className="w-5 h-5" />
           </button>
@@ -179,7 +181,7 @@ export default function Home() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden px-4 pb-2"
           >
-            <div className="bg-card border border-yellow-400/20 rounded-2xl p-4">
+            <div className="bg-card/80 border border-gold/25 rounded-2xl p-4">
               <WhoLikedYou
                 isGold={isGold}
                 myProfileId={null}
@@ -192,11 +194,11 @@ export default function Home() {
 
       {/* Swipe limit warning for free users */}
       {!isGold && swipesLeft <= 5 && swipesLeft > 0 && (
-        <div className="mx-4 mb-1 px-3 py-2 rounded-xl bg-yellow-400/10 border border-yellow-400/30 flex items-center justify-between">
-          <p className="text-yellow-400 text-xs font-heading font-semibold">
+        <div className="mx-4 mb-1 px-3 py-2 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-between">
+          <p className="text-gold text-xs font-heading font-semibold">
             {swipesLeft} swipe{swipesLeft !== 1 ? "s" : ""} left today
           </p>
-          <button onClick={() => openModal("gold")} className="text-xs font-heading font-black text-yellow-400 underline underline-offset-2">
+          <button onClick={() => openModal("gold")} className="text-xs font-heading font-black text-gold underline underline-offset-2">
             Get Gold
           </button>
         </div>
@@ -206,8 +208,8 @@ export default function Home() {
       <div className="flex-1 relative px-3 pb-2 overflow-hidden">
         {outOfSwipes ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-8 gap-4">
-            <div className="w-20 h-20 rounded-full bg-yellow-400/10 flex items-center justify-center">
-              <Crown className="w-10 h-10 text-yellow-400" />
+            <div className="w-20 h-20 rounded-full bg-gold/10 flex items-center justify-center glow-gold-ring">
+              <Crown className="w-10 h-10 text-gold" />
             </div>
             <h3 className="text-xl font-heading font-bold text-foreground">Out of free swipes</h3>
             <p className="text-muted-foreground font-body text-sm">
@@ -215,14 +217,15 @@ export default function Home() {
             </p>
             <button
               onClick={() => openModal("gold")}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-heading font-black shadow-lg shadow-yellow-400/20"
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-black"
+              style={{ boxShadow: "0 0 22px rgba(212,175,55,0.4)" }}
             >
               ✨ Get Unlimited Swipes
             </button>
           </div>
         ) : noMoreProfiles ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-8">
-            <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-4">
+            <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4">
               <span className="text-3xl">🦔</span>
             </div>
             <h3 className="text-xl font-heading font-bold text-foreground mb-2">No one new nearby</h3>

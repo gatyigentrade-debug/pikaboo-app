@@ -8,44 +8,47 @@ const actions = [
     icon: RotateCcw,
     color: "text-amber",
     bg: "bg-amber/10 hover:bg-amber/20 border-amber/30",
-    glow: "",
-    size: "w-11 h-11",
+    ring: "border-amber/40",
+    size: "w-12 h-12",
     iconSize: "w-5 h-5",
   },
   {
     id: "dislike",
     icon: X,
-    color: "text-destructive",
-    bg: "bg-destructive/10 hover:bg-destructive/20 border-destructive/30",
-    glow: "",
-    size: "w-14 h-14",
+    color: "text-rose-400",
+    bg: "bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/30",
+    ring: "border-rose-500/40",
+    size: "w-16 h-16",
     iconSize: "w-7 h-7",
   },
   {
     id: "super_like",
     icon: Star,
-    color: "text-violet",
-    bg: "bg-violet/10 hover:bg-violet/20 border-violet/30",
-    glow: "glow-violet",
-    size: "w-11 h-11",
+    color: "text-sky-400",
+    bg: "bg-sky-500/10 hover:bg-sky-500/20 border-sky-500/30",
+    ring: "border-sky-500/40",
+    glow: "0 0 18px rgba(56,189,248,0.3)",
+    size: "w-12 h-12",
     iconSize: "w-5 h-5",
   },
   {
     id: "like",
     icon: Heart,
-    color: "text-primary",
-    bg: "bg-primary/10 hover:bg-primary/20 border-primary/30",
-    glow: "glow-orange",
-    size: "w-14 h-14",
+    color: "text-black",
+    bg: "bg-gradient-to-br from-[#F3E5AB] to-[#D4AF37] hover:opacity-90 border-gold",
+    ring: "border-gold/50",
+    glow: "0 0 22px rgba(212,175,55,0.45)",
+    fill: true,
+    size: "w-16 h-16",
     iconSize: "w-7 h-7",
   },
   {
     id: "boost",
     icon: Zap,
-    color: "text-gold",
-    bg: "bg-gold/10 hover:bg-gold/20 border-gold/30",
-    glow: "glow-gold",
-    size: "w-11 h-11",
+    color: "text-violet",
+    bg: "bg-violet/10 hover:bg-violet/20 border-violet/30",
+    ring: "border-violet/40",
+    size: "w-12 h-12",
     iconSize: "w-5 h-5",
   },
 ];
@@ -63,10 +66,12 @@ export default function SwipeActions({ onAction }) {
       {actions.map((action) => (
         <motion.button
           key={action.id}
-          whileTap={{ scale: 0.8 }}
-          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.82 }}
+          whileHover={{ scale: 1.08 }}
           onClick={() => handleClick(action)}
-          className={`relative ${action.size} rounded-full border ${action.bg} ${action.glow} flex items-center justify-center transition-all`}
+          aria-label={action.id}
+          className={`relative ${action.size} rounded-full border ${action.bg} flex items-center justify-center transition-all`}
+          style={action.glow ? { boxShadow: action.glow } : undefined}
         >
           <AnimatePresence>
             {pulseId && pulseId.startsWith(action.id) && (
@@ -76,12 +81,12 @@ export default function SwipeActions({ onAction }) {
                 animate={{ opacity: 0, scale: 1.9 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className={`absolute inset-0 rounded-full border-2 ${action.bg.split(" ")[0].replace("bg-", "border-")}`}
+                className={`absolute inset-0 rounded-full border-2 ${action.ring}`}
                 onAnimationComplete={() => setPulseId(null)}
               />
             )}
           </AnimatePresence>
-          <action.icon className={`${action.iconSize} ${action.color}`} />
+          <action.icon className={`${action.iconSize} ${action.color}`} {...(action.fill ? { fill: "currentColor" } : {})} />
         </motion.button>
       ))}
     </div>

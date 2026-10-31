@@ -19,7 +19,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   const cardOpacity = useTransform(x, [-300, -200, 0, 200, 300], [0, 1, 1, 1, 0]);
   const likeGlow = useTransform(x, [20, 150], [0, 0.55]);
   const nopeGlow = useTransform(x, [-150, -20], [0.55, 0]);
-  const boxShadow = useMotionTemplate`0 0 40px rgba(74, 222, 128, ${likeGlow}), 0 0 40px rgba(248, 113, 113, ${nopeGlow})`;
+  const boxShadow = useMotionTemplate`0 0 44px rgba(212,175,55, ${likeGlow}), 0 0 44px rgba(244,63,94, ${nopeGlow})`;
 
   // Only real uploaded photos — no stock fallback that could pass as this person
   const photos = realPhotos(profile);
@@ -63,9 +63,9 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
 
   if (!isTop) {
     return (
-      <div className="absolute inset-0 rounded-3xl overflow-hidden bg-secondary scale-[0.95] opacity-60">
+      <div className="absolute inset-0 rounded-[28px] overflow-hidden bg-[#0c0c0e] scale-[0.95] opacity-60 ring-1 ring-white/5">
         <ProfilePhoto src={photo} alt="" className="w-full h-full object-cover" iconClassName="w-24 h-24" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050300]/90 via-[#050300]/20 to-transparent" />
       </div>
     );
   }
@@ -73,7 +73,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
   return (
     <>
       <motion.div
-        className={`absolute inset-0 rounded-3xl overflow-hidden cursor-grab active:cursor-grabbing card-enter ${showDetails ? "touch-pan-y" : "touch-none"}`}
+        className={`absolute inset-0 rounded-[28px] overflow-hidden cursor-grab active:cursor-grabbing card-enter premium-card-shadow ${showDetails ? "touch-pan-y" : "touch-none"}`}
         style={{ x, rotate, scale, opacity: cardOpacity, boxShadow }}
         animate={controls}
         drag={showDetails ? false : "x"}
@@ -92,7 +92,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
           {photos.length > 1 && (
             <div className="absolute top-4 left-4 right-4 pr-10 flex gap-1.5 z-20">
               {photos.map((_, i) => (
-                <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i === imgIdx ? "bg-white" : "bg-white/30"}`} />
+                <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i === imgIdx ? "bg-gold" : "bg-white/25"}`} />
               ))}
             </div>
           )}
@@ -100,42 +100,42 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
           {/* Report button */}
           <button
             onClick={(e) => { e.stopPropagation(); setShowReport(true); }}
-            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-destructive/60 transition-colors"
+            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center hover:bg-rose-500/60 transition-colors"
           >
             <Flag className="w-3.5 h-3.5 text-white" />
           </button>
 
           {/* Swipe labels */}
-          <motion.div className="absolute top-20 left-6 z-20 border-4 border-green-400 rounded-xl px-4 py-2 -rotate-12" style={{ opacity: likeOpacity }}>
-            <span className="text-green-400 font-heading font-black text-3xl">LEKKER</span>
+          <motion.div className="absolute top-20 left-6 z-20 rounded-xl px-4 py-2 -rotate-12 border-4 border-gold" style={{ opacity: likeOpacity, boxShadow: "0 0 26px rgba(212,175,55,0.45)" }}>
+            <span className="text-gold font-heading font-black text-3xl tracking-tight">LEKKER</span>
           </motion.div>
-          <motion.div className="absolute top-20 right-6 z-20 border-4 border-destructive rounded-xl px-4 py-2 rotate-12" style={{ opacity: nopeOpacity }}>
-            <span className="text-destructive font-heading font-black text-3xl">NOPE</span>
+          <motion.div className="absolute top-20 right-6 z-20 rounded-xl px-4 py-2 rotate-12 border-4 border-rose-500" style={{ opacity: nopeOpacity, boxShadow: "0 0 26px rgba(244,63,94,0.4)" }}>
+            <span className="text-rose-400 font-heading font-black text-3xl tracking-tight">NOPE</span>
           </motion.div>
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050300] via-[#050300]/45 to-transparent" />
 
           {/* Auto-expanding bio + details (inline, smooth) */}
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
             <div className="flex items-baseline gap-2 flex-wrap">
-              <h2 className="text-2xl sm:text-3xl font-heading font-bold text-white drop-shadow-lg leading-tight">{displayName}</h2>
+              <h2 className="text-3xl font-heading font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)] leading-tight tracking-tight">{displayName}</h2>
               {profile.age ? (
-                <span className="text-xl sm:text-2xl font-heading font-light text-white/80 drop-shadow-lg leading-tight">{profile.age}</span>
+                <span className="text-2xl font-heading font-light text-white/75 drop-shadow-lg leading-tight">{profile.age}</span>
               ) : null}
               {verified && (
-                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg" style={{boxShadow: '0 0 8px rgba(59,130,246,0.6)'}}>
+                <span className="inline-flex w-6 h-6 rounded-full bg-gradient-to-br from-[#F3E5AB] to-[#D4AF37] items-center justify-center" style={{ boxShadow: "0 0 10px rgba(212,175,55,0.55)" }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 6l3 3 5-5" stroke="#1a1205" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </div>
+                </span>
               )}
             </div>
 
-            <div className="flex items-center gap-1.5 text-white/80 text-sm sm:text-sm mt-1 drop-shadow-lg">
-              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-white/85 text-sm mt-1 drop-shadow-lg">
+              <MapPin className="w-3.5 h-3.5 text-gold flex-shrink-0" />
               <span className="truncate">{profile.city}</span>
-              {profile.distanceKm != null && <span className="text-white/50 flex-shrink-0">· {profile.distanceKm} km away</span>}
+              {profile.distanceKm != null && <span className="text-white/55 flex-shrink-0">· {profile.distanceKm} km away</span>}
             </div>
 
             {/* Smoothly expanding details */}
@@ -153,20 +153,20 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                   <div className="pt-3 max-h-[42vh] overflow-y-auto overscroll-contain touch-pan-y pr-1 -mr-1">
                     {/* Quote */}
                     {profile.braai_starter && (
-                      <div className="flex items-start gap-2 bg-white/10 rounded-2xl px-3 py-2 mb-3">
-                        <Flame className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-2 bg-gold/10 border border-gold/20 rounded-2xl px-3 py-2 mb-3">
+                        <Flame className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
                         <p className="text-white/90 text-sm font-body italic">"{profile.braai_starter}"</p>
                       </div>
                     )}
 
                     {/* Interest pills */}
                     <div className="flex gap-2 flex-wrap mb-3">
-                      {profile.home_language && <Badge className="bg-primary/20 text-primary border-primary/30 border font-body text-sm">{profile.home_language}</Badge>}
+                      {profile.home_language && <Badge className="bg-gold/15 text-gold border-gold/30 border font-body text-sm">{profile.home_language}</Badge>}
                       {profile.braai_role && <Badge className="bg-amber/20 text-amber border-amber/30 border font-body text-sm">🔥 {profile.braai_role}</Badge>}
                       {profile.spirit_animal && <Badge className="bg-violet/20 text-violet border-violet/30 border font-body text-sm">{profile.spirit_animal}</Badge>}
-                      {profile.sports_team && <Badge className="bg-green-500/20 text-green-400 border-green-500/30 border font-body text-sm">⚽ {profile.sports_team}</Badge>}
+                      {profile.sports_team && <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 border font-body text-sm">⚽ {profile.sports_team}</Badge>}
                       {profile.looking_for && (
-                        <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30 border font-body text-sm">
+                        <Badge className="bg-rose-500/20 text-rose-300 border-rose-500/30 border font-body text-sm">
                           {profile.looking_for === "relationship" ? "💍 Relationship" : profile.looking_for === "friendship" ? "🤝 Friendship" : profile.looking_for === "casual" ? "✌️ Casual" : "🤔 Not Sure"}
                         </Badge>
                       )}
@@ -179,7 +179,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">📍</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
+                              <p className="text-white/50 text-xs font-heading uppercase tracking-wide leading-none mb-0.5">Fave Spot</p>
                               <p className="text-white/90 text-sm font-body truncate">{profile.favorite_kota_spot}</p>
                             </div>
                           </div>
@@ -188,7 +188,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">❤️</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
+                              <p className="text-white/50 text-xs font-heading uppercase tracking-wide leading-none mb-0.5">Can't live without</p>
                               <p className="text-white/90 text-sm font-body truncate">{profile.cant_live_without}</p>
                             </div>
                           </div>
@@ -197,7 +197,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                           <div className="flex items-center gap-2 bg-white/8 rounded-xl px-3 py-2">
                             <span className="text-base flex-shrink-0">🌅</span>
                             <div className="min-w-0">
-                              <p className="text-white/50 text-sm font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
+                              <p className="text-white/50 text-xs font-heading uppercase tracking-wide leading-none mb-0.5">Dream date</p>
                               <p className="text-white/90 text-sm font-body truncate">{profile.dream_date_location}</p>
                             </div>
                           </div>
@@ -212,7 +212,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
                     {onMessage && (
                       <button
                         onClick={(e) => { e.stopPropagation(); onMessage(profile); }}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-white text-sm font-heading font-semibold hover:bg-white/25 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-gold/15 backdrop-blur-sm border border-gold/40 text-gold text-sm font-heading font-semibold hover:bg-gold/25 transition-colors"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
                         Message {displayName}
@@ -226,7 +226,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, isTop, onMes
             {/* Expand toggle */}
             <button
               onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}
-              className="mt-2 flex items-center gap-1 text-white/70 text-sm font-heading font-semibold"
+              className="mt-2 flex items-center gap-1 text-gold/90 text-sm font-heading font-semibold"
             >
               <ChevronDown className={`w-4 h-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
               {showDetails ? "Less" : "More about " + displayName}
