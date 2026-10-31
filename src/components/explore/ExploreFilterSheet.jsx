@@ -189,13 +189,13 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
 
             {/* Apply button — pinned below the scrollable body, clear of the bottom nav */}
             <div
-              className="shrink-0 bg-background/95 backdrop-blur-xl px-4 pt-3 border-t border-border/30"
-              style={{ paddingBottom: "calc(7rem + env(safe-area-inset-bottom))" }}
+              className="shrink-0 bg-background/95 backdrop-blur-xl px-4 border-t border-border/30"
+              style={{ paddingTop: "12px", paddingBottom: "calc(7rem + env(safe-area-inset-bottom))" }}
             >
               <button
                 onClick={handleApply}
-                className="w-full h-14 min-h-[44px] rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-bold text-base tracking-wide active:scale-[0.98] transition-transform"
-                style={{ boxShadow: "0 8px 28px rgba(212,175,55,0.4)" }}
+                className="w-full h-12 rounded-[14px] bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-semibold text-[15px] active:scale-[0.98] transition-transform"
+                style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.18)" }}
               >
                 Apply filters
               </button>
