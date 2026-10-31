@@ -98,9 +98,9 @@ export default function ExploreCategorySheet({ category, onClose }) {
                   <button
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleLike(p.id); }}
                     aria-label={`Like ${p.name}`}
-                    className="absolute top-2 right-2 w-9 h-9 rounded-full bg-primary/80 flex items-center justify-center active:scale-90 transition-transform z-10"
+                    className="absolute top-2 right-2 w-9 h-9 rounded-full bg-gold flex items-center justify-center active:scale-90 transition-transform z-10"
                   >
-                    <Heart className={`w-4 h-4 text-white ${liked[p.id] ? "fill-white" : ""}`} />
+                    <Heart className={`w-4 h-4 text-black ${liked[p.id] ? "fill-black" : ""}`} />
                   </button>
                 </motion.div>
               ))}
@@ -109,8 +109,14 @@ export default function ExploreCategorySheet({ category, onClose }) {
         </div>
 
         {/* CTA */}
-        <div className="p-4 border-t border-border/40 flex-shrink-0">
-          <Button className="w-full rounded-full bg-primary font-heading font-bold" onClick={onClose}>
+        <div
+          className="px-4 pt-4 border-t border-border/40 flex-shrink-0"
+          style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}
+        >
+          <Button
+            className="w-full rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-bold"
+            onClick={onClose}
+          >
             Start Swiping in This Vibe 🔥
           </Button>
         </div>

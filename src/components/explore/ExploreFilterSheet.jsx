@@ -190,7 +190,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
             {/* Apply button — pinned below the scrollable body, clear of the bottom nav */}
             <div
               className="shrink-0 bg-background/95 backdrop-blur-xl px-4 border-t border-border/30"
-              style={{ paddingTop: "12px", paddingBottom: "calc(7rem + env(safe-area-inset-bottom))" }}
+              style={{ paddingTop: "12px", paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
             >
               <button
                 onClick={handleApply}

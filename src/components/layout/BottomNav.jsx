@@ -10,15 +10,22 @@ const navItems = [
   { path: "/profile", icon: User, label: "Profile" },
 ];
 
-export default function BottomNav({ unreadMatches = 0, lastTabRoutes = {} }) {
+export default function BottomNav({ unreadMatches = 0, lastTabRoutes = {}, hidden = false }) {
   const location = useLocation();
 
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none px-4"
-      style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+      style={{
+        paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
+        transform: hidden ? "translateY(140%)" : "translateY(0)",
+        transition: "transform 200ms ease",
+      }}
     >
-      <div className="pointer-events-auto mx-auto max-w-lg flex items-center gap-1 rounded-full border border-gold/20 bg-background/80 backdrop-blur-2xl px-1.5 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.55)]">
+      <div
+        className="mx-auto max-w-lg flex items-center gap-1 rounded-full border border-gold/20 bg-background/80 backdrop-blur-2xl px-1.5 py-1.5 shadow-[0_10px_40px_rgba(0,0,0,0.55)]"
+        style={{ pointerEvents: hidden ? "none" : "auto" }}
+      >
         {navItems.map((item) => {
           const isActive =
             location.pathname === item.path ||

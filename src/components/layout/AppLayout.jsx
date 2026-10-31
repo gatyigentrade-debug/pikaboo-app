@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useScrollHideNav } from "@/hooks/useScrollHideNav";
 import { base44 } from "@/api/base44Client";
 import { useAppNotifications } from "@/hooks/useAppNotifications";
 import ChatView from "@/components/matches/ChatView";
@@ -31,6 +32,11 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const params = useParams();
   const chatId = params.id;
+  const scrollHidden = useScrollHideNav();
+  const isChatThread = /^\/chat\/[^/]+$/.test(location.pathname);
+  const search = new URLSearchParams(location.search);
+  const sheetOpen = !!(search.get("filters") || search.get("category"));
+  const navHidden = isChatThread || sheetOpen || scrollHidden;
   const chatMatch = chatId ? location.state?.match : null;
   const [activeMatch, setActiveMatch] = useState(null);
   // Track which tabs have been visited so we only mount them on first visit
@@ -120,7 +126,7 @@ export default function AppLayout() {
         })}
       </main>
 
-      <BottomNav unreadMatches={unreadMatches} lastTabRoutes={lastTabRoutes} />
+      <BottomNav unreadMatches={unreadMatches} lastTabRoutes={lastTabRoutes} hidden={navHidden} />
 
       {/* Deep-link ChatView overlay */}
       <AnimatePresence>
