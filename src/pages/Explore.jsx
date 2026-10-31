@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Flame, Zap, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
@@ -6,6 +5,7 @@ import ExploreCard from "@/components/explore/ExploreCard";
 import ExploreCategorySheet from "@/components/explore/ExploreCategorySheet";
 import ExploreFilterSheet from "@/components/explore/ExploreFilterSheet";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
+import { useDiscoveryFilters } from "@/hooks/useDiscoveryFilters";
 
 const VIBES_CULTURE = [
   {
@@ -89,7 +89,7 @@ const ALL_CARDS = [...VIBES_CULTURE, ...SPORT_LIFESTYLE, ...TONIGHTS_VIBE];
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [filters, setFilters] = useState({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
+  const { filters, save } = useDiscoveryFilters();
   const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
 
   const showFilters = searchParams.get("filters") === "open";
@@ -184,7 +184,7 @@ export default function Explore() {
         isOpen={showFilters}
         onClose={() => closeSheet("filters")}
         filters={filters}
-        onApply={setFilters}
+        onApply={save}
       />
 
       {/* Category Sheet */}

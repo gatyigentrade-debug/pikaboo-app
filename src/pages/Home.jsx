@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Flame, SlidersHorizontal, Crown } from "lucide-react";
@@ -12,6 +12,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
 import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
+import { useDiscoveryFilters, filterProfiles } from "@/hooks/useDiscoveryFilters";
 
 const FREE_SWIPE_LIMIT = 20;
 
@@ -45,7 +46,9 @@ export default function Home() {
   }, [setSearchParams]);
 
   // Only complete, adult profiles with a real photo reach the deck
-  const { discoverable: profiles, isLoading } = useDiscoverableProfiles();
+  const { discoverable: allProfiles, isLoading } = useDiscoverableProfiles();
+  const { filters } = useDiscoveryFilters();
+  const profiles = useMemo(() => filterProfiles(allProfiles, filters), [allProfiles, filters]);
 
   const currentProfile = profiles[currentIdx];
   const nextProfile = profiles[currentIdx + 1];

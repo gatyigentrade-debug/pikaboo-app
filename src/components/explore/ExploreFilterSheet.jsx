@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Calendar, Heart } from "lucide-react";
+import { toast } from "sonner";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { DEFAULT_FILTERS } from "@/hooks/useDiscoveryFilters";
 
 const INTERESTS = [
   "Amapiano", "Soccer", "Braai", "Road Trips", "Foodie",
@@ -9,7 +11,7 @@ const INTERESTS = [
   "Travel", "Movies", "Art", "Coffee", "Hiking",
 ];
 
-function AgeDrawer({ label, value, onChange }) {
+function AgeDrawer({ label, value, onChange, min = 18 }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -29,11 +31,11 @@ function AgeDrawer({ label, value, onChange }) {
           <div className="px-6 pb-8">
             <input
               type="range"
-              min="18"
+              min={min}
               max="99"
               value={value}
               onChange={(e) => onChange(Number(e.target.value))}
-              className="w-full accent-primary"
+              className="w-full accent-gold"
             />
             <div className="text-center mt-3 text-2xl font-heading font-bold text-foreground">{value}</div>
           </div>
@@ -61,11 +63,26 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
 
   const handleApply = () => {
     onApply(localFilters);
+    toast.success("Filters saved", {
+      style: {
+        background: "linear-gradient(90deg,#F3E5AB,#D4AF37)",
+        color: "#1a1205",
+        border: "1px solid rgba(212,175,55,0.5)",
+      },
+    });
     onClose();
   };
 
   const handleReset = () => {
-    setLocalFilters({ distance: 50, ageMin: 18, ageMax: 45, interests: [] });
+    setLocalFilters({ ...DEFAULT_FILTERS });
+  };
+
+  const setAgeMin = (v) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      ageMin: Math.max(18, v),
+      ageMax: Math.max(prev.ageMax, Math.max(18, v)),
+    }));
   };
 
   return (
@@ -92,7 +109,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                 <X className="w-5 h-5 text-foreground" />
               </button>
               <h2 className="text-lg font-heading font-bold text-foreground">Filters</h2>
-              <button onClick={handleReset} className="text-xs text-primary font-heading font-bold">
+              <button onClick={handleReset} className="text-xs text-gold font-heading font-bold">
                 Reset
               </button>
             </div>
@@ -101,7 +118,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
               {/* Distance */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <MapPin className="w-4 h-4 text-primary" />
+                  <MapPin className="w-4 h-4 text-gold" />
                   <h3 className="text-sm font-heading font-bold text-foreground">Distance</h3>
                 </div>
                 <span className="text-xs text-muted-foreground font-body block mb-2">
@@ -113,14 +130,14 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                   max="100"
                   value={localFilters.distance}
                   onChange={(e) => setLocalFilters((prev) => ({ ...prev, distance: Number(e.target.value) }))}
-                  className="w-full accent-primary"
+                  className="w-full accent-gold"
                 />
               </div>
 
               {/* Age Range */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Calendar className="w-4 h-4 text-primary" />
+                  <Calendar className="w-4 h-4 text-gold" />
                   <h3 className="text-sm font-heading font-bold text-foreground">Age Range</h3>
                 </div>
                 <div className="flex items-center gap-3">
@@ -129,7 +146,8 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                     <AgeDrawer
                       label="Min"
                       value={localFilters.ageMin}
-                      onChange={(v) => setLocalFilters((prev) => ({ ...prev, ageMin: v }))}
+                      onChange={setAgeMin}
+                      min={18}
                     />
                   </div>
                   <span className="text-muted-foreground mt-5">—</span>
@@ -139,6 +157,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                       label="Max"
                       value={localFilters.ageMax}
                       onChange={(v) => setLocalFilters((prev) => ({ ...prev, ageMax: v }))}
+                      min={Math.max(18, localFilters.ageMin)}
                     />
                   </div>
                 </div>
@@ -147,7 +166,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
               {/* Interests */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Heart className="w-4 h-4 text-primary" />
+                  <Heart className="w-4 h-4 text-gold" />
                   <h3 className="text-sm font-heading font-bold text-foreground">Interests</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -157,7 +176,7 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                       onClick={() => toggleInterest(interest)}
                       className={`px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-colors ${
                         localFilters.interests.includes(interest)
-                          ? "bg-primary text-primary-foreground border border-primary"
+                          ? "bg-gold text-black border border-gold"
                           : "bg-secondary text-muted-foreground border border-border/40"
                       }`}
                     >
@@ -168,16 +187,17 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
               </div>
             </div>
 
-            {/* Apply button — pinned below the scrollable body */}
+            {/* Apply button — pinned below the scrollable body, clear of the bottom nav */}
             <div
               className="shrink-0 bg-background/95 backdrop-blur-xl px-4 pt-3 border-t border-border/30"
-              style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
+              style={{ paddingBottom: "calc(7rem + env(safe-area-inset-bottom))" }}
             >
               <button
                 onClick={handleApply}
-                className="w-full h-14 min-h-[44px] rounded-full bg-gradient-to-r from-primary to-amber text-primary-foreground font-heading font-bold text-base tracking-wide shadow-[0_8px_28px_hsla(25,95%,55%,0.45)] active:scale-[0.98] transition-transform"
+                className="w-full h-14 min-h-[44px] rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-bold text-base tracking-wide active:scale-[0.98] transition-transform"
+                style={{ boxShadow: "0 8px 28px rgba(212,175,55,0.4)" }}
               >
-                Apply Filters
+                Apply filters
               </button>
             </div>
           </motion.div>
