@@ -225,13 +225,44 @@ export default function Home() {
           </div>
         ) : noMoreProfiles ? (
           <div className="flex flex-col items-center justify-center h-full text-center px-8">
-            <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4">
-              <span className="text-3xl">🦔</span>
+            <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4 glow-gold-ring">
+              <img
+                src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/8b5857139_PikaBoo_logo-removebg-preview.png"
+                alt="PikaBoo"
+                className="w-11 h-11 object-contain"
+                style={{ filter: "drop-shadow(0 0 10px rgba(212,175,55,0.7)) brightness(1.05)" }}
+              />
             </div>
-            <h3 className="text-xl font-heading font-bold text-foreground mb-2">No one new nearby</h3>
-            <p className="text-muted-foreground font-body text-sm">
-              Try expanding your distance to include Melkbos or Soweto.
+            <h3 className="text-xl font-heading font-bold text-foreground mb-2">No one new nearby right now</h3>
+            <p className="text-muted-foreground font-body text-sm mb-6">
+              Widen your distance or check back soon.
             </p>
+            <div className="flex flex-col gap-3 w-full max-w-xs">
+              <button
+                onClick={() => navigate("/explore?filters=open")}
+                className="h-12 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-bold text-sm"
+                style={{ boxShadow: "0 0 18px rgba(212,175,55,0.35)" }}
+              >
+                Adjust distance
+              </button>
+              <button
+                onClick={() => {
+                  const shareData = {
+                    title: "PikaBoo",
+                    text: "Find your Boo on PikaBoo 🫶",
+                    url: "https://play.google.com/store/apps/details?id=com.base44.pikaboovibe",
+                  };
+                  if (navigator.share) {
+                    navigator.share(shareData).catch(() => {});
+                  } else {
+                    window.open("https://play.google.com/store/apps/details?id=com.base44.pikaboovibe", "_blank");
+                  }
+                }}
+                className="h-12 rounded-full bg-white/5 border border-gold/40 text-gold font-heading font-bold text-sm hover:bg-gold/10 transition-colors"
+              >
+                Invite friends
+              </button>
+            </div>
           </div>
         ) : (
           <div className="relative w-full h-full">
