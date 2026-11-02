@@ -78,7 +78,7 @@ const AuthenticatedApp = () => {
             style={{
               width: "180px",
               height: "180px",
-              background: "radial-gradient(circle, rgba(191,255,0,0.45) 0%, rgba(191,255,0,0.18) 45%, transparent 75%)",
+              background: "radial-gradient(circle, rgba(212,165,74,0.45) 0%, rgba(212,165,74,0.18) 45%, transparent 75%)",
               filter: "blur(8px)"
             }}
           />
@@ -86,7 +86,7 @@ const AuthenticatedApp = () => {
             src="https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/eb969a81b_App_Icon-removebg-preview.png"
             alt="PikaBoo"
             className="relative w-32 h-32 object-contain animate-float"
-            style={{ filter: "drop-shadow(0 0 18px rgba(191,255,0,0.7)) brightness(1.15)" }}
+            style={{ filter: "drop-shadow(0 0 18px rgba(212,165,74,0.7)) brightness(1.15)" }}
           />
         </div>
         <p className="font-body text-sm" style={{ color: "rgba(200,200,200,0.85)" }}>Finding your vibes...</p>
@@ -138,19 +138,16 @@ function App() {
           <div
             className="fixed inset-0 pointer-events-none"
             style={{
-              backgroundImage: "url('https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/19e2302af_Gemini_Generated_Image_gpdoukgpdoukgpdo.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              filter: "blur(1px)",
-              opacity: 0.85,
-              transform: "scale(1.03)",
+              background: "radial-gradient(circle at 50% 0%, #2A0A3B 0%, #171717 52%, #0E0E0F 100%)",
               zIndex: 0
             }}
           />
           <div
             className="fixed inset-0 pointer-events-none"
-            style={{ background: "rgba(5,3,0,0.25)", zIndex: 0 }}
+            style={{
+              background: "radial-gradient(circle at 50% 100%, rgba(212,165,74,0.05), transparent 60%)",
+              zIndex: 0
+            }}
           />
           <AuthenticatedApp />
         </Router>

@@ -51,6 +51,9 @@ module.exports = {
         amber: 'hsl(var(--amber))',
         violet: 'hsl(var(--violet))',
         sunset: 'hsl(var(--sunset))',
+        coral: 'hsl(var(--coral))',
+        royal: 'hsl(var(--royal))',
+        surface: 'hsl(var(--surface))',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
