@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Flame, SlidersHorizontal, Crown } from "lucide-react";
 import SwipeCard from "@/components/swipe/SwipeCard";
 import SwipeActions from "@/components/swipe/SwipeActions";
+import SwipeInfoSheet from "@/components/swipe/SwipeInfoSheet";
 import MatchModal from "@/components/swipe/MatchModal";
 import GoldUpgradeModal from "@/components/gold/GoldUpgradeModal";
 import WhoLikedYou from "@/components/gold/WhoLikedYou";
@@ -11,6 +12,7 @@ import { useGold } from "@/hooks/useGold";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthContext";
+import { useMyProfile } from "@/hooks/useMyProfile";
 import useDiscoverableProfiles from "@/hooks/useDiscoverableProfiles";
 import { useDiscoveryFilters, filterProfiles } from "@/hooks/useDiscoveryFilters";
 
@@ -21,10 +23,12 @@ export default function Home() {
   const [matchedProfile, setMatchedProfile] = useState(null);
   const [createdMatch, setCreatedMatch] = useState(null);
   const [showWhoLiked, setShowWhoLiked] = useState(false);
+  const [infoProfile, setInfoProfile] = useState(null);
   const [swipeCount, setSwipeCount] = useState(0);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
+  const { profile: myProfile } = useMyProfile();
   const { isGold, activateGold } = useGold();
   const topCardRef = useRef(null);
 
@@ -274,7 +278,7 @@ export default function Home() {
                 <SwipeCard key={nextProfile.id + "-bg"} profile={nextProfile} onSwipe={() => {}} isTop={false} />
               )}
               {currentProfile && (
-                <SwipeCard key={currentProfile.id} ref={topCardRef} profile={currentProfile} onSwipe={handleSwipe} isTop={true} />
+                <SwipeCard key={currentProfile.id} ref={topCardRef} profile={currentProfile} onSwipe={handleSwipe} isTop={true} onInfo={() => setInfoProfile(currentProfile)} />
               )}
             </AnimatePresence>
           </div>
@@ -287,6 +291,9 @@ export default function Home() {
           <SwipeActions onAction={handleAction} />
         </div>
       )}
+
+      {/* Profile info sheet */}
+      <SwipeInfoSheet profile={infoProfile} myInterests={myProfile?.interests || []} onClose={() => setInfoProfile(null)} />
 
       {/* Match modal */}
       <MatchModal
