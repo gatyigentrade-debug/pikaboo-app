@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Lock, Loader2, AlertTriangle } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 
+const fieldCls = "pl-10 h-12 rounded-xl bg-white/5 border-white/10 text-foreground placeholder:text-muted-foreground/70 focus:border-gold/60 focus:bg-white/[0.07]";
+const submitCls = "w-full h-12 font-semibold bg-gradient-to-r from-[#E8C56A] to-[#D4A54A] text-[#171717] hover:opacity-90";
+
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const resetToken = searchParams.get("token");
@@ -41,12 +44,12 @@ export default function ResetPassword() {
         title="Invalid reset link"
         subtitle="This password reset link is missing or invalid"
         footer={
-          <Link to="/forgot-password" className="text-primary font-medium hover:underline">
+          <Link to="/forgot-password" className="text-gold font-medium hover:underline">
             Request a new link
           </Link>
         }
       >
-        <p className="text-sm text-white text-center">
+        <p className="text-sm text-foreground text-center">
           The link you used appears to be incomplete. Please request a new password reset email.
         </p>
       </AuthLayout>
@@ -60,15 +63,15 @@ export default function ResetPassword() {
       subtitle="Enter your new password below"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-500/10 text-red-300 text-sm">
+        <div className="mb-4 p-3 rounded-lg bg-destructive/15 text-red-300 text-sm">
           {error}
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-slate-200">New Password</Label>
+          <Label htmlFor="password" className="text-xs font-body text-muted-foreground">New Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/70" aria-hidden="true" />
             <Input
               id="password"
               type="password"
@@ -77,15 +80,15 @@ export default function ResetPassword() {
               placeholder="••••••••"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
+              className={fieldCls}
               required
             />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm" className="text-slate-200">Confirm Password</Label>
+          <Label htmlFor="confirm" className="text-xs font-body text-muted-foreground">Confirm Password</Label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/70" aria-hidden="true" />
             <Input
               id="confirm"
               type="password"
@@ -93,12 +96,12 @@ export default function ResetPassword() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
+              className={fieldCls}
               required
             />
           </div>
         </div>
-        <Button type="submit" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700" disabled={loading}>
+        <Button type="submit" className={submitCls} disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />

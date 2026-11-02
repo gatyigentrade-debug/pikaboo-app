@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Mail, ArrowLeft, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 
+const fieldCls = "pl-10 h-12 rounded-xl bg-white/5 border-white/10 text-foreground placeholder:text-muted-foreground/70 focus:border-gold/60 focus:bg-white/[0.07]";
+const submitCls = "w-full h-12 font-semibold bg-gradient-to-r from-[#E8C56A] to-[#D4A54A] text-[#171717] hover:opacity-90";
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,19 +34,19 @@ export default function ForgotPassword() {
       title="Reset password"
       subtitle="We'll send you a link to reset it"
       footer={
-        <Link to="/login" className="text-primary font-medium hover:underline">
+        <Link to="/login" className="text-gold font-medium hover:underline">
           <ArrowLeft className="w-3 h-3 inline mr-1" />Back to log in
         </Link>
       }
     >
       {sent ? (
         <div className="space-y-4">
-          <p className="text-sm text-white text-center">
+          <p className="text-sm text-foreground text-center">
             If an account exists with that email, you'll receive a password reset link shortly.
           </p>
           <Button
             variant="outline"
-            className="w-full h-12 border-amber-500/40 text-amber-400 hover:bg-amber-500/10"
+            className="w-full h-12 border-white/10 text-foreground bg-white/5 hover:bg-white/10"
             onClick={() => { setSent(false); setEmail(""); }}
           >
             Try a different email
@@ -52,9 +55,9 @@ export default function ForgotPassword() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-slate-200">Email address</Label>
+            <Label htmlFor="email" className="text-xs font-body text-muted-foreground">Email address</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400/70" aria-hidden="true" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/70" aria-hidden="true" />
               <Input
                 id="email"
                 type="email"
@@ -63,12 +66,12 @@ export default function ForgotPassword() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 h-12 bg-black/40 border-amber-500/40 text-white placeholder:text-slate-300"
+                className={fieldCls}
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="w-full h-12 font-semibold bg-gradient-to-r from-amber-400 to-yellow-600 text-black hover:from-amber-500 hover:to-yellow-700" disabled={loading}>
+          <Button type="submit" className={submitCls} disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
