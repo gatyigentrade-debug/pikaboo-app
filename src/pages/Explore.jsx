@@ -17,7 +17,7 @@ const CATEGORIES = [
     icon: Music,
     tint: "rgba(42,10,59,0.55)",
     size: "full",
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop",
+    image: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/c00dc0825_generated_image.png",
   },
   {
     id: "food-social",
@@ -26,7 +26,7 @@ const CATEGORIES = [
     icon: UtensilsCrossed,
     tint: "rgba(122,55,15,0.55)",
     size: "half",
-    image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=300&fit=crop",
+    image: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/6ccf0f4d8_generated_image.png",
   },
   {
     id: "sports-activities",
@@ -35,7 +35,7 @@ const CATEGORIES = [
     icon: Trophy,
     tint: "rgba(20,65,45,0.5)",
     size: "half",
-    image: "https://images.unsplash.com/photo-1510566337590-2fc1f21d0faa?w=300&h=300&fit=crop",
+    image: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/d4083c477_generated_image.png",
   },
   {
     id: "road-trips",
@@ -44,7 +44,7 @@ const CATEGORIES = [
     icon: Car,
     tint: "rgba(20,40,60,0.5)",
     size: "full",
-    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=400&fit=crop",
+    image: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/3425c1967_generated_image.png",
   },
   {
     id: "events-near-you",
@@ -53,7 +53,7 @@ const CATEGORIES = [
     icon: Ticket,
     tint: "rgba(80,20,90,0.55)",
     size: "full",
-    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&h=400&fit=crop",
+    image: "https://media.base44.com/images/public/6a1ae3ef77b040df5f5f2e2c/751f11e7b_generated_image.png",
   },
 ];
 
