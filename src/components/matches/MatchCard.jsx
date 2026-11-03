@@ -11,11 +11,11 @@ export default function MatchCard({ match, onClick }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className="flex items-center gap-3 w-full p-3 rounded-2xl bg-secondary/50 hover:bg-secondary transition-colors text-left"
+      className="flex items-center gap-3 w-full p-3 rounded-2xl bg-[#29252E]/60 hover:bg-[#29252E] border border-white/5 hover:border-gold/20 transition-colors text-left"
     >
       {/* Avatar */}
       <div className="relative flex-shrink-0">
-        <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/30">
+        <div className={`w-14 h-14 rounded-full overflow-hidden border-2 ${match.unread_count > 0 ? "border-gold" : "border-gold/30"}`}>
           <ProfilePhoto
             src={match.matched_photo}
             alt={name}
@@ -24,7 +24,7 @@ export default function MatchCard({ match, onClick }) {
           />
         </div>
         {match.unread_count > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">
+          <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gold text-[#171717] text-xs font-bold flex items-center justify-center">
             {match.unread_count}
           </div>
         )}
@@ -33,11 +33,9 @@ export default function MatchCard({ match, onClick }) {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h3 className="font-heading font-semibold text-foreground text-sm truncate">
-            {name}
-          </h3>
+          <h3 className="font-heading font-semibold text-foreground text-sm truncate">{name}</h3>
           {match.status === "pending" && (
-            <div className="flex items-center gap-1 text-amber text-sm">
+            <div className="flex items-center gap-1 text-amber text-xs">
               <Clock className="w-3 h-3" />
               <span>24h</span>
             </div>
@@ -49,7 +47,7 @@ export default function MatchCard({ match, onClick }) {
       </div>
 
       {/* Time */}
-      <span className="text-sm text-muted-foreground flex-shrink-0">
+      <span className="text-xs text-muted-foreground flex-shrink-0">
         {match.last_message_time
           ? new Date(match.last_message_time).toLocaleDateString("en-ZA", { day: "numeric", month: "short" })
           : "New"}

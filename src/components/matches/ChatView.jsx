@@ -292,7 +292,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
         <button onClick={handleViewProfile} className="flex items-center gap-3 flex-1 min-w-0 text-left">
           {/* Avatar */}
           <div className="relative flex-shrink-0">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/40">
+            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gold/50">
               <ProfilePhoto src={match.matched_photo} alt={partnerName} className="w-full h-full object-cover" iconClassName="w-5 h-5" />
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
@@ -300,7 +300,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
 
           <div className="flex-1 min-w-0">
             <h3 className="font-heading font-semibold text-sm text-foreground leading-tight">{partnerName}</h3>
-            <p className="text-sm text-green-400 font-body">Active now</p>
+            <p className="text-sm text-gold/80 font-body">Active now</p>
           </div>
         </button>
 
@@ -315,7 +315,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
             <button
               onClick={() => setShowMoreMenu((v) => !v)}
               aria-label="More options"
-              className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              className="w-11 h-11 rounded-full bg-[#29252E] flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
@@ -344,18 +344,18 @@ export default function ChatView({ match, onBack, openingMessage }) {
       {/* ── Match badge ── */}
       <div className="flex justify-center py-4">
         <div className="flex items-center gap-3">
-          <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-primary/50 glow-orange">
+          <div             className="w-14 h-14 rounded-full overflow-hidden border-2 border-gold/50 glow-gold">
             <ProfilePhoto src={myProfile?.photos?.[0]} alt="You" className="w-full h-full object-cover" iconClassName="w-7 h-7" />
           </div>
           <div className="flex flex-col items-center">
             <div className="flex gap-0.5">
               {[0,1,2].map(i => (
-                <div key={i} className={`w-1.5 h-1.5 rounded-full ${i===1 ? 'bg-primary scale-125' : 'bg-primary/50'}`} />
+                <div key={i} className={`w-1.5 h-1.5 rounded-full ${i===1 ? 'bg-gold scale-125' : 'bg-gold/50'}`} />
               ))}
             </div>
-            <span className="text-sm text-primary font-heading font-bold mt-1">It's a Match!</span>
+            <span className="text-sm text-gradient-gold font-heading font-bold mt-1">It's a Match!</span>
           </div>
-          <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-primary/50 glow-orange">
+          <div             className="w-14 h-14 rounded-full overflow-hidden border-2 border-gold/50 glow-gold">
             <ProfilePhoto src={match.matched_photo} alt={partnerName} className="w-full h-full object-cover" iconClassName="w-7 h-7" />
           </div>
         </div>
@@ -400,8 +400,8 @@ export default function ChatView({ match, onBack, openingMessage }) {
                     onDoubleClick={() => setReactionTarget(reactionTarget === msg.id ? null : msg.id)}
                     className={`px-4 py-2.5 rounded-2xl cursor-pointer select-none ${
                       isMe
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-secondary text-foreground rounded-bl-sm"
+                        ? "bg-gradient-to-br from-[#F3E5AB] to-[#D4A54A] text-[#171717] rounded-br-sm"
+                        : "bg-[#29252E] text-white rounded-bl-sm"
                     }`}
                   >
                     {msg._uploading ? (
@@ -414,13 +414,13 @@ export default function ChatView({ match, onBack, openingMessage }) {
                       <p className="text-sm font-body leading-relaxed">{msg.text}</p>
                     )}
                     <div className={`flex items-center gap-1 mt-0.5 ${isMe ? "justify-end" : "justify-start"}`}>
-                      <span className={`text-sm ${isMe ? "text-primary-foreground/55" : "text-muted-foreground"}`}>
+                      <span className={`text-sm ${isMe ? "text-[#171717]/55" : "text-muted-foreground"}`}>
                         {msg.time}
                       </span>
                       {isMe && (
                         msg.read
-                          ? <CheckCheck className="w-3 h-3 text-blue-400" />
-                          : <Check className="w-3 h-3 text-primary-foreground/50" />
+                          ? <CheckCheck className="w-3 h-3 text-[#171717]/70" />
+                          : <Check className="w-3 h-3 text-[#171717]/50" />
                       )}
                     </div>
                   </div>
@@ -491,7 +491,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
               <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
                 <ProfilePhoto src={match.matched_photo} alt="" className="w-full h-full object-cover" iconClassName="w-4 h-4" />
               </div>
-              <div className="bg-secondary rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1 items-center">
+              <div className="bg-[#29252E] rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1 items-center">
                 {[0, 1, 2].map((i) => (
                   <motion.div
                     key={i}
@@ -551,7 +551,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
             key={qr}
             onClick={() => handleSend(qr)}
             disabled={!recipientId}
-            className="flex-shrink-0 text-sm font-body px-3 py-1.5 rounded-full border border-primary/30 text-primary bg-primary/5 hover:bg-primary/15 transition-colors disabled:opacity-40"
+            className="flex-shrink-0 text-sm font-body px-3 py-1.5 rounded-full border border-gold/30 text-gold bg-gold/5 hover:bg-gold/15 transition-colors disabled:opacity-40"
           >
             {qr}
           </button>
@@ -561,7 +561,7 @@ export default function ChatView({ match, onBack, openingMessage }) {
       {/* ── Input Bar ── */}
       <div className="px-4 py-3 border-t border-border/40 bg-card/90 backdrop-blur-xl" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)" }}>
         <div className="flex items-center gap-2">
-          <button aria-label="Attach image" onClick={() => imageInputRef.current?.click()} disabled={imageUploading || !recipientId} className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0 disabled:opacity-40">
+          <button aria-label="Attach image" onClick={() => imageInputRef.current?.click()} disabled={imageUploading || !recipientId}             className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-gold transition-colors flex-shrink-0 disabled:opacity-40">
             {imageUploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImagePlus className="w-5 h-5" />}
           </button>
           <input ref={imageInputRef} type="file" accept="image/*" onChange={handleImageSelect} className="hidden" />
@@ -572,12 +572,12 @@ export default function ChatView({ match, onBack, openingMessage }) {
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
               placeholder={`Message ${partnerName}...`}
-              className="bg-secondary border-none rounded-full text-sm font-body placeholder:text-muted-foreground pr-10"
+              className="bg-[#29252E] border-none rounded-full text-sm font-body placeholder:text-muted-foreground pr-10"
             />
             <button
               onClick={() => setShowEmoji((v) => !v)}
               aria-label="Emoji"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-gold transition-colors"
             >
               <Smile className="w-4 h-4" />
             </button>
@@ -588,12 +588,12 @@ export default function ChatView({ match, onBack, openingMessage }) {
               animate={{ scale: 1 }}
               onClick={() => handleSend()}
               aria-label="Send message"
-              className="w-11 h-11 rounded-full bg-primary flex items-center justify-center flex-shrink-0 glow-orange"
+              className="w-11 h-11 rounded-full bg-gradient-to-br from-[#F3E5AB] to-[#D4A54A] flex items-center justify-center flex-shrink-0 glow-gold"
             >
-              <Send className="w-4 h-4 text-primary-foreground" />
+              <Send className="w-4 h-4 text-[#171717]" />
             </motion.button>
           ) : (
-            <button aria-label="Voice message" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+            <button aria-label="Voice message" className="w-11 h-11 flex items-center justify-center text-muted-foreground hover:text-gold transition-colors flex-shrink-0">
               <Mic className="w-5 h-5" />
             </button>
           )}

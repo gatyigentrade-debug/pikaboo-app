@@ -1,137 +1,208 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { SlidersHorizontal, Star, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Crown, Heart, Lock, Star, Send } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import PullToRefreshWrapper from "@/components/common/PullToRefreshWrapper";
+import ProfilePhoto from "@/components/common/ProfilePhoto";
+import { useMyProfile } from "@/hooks/useMyProfile";
+import { useGold } from "@/hooks/useGold";
+import { firstName, isVerifiedProfile, ageFromDob } from "@/utils/profile";
 
-const FILTERS = ["Nearby", "Has a Bio", "Photo Verified"];
+function VerifiedMini() {
+  return (
+    <span className="inline-flex w-4 h-4 rounded-full bg-gradient-to-br from-[#F3E5AB] to-[#D4AF37] items-center justify-center flex-shrink-0">
+      <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
+        <path d="M2 6l3 3 5-5" stroke="#1a1205" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
 
-const likedCards = [
-  { id: "l1", color: "#4A1A5A", active: true, starred: true },
-  { id: "l2", color: "#5A3010", active: true, starred: false },
-  { id: "l3", color: "#5A1030", active: true, starred: false },
-  { id: "l4", color: "#1A4A2A", active: true, starred: false },
-];
+function EmptyLikes({ icon, title, subtitle }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center px-6">
+      <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4 glow-gold-ring">
+        {icon || <Heart className="w-7 h-7 text-gold" />}
+      </div>
+      <p className="text-sm font-heading font-bold text-foreground mb-1">{title || "No likes yet"}</p>
+      <p className="text-xs text-muted-foreground font-body">{subtitle || "Keep swiping — your admirers will show up here."}</p>
+    </div>
+  );
+}
 
 export default function Likes() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("likes");
-  const [filters, setFilters] = useState({});
-  const handleRefresh = () => new Promise((resolve) => setTimeout(resolve, 1000));
+  const [tab, setTab] = useState("received");
+  const { profile: myProfile } = useMyProfile();
+  const { isGold } = useGold();
+  const myProfileId = myProfile?.id;
 
-  const toggleFilter = (f) => setFilters((p) => ({ ...p, [f]: !p[f] }));
+  // Real likes received (visible to Gold per existing access rules)
+  const { data: received = [], refetch: refetchReceived, isLoading: recLoading } = useQuery({
+    queryKey: ["swipe-likes-received", myProfileId],
+    queryFn: () => base44.entities.SwipeLike.filter({ liked_profile_id: myProfileId }, "-created_date"),
+    enabled: !!myProfileId,
+  });
+
+  // Real likes sent
+  const { data: sent = [], refetch: refetchSent, isLoading: sentLoading } = useQuery({
+    queryKey: ["swipe-likes-sent", myProfileId],
+    queryFn: () => base44.entities.SwipeLike.filter({ liker_profile_id: myProfileId }, "-created_date"),
+    enabled: !!myProfileId,
+  });
+
+  // Fetch the liked profiles for sent likes to show real premium cards
+  const sentIds = sent.map((s) => s.liked_profile_id).filter(Boolean);
+  const { data: sentProfiles = [] } = useQuery({
+    queryKey: ["sent-liked-profiles", sentIds.join(",")],
+    queryFn: async () => {
+      const results = await Promise.all(
+        sentIds.map((id) => base44.entities.DatingProfile.get(id).catch(() => null))
+      );
+      return results.filter(Boolean);
+    },
+    enabled: sentIds.length > 0,
+  });
+
+  const handleRefresh = async () => {
+    await Promise.all([refetchReceived(), refetchSent()]);
+  };
 
   return (
-    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-28">
+    <PullToRefreshWrapper onRefresh={handleRefresh} className="px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-32">
       {/* Header */}
       <div className="flex items-center gap-3 mb-5">
-        <Link to="/matches" aria-label="Back" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+        <Link to="/matches" aria-label="Back" className="w-11 h-11 rounded-full bg-[#29252E] flex items-center justify-center border border-white/5">
           <ArrowLeft className="w-4 h-4 text-foreground" />
         </Link>
-        <h1 className="text-2xl font-heading font-bold text-foreground">Likes</h1>
+        <h1 className="text-2xl font-heading font-bold text-gradient-gold">Likes</h1>
+        {isGold && (
+          <span className="flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-[#171717] text-xs font-heading font-black">
+            <Crown className="w-3 h-3" /> GOLD
+          </span>
+        )}
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b border-border/40 mb-4">
-        <button
-          onClick={() => setActiveTab("likes")}
-          className="pb-2 relative"
-        >
-          <span className={`text-sm font-heading font-bold ${activeTab === "likes" ? "text-foreground" : "text-muted-foreground"}`}>
-            8 Likes
-          </span>
-          {activeTab === "likes" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />}
-        </button>
-        <button
-          onClick={() => setActiveTab("sent")}
-          className="pb-2 relative"
-        >
-          <span className={`text-sm font-heading font-bold ${activeTab === "sent" ? "text-foreground" : "text-muted-foreground"}`}>
-            Likes Sent
-          </span>
-          {activeTab === "sent" && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />}
-        </button>
-      </div>
-
-      {/* Filter pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-hide">
-        <button className="flex-shrink-0 w-11 h-11 rounded-full border border-border flex items-center justify-center">
-          <SlidersHorizontal className="w-4 h-4 text-foreground" />
-        </button>
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => toggleFilter(f)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full border text-xs font-body transition-colors ${
-              filters[f]
-                ? "border-gold/40 bg-gold/10 text-gold"
-                : "border-border text-muted-foreground"
-            }`}
-          >
-            {f}
+      <div className="flex gap-6 border-b border-white/10 mb-5">
+        {[
+          { id: "received", label: "Received" },
+          { id: "sent", label: "Sent" },
+        ].map((t) => (
+          <button key={t.id} onClick={() => setTab(t.id)} className="pb-2 relative">
+            <span className={`text-sm font-heading font-bold ${tab === t.id ? "text-foreground" : "text-muted-foreground"}`}>{t.label}</span>
+            {tab === t.id && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold rounded-full" />}
           </button>
         ))}
       </div>
 
-      {/* Banner text */}
-      <p className="text-center text-xs text-muted-foreground font-body my-4">
-        Upgrade to Gold to see people who already liked you.
-      </p>
+      {tab === "received" ? (
+        isGold ? (
+          recLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-7 h-7 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : received.length === 0 ? (
+            <EmptyLikes />
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {received.map((like, i) => (
+                <motion.button
+                  key={like.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => like.liker_profile_id && navigate(`/profile/${like.liker_profile_id}`)}
+                  className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-gold/20 premium-card-shadow text-left"
+                >
+                  <ProfilePhoto src={like.liker_photo} alt={firstName(like.liker_name)} className="w-full h-full object-cover" iconClassName="w-10 h-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-transparent to-transparent" />
+                  {like.is_super_like && (
+                    <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-sky-500/80 flex items-center justify-center">
+                      <Star className="w-3.5 h-3.5 text-white" fill="currentColor" />
+                    </div>
+                  )}
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gold/90 text-[#171717] text-[10px] font-heading font-bold flex items-center gap-1">
+                    <Heart className="w-2.5 h-2.5" fill="currentColor" /> LIKES YOU
+                  </div>
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <p className="text-white font-heading font-bold text-sm truncate drop-shadow-lg">{firstName(like.liker_name)}</p>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          )
+        ) : (
+          /* Non-gold: honest locked state — blurred silhouettes, no fake people */
+          <div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/5 bg-[#29252E]">
+                  <div className="absolute inset-0 blur-md scale-110">
+                    <ProfilePhoto src={null} alt="" className="w-full h-full object-cover" iconClassName="w-12 h-12" />
+                  </div>
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <Lock className="w-6 h-6 text-gold/70" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-[#2A0A3B]/40 to-[#171717] p-4 text-center">
+              <p className="text-sm font-heading font-bold text-foreground mb-1">Who's into you is locked</p>
+              <p className="text-xs text-muted-foreground font-body">
+                Gold members can see everyone who liked them, with photos and first names. Upgrade to reveal your admirers.
+              </p>
+            </div>
+          </div>
+        )
+      ) : (
+        /* Sent tab — real liked profiles */
+        sentLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-7 h-7 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : sentProfiles.length === 0 ? (
+          <EmptyLikes icon={<Send className="w-7 h-7 text-gold" />} title="No likes sent yet" subtitle="When you like someone, they'll show up here." />
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {sentProfiles.map((p, i) => (
+              <motion.button
+                key={p.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.05 }}
+                onClick={() => navigate(`/profile/${p.id}`)}
+                className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-gold/20 premium-card-shadow text-left"
+              >
+                <ProfilePhoto src={p.photos?.[0]} alt={firstName(p.name)} className="w-full h-full object-cover" iconClassName="w-10 h-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-transparent to-transparent" />
+                <div className="absolute bottom-2 left-2 right-2">
+                  <div className="flex items-center gap-1">
+                    <p className="text-white font-heading font-bold text-sm truncate drop-shadow-lg">{firstName(p.name)}</p>
+                    {ageFromDob(p.date_of_birth) && <span className="text-white/70 text-xs">{ageFromDob(p.date_of_birth)}</span>}
+                    {isVerifiedProfile(p) && <VerifiedMini />}
+                  </div>
+                  {p.city && <p className="text-white/70 text-xs font-body truncate">{p.city}</p>}
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        )
+      )}
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 gap-3">
-        {likedCards.map((card) => (
-          <motion.div
-            key={card.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/40"
-            style={{ backgroundColor: "#1C1C1C" }}
+      {/* Sticky CTA for non-gold received */}
+      {tab === "received" && !isGold && (
+        <div className="fixed left-0 right-0 px-4 z-30" style={{ bottom: "calc(6rem + env(safe-area-inset-bottom))" }}>
+          <button
+            onClick={() => navigate("/subscriptions")}
+            className="w-full max-w-lg mx-auto h-12 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-bold flex items-center justify-center gap-2 glow-gold active:scale-95 transition-transform"
           >
-            {/* Blurred color blob */}
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{ filter: "blur(20px)" }}
-            >
-              <div className="w-24 h-24 rounded-full opacity-60" style={{ backgroundColor: card.color }} />
-            </div>
-            <div className="absolute inset-0 backdrop-blur-md bg-black/20" />
-
-            {/* Recently Active badge */}
-            {card.active && (
-              <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                <span className="text-xs text-green-400 font-body font-semibold">Recently Active</span>
-              </div>
-            )}
-
-            {/* Star */}
-            {card.starred && (
-              <div className="absolute top-2 right-2">
-                <Star className="w-4 h-4 text-gold" fill="currentColor" />
-              </div>
-            )}
-
-            {/* Bottom info */}
-            <div className="absolute bottom-2 left-2 right-2">
-              <p className="text-xs text-green-400 font-body font-semibold">8 · Recently Active</p>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Sticky bottom CTA */}
-      <div
-        className="fixed left-0 right-0 px-4 z-30"
-        style={{ bottom: "calc(6rem + env(safe-area-inset-bottom))" }}
-      >
-        <button
-          onClick={() => navigate("/subscriptions")}
-          className="w-full max-w-lg mx-auto h-12 rounded-full bg-gold text-black font-heading font-bold flex items-center justify-center gap-2 glow-gold active:scale-95 transition-transform"
-        >
-          See who Likes you 👀
-        </button>
-      </div>
+            <Crown className="w-4 h-4" /> See who likes you
+          </button>
+        </div>
+      )}
     </PullToRefreshWrapper>
   );
 }
