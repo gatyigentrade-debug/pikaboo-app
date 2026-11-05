@@ -44,7 +44,7 @@ export default function MatchModal({ matchedProfile, createdMatch, onChat }) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
               className="absolute w-72 h-72 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(circle, rgba(212,165,55,0.25) 0%, transparent 70%)" }}
             />
 
             <motion.div
@@ -94,7 +94,7 @@ export default function MatchModal({ matchedProfile, createdMatch, onChat }) {
               <div className="flex gap-3 justify-center">
                 <Button
                   onClick={() => setShowComposer(true)}
-                  className="bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] hover:opacity-90 text-black font-heading font-semibold px-8 py-3 rounded-full"
+                  className="bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] hover:opacity-90 text-[#171717] font-heading font-semibold px-8 py-3 rounded-full"
                   style={{ boxShadow: "0 0 22px rgba(212,175,55,0.4)" }}
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />

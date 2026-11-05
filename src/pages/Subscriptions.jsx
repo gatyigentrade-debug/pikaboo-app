@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Crown, Check, Loader2, ArrowLeft, Zap, Eye, Heart, RotateCcw, Star } from "lucide-react";
+import { Crown, Check, Loader2, Zap, Eye, Heart, RotateCcw, Star, Sparkles } from "lucide-react";
 import VipSuccessModal from "@/components/payment/VipSuccessModal";
+import ScreenHeader from "@/components/pika/ScreenHeader";
 
 const PLANS = [
   { id: "plus_weekly", label: "PikaBoo Plus", price: "R39", per: "/ week", productId: "pikaboo_plus_weekly", popular: false },
@@ -11,11 +12,11 @@ const PLANS = [
 ];
 
 const PERKS = [
-  { icon: Eye, title: "See Who Likes You", color: "text-yellow-400", bg: "bg-yellow-400/10" },
-  { icon: Zap, title: "Unlimited Swipes", color: "text-orange-400", bg: "bg-orange-400/10" },
-  { icon: RotateCcw, title: "Unlimited Rewinds", color: "text-blue-400", bg: "bg-blue-400/10" },
-  { icon: Star, title: "5 Super Likes / Week", color: "text-cyan-400", bg: "bg-cyan-400/10" },
-  { icon: Heart, title: "VIP Badge", color: "text-pink-400", bg: "bg-pink-400/10" },
+  { icon: Eye, title: "See Who Likes You" },
+  { icon: Zap, title: "Unlimited Swipes" },
+  { icon: RotateCcw, title: "Unlimited Rewinds" },
+  { icon: Star, title: "5 Super Likes / Week" },
+  { icon: Heart, title: "VIP Badge" },
 ];
 
 export default function Subscriptions() {
@@ -82,42 +83,38 @@ export default function Subscriptions() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen w-full bg-background flex flex-col">
-      {/* Header */}
-      <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-xl flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-4 border-b border-border/30">
-        <button onClick={() => navigate(-1)} aria-label="Back" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
-          <ArrowLeft className="w-4 h-4 text-foreground" />
-        </button>
-        <h1 className="text-lg font-heading font-bold text-foreground">PikaBoo VIP</h1>
-      </div>
+    <div className="min-h-screen w-full flex flex-col">
+      <ScreenHeader title="PikaBoo VIP" icon={Crown} fallback="/profile" />
 
-      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6 pb-10">
         {/* Hero */}
-        <div className="relative rounded-3xl bg-gradient-to-br from-yellow-500 via-amber-400 to-orange-500 px-6 py-8 text-center overflow-hidden">
-          <div className="absolute top-4 left-8 w-2 h-2 bg-white/60 rounded-full animate-sparkle" />
-          <div className="absolute top-8 right-12 w-1.5 h-1.5 bg-white/50 rounded-full animate-sparkle" style={{ animationDelay: "0.5s" }} />
-          <div className="absolute top-6 left-1/3 w-1 h-1 bg-white/40 rounded-full animate-sparkle" style={{ animationDelay: "1s" }} />
+        <div className="relative rounded-3xl overflow-hidden px-6 py-8 text-center" style={{ background: "linear-gradient(135deg, #2A0A3B 0%, #171717 60%, #0A0A0C 100%)" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(212,165,74,0.22), transparent 65%)" }} />
+          <div className="absolute top-4 left-8 w-2 h-2 bg-gold/70 rounded-full animate-sparkle" />
+          <div className="absolute top-8 right-12 w-1.5 h-1.5 bg-gold/60 rounded-full animate-sparkle" style={{ animationDelay: "0.5s" }} />
+          <div className="absolute top-6 left-1/3 w-1 h-1 bg-gold/50 rounded-full animate-sparkle" style={{ animationDelay: "1s" }} />
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
-            className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-3"
+            className="relative w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center glow-gold-ring"
+            style={{ background: "linear-gradient(135deg, rgba(243,229,171,0.18), rgba(212,165,74,0.08))" }}
           >
-            <Crown className="w-8 h-8 text-white drop-shadow-lg" />
+            <Crown className="w-8 h-8 text-gold drop-shadow-lg" />
           </motion.div>
-          <h2 className="text-2xl font-heading font-black text-white drop-shadow">Unlock PikaBoo VIP</h2>
-          <p className="text-white/90 font-body text-sm mt-1">Real people. Real connections. Faster.</p>
+          <h2 className="relative text-2xl font-heading font-black text-gradient-gold">Unlock PikaBoo VIP</h2>
+          <p className="relative text-muted-foreground font-body text-sm mt-1">Real people. Real connections. Faster.</p>
         </div>
 
         {/* Perks */}
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {PERKS.map((perk) => (
-            <div key={perk.title} className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl ${perk.bg} flex items-center justify-center flex-shrink-0`}>
-                <perk.icon className={`w-5 h-5 ${perk.color}`} />
+            <div key={perk.title} className="flex items-center gap-3 rounded-2xl border border-white/5 bg-secondary/40 px-4 py-3">
+              <div className="w-9 h-9 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">
+                <perk.icon className="w-4 h-4 text-gold" />
               </div>
-              <p className="font-heading font-semibold text-foreground text-sm">{perk.title}</p>
-              <Check className="w-4 h-4 text-green-400 ml-auto" />
+              <p className="font-heading font-semibold text-foreground text-sm flex-1">{perk.title}</p>
+              <Check className="w-4 h-4 text-gold" />
             </div>
           ))}
         </div>
@@ -130,26 +127,26 @@ export default function Subscriptions() {
               <button
                 key={plan.id}
                 onClick={() => setSelectedPlan(plan.id)}
-                className={`w-full relative rounded-2xl border-2 p-4 text-left transition-all ${
-                  active ? "border-amber bg-amber/10" : "border-border bg-secondary/30"
+                className={`w-full relative rounded-2xl border p-4 text-left transition-all ${
+                  active ? "border-gold bg-gold/10 glow-gold-ring" : "border-white/5 bg-secondary/40"
                 }`}
               >
                 {plan.badge && (
-                  <span className="absolute -top-2.5 right-4 bg-amber text-black text-xs font-heading font-black px-2 py-0.5 rounded-full">
+                  <span className="absolute -top-2.5 right-4 bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] text-xs font-heading font-black px-2.5 py-0.5 rounded-full">
                     {plan.badge}
                   </span>
                 )}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${active ? "border-amber bg-amber" : "border-muted-foreground"}`}>
-                      {active && <div className="w-2 h-2 rounded-full bg-black" />}
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${active ? "border-gold bg-gold" : "border-muted-foreground/50"}`}>
+                      {active && <div className="w-2 h-2 rounded-full bg-[#171717]" />}
                     </div>
                     <div>
                       <p className="font-heading font-bold text-foreground">{plan.label}</p>
                       <p className="text-xs text-muted-foreground font-body">Billed {plan.per.replace("/", "per")}</p>
                     </div>
                   </div>
-                  <p className="text-xl font-heading font-black text-foreground">{plan.price}</p>
+                  <p className="text-xl font-heading font-black text-gradient-gold">{plan.price}</p>
                 </div>
               </button>
             );
@@ -157,18 +154,15 @@ export default function Subscriptions() {
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl text-sm text-center bg-destructive/15 text-red-300 font-body">{error}</div>
+          <div className="p-3 rounded-xl text-sm text-center bg-destructive/15 text-coral font-body">{error}</div>
         )}
 
         {/* CTA */}
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          style={{
-            background: "linear-gradient(90deg, #FDE047 0%, #FBBF24 50%, #FB923C 100%)",
-            boxShadow: "0 0 28px rgba(251,191,36,0.65), 0 4px 16px rgba(251,146,60,0.45)"
-          }}
-          className="w-full h-14 rounded-full text-black font-heading font-black text-base disabled:opacity-70 flex items-center justify-center gap-2"
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-black text-base disabled:opacity-60 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+          style={{ boxShadow: "0 8px 28px -8px rgba(212,165,74,0.55)" }}
         >
           {loading ? (
             <>
@@ -177,13 +171,13 @@ export default function Subscriptions() {
             </>
           ) : (
             <>
-              <Crown className="w-5 h-5" />
+              <Sparkles className="w-5 h-5" />
               Subscribe to VIP — {PLANS.find((p) => p.id === selectedPlan).price}
             </>
           )}
         </button>
 
-        <p className="text-center text-xs text-muted-foreground font-body pb-4">
+        <p className="text-center text-xs text-muted-foreground font-body pb-2">
           Secure payment via Google Play · Cancel anytime · ZAR
         </p>
       </div>

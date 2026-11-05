@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Crown, Lock } from "lucide-react";
@@ -28,18 +27,18 @@ export default function WhoLikedYou({ isGold, myProfileId, onUpgrade }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Crown className="w-5 h-5 text-yellow-400" />
+          <Crown className="w-5 h-5 text-gold" />
           <h2 className="font-heading font-bold text-foreground text-base">
             {isGold ? "Who Liked You" : "People Who Liked You"}
           </h2>
-          <span className="px-2 py-0.5 rounded-full bg-yellow-400/20 text-yellow-400 text-xs font-heading font-bold">
+          <span className="px-2 py-0.5 rounded-full bg-gold/15 border border-gold/30 text-gold text-xs font-heading font-bold">
             {count}
           </span>
         </div>
         {!isGold && (
           <button
             onClick={onUpgrade}
-            className="text-xs font-heading font-bold text-yellow-400 underline underline-offset-2"
+            className="text-xs font-heading font-bold text-gold underline underline-offset-2"
           >
             Unlock
           </button>
@@ -54,7 +53,7 @@ export default function WhoLikedYou({ isGold, myProfileId, onUpgrade }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.06 }}
-            className="relative aspect-square rounded-2xl overflow-hidden"
+            className="relative aspect-square rounded-2xl overflow-hidden border border-white/5"
           >
             <img
               src={isGold ? item.liker_photo : item.photo}
@@ -62,12 +61,14 @@ export default function WhoLikedYou({ isGold, myProfileId, onUpgrade }) {
               className={`w-full h-full object-cover transition-all duration-300 ${!isGold ? "blur-md scale-110" : ""}`}
             />
             {!isGold && (
-              <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center">
-                <Lock className="w-5 h-5 text-white mb-1" />
+              <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center" style={{ background: "linear-gradient(135deg, rgba(42,10,59,0.45), rgba(0,0,0,0.5))" }}>
+                <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center">
+                  <Lock className="w-4 h-4 text-gold" />
+                </div>
               </div>
             )}
             {isGold && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-1.5">
                 <p className="text-white text-xs font-heading font-semibold truncate">{item.liker_name}</p>
               </div>
             )}
@@ -79,7 +80,8 @@ export default function WhoLikedYou({ isGold, myProfileId, onUpgrade }) {
       {!isGold && (
         <button
           onClick={onUpgrade}
-          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-500 text-black font-heading font-black text-sm shadow-lg shadow-yellow-500/20 hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          className="w-full h-12 rounded-2xl bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-black text-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
+          style={{ boxShadow: "0 8px 24px -8px rgba(212,165,74,0.5)" }}
         >
           <Crown className="w-4 h-4" />
           See who likes you — Get Gold

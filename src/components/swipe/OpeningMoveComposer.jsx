@@ -6,9 +6,9 @@ import { base44 } from "@/api/base44Client";
 const TONE_EMOJI  = { flirty: "😍", humorous: "😂", sincere: "🤙" };
 const TONE_LABEL  = { flirty: "Flirty", humorous: "Playful", sincere: "Sincere" };
 const TONE_COLOR  = {
-  flirty:   "text-pink-400 bg-pink-400/10 border-pink-400/30",
-  humorous: "text-amber  bg-amber/10    border-amber/30",
-  sincere:  "text-violet bg-violet/10   border-violet/30",
+  flirty:   "text-coral bg-coral/10 border-coral/30",
+  humorous: "text-gold bg-gold/10 border-gold/30",
+  sincere:  "text-violet bg-violet/10 border-violet/30",
 };
 
 function ProfileChips({ profile }) {
@@ -25,7 +25,7 @@ function ProfileChips({ profile }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {chips.map((c, i) => (
-        <span key={i} className="text-sm font-body px-2 py-0.5 rounded-full bg-secondary border border-border/40 text-muted-foreground">
+        <span key={i} className="text-sm font-body px-2 py-0.5 rounded-full bg-secondary border border-white/10 text-muted-foreground">
           {c.label}
         </span>
       ))}
@@ -143,7 +143,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 320, damping: 32 }}
-        className="w-full max-w-lg bg-card rounded-t-3xl border border-border/40 flex flex-col max-h-[92vh]"
+        className="w-full max-w-lg bg-card rounded-t-3xl border-t border-gold/20 flex flex-col max-h-[92vh]"
       >
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
@@ -151,10 +151,10 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border/30 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/5 flex-shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="relative">
-              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/50">
+              <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-gold/50">
                 <img src={matchedProfile?.photos?.[0] || ""} alt={matchedProfile?.name} className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-card" />
@@ -166,7 +166,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
               <p className="text-sm text-muted-foreground font-body">Answer their question to start chatting</p>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Close" className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={onClose} aria-label="Close" className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -175,8 +175,8 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
         <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
 
           {/* Their question */}
-          <div className="bg-gradient-to-br from-primary/10 to-violet/10 rounded-2xl px-4 py-3.5 border border-primary/20">
-            <p className="text-sm text-primary font-heading font-bold uppercase tracking-widest mb-1.5">🔥 Their Opening Move</p>
+          <div className="rounded-2xl px-4 py-3.5 border border-gold/20" style={{ background: "linear-gradient(135deg, rgba(212,165,74,0.08), rgba(42,10,59,0.18))" }}>
+            <p className="text-xs text-gold font-heading font-bold uppercase tracking-widest mb-1.5">🔥 Their Opening Move</p>
             <p className="text-sm font-body text-foreground italic leading-relaxed">"{prompt}"</p>
           </div>
 
@@ -195,7 +195,7 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                 transition={{ duration: 0.6 }}
                 className="text-5xl"
               >🔥</motion.div>
-              <h3 className="font-heading font-black text-xl text-foreground">Move Sent!</h3>
+              <h3 className="font-heading font-black text-xl text-gradient-gold">Move Sent!</h3>
               <p className="text-sm text-muted-foreground font-body">
                 Your opening move is on the way to {matchedProfile?.name}. Lekker bru! 🤙
               </p>
@@ -207,10 +207,10 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
             <>
               {/* Unverified gate */}
               {!isVerified && (
-                <div className="flex items-start gap-3 bg-yellow-400/10 border border-yellow-400/30 rounded-2xl px-4 py-3">
-                  <Lock className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-3 bg-gold/10 border border-gold/30 rounded-2xl px-4 py-3">
+                  <Lock className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-heading font-bold text-yellow-400">Verify your selfie to unlock AI Wingman</p>
+                    <p className="text-sm font-heading font-bold text-gold">Verify your selfie to unlock AI Wingman</p>
                     <p className="text-sm text-muted-foreground font-body mt-0.5">Get 3 personalised icebreakers generated just for this match.</p>
                   </div>
                 </div>
@@ -221,14 +221,14 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-green-400" />
-                      <span className="text-sm text-green-400 font-heading font-semibold">AI Wingman</span>
+                      <ShieldCheck className="w-3.5 h-3.5 text-gold" />
+                      <span className="text-sm text-gold font-heading font-semibold">AI Wingman</span>
                       <span className="text-sm text-muted-foreground font-body">· personalised for {matchedProfile?.name}</span>
                     </div>
                     <button
                       onClick={generate}
                       disabled={loading}
-                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors disabled:opacity-40"
+                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-gold transition-colors disabled:opacity-40"
                     >
                       <RefreshCw className={`w-3 h-3 ${loading ? "animate-spin" : ""}`} />
                       Refresh
@@ -257,21 +257,21 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                             onClick={() => handleSelectIce(ice)}
                             className={`w-full text-left px-4 py-3 rounded-2xl border transition-all group relative overflow-hidden ${
                               selected?.text === ice.text
-                                ? "border-primary bg-primary/10"
-                                : "border-border/40 bg-secondary/40 hover:border-primary/40 hover:bg-secondary/70"
+                                ? "border-gold bg-gold/10"
+                                : "border-white/10 bg-secondary/40 hover:border-gold/40 hover:bg-secondary/70"
                             }`}
                           >
                             {/* Tone badge */}
-                            <span className={`inline-flex items-center gap-1 text-sm font-heading font-bold px-2 py-0.5 rounded-full border mb-1.5 ${TONE_COLOR[ice.tone]}`}>
+                            <span className={`inline-flex items-center gap-1 text-xs font-heading font-bold px-2 py-0.5 rounded-full border mb-1.5 ${TONE_COLOR[ice.tone]}`}>
                               {TONE_EMOJI[ice.tone]} {TONE_LABEL[ice.tone]}
                             </span>
                             <p className="text-sm font-body text-foreground leading-snug">{ice.text}</p>
                             {ice.why && (
-                              <p className="text-sm text-muted-foreground font-body mt-1 opacity-70">↳ {ice.why}</p>
+                              <p className="text-xs text-muted-foreground font-body mt-1 opacity-70">↳ {ice.why}</p>
                             )}
                             {selected?.text === ice.text && (
-                              <div className="absolute right-3 top-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                                <ChevronRight className="w-3 h-3 text-white" />
+                              <div className="absolute right-3 top-3 w-5 h-5 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] flex items-center justify-center">
+                                <ChevronRight className="w-3 h-3 text-[#171717]" />
                               </div>
                             )}
                           </motion.button>
@@ -284,9 +284,9 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
 
               {/* Divider */}
               <div className="relative flex items-center gap-2">
-                <div className="flex-1 h-px bg-border/40" />
+                <div className="flex-1 h-px bg-white/10" />
                 <span className="text-sm text-muted-foreground font-body flex-shrink-0">or write your own</span>
-                <div className="flex-1 h-px bg-border/40" />
+                <div className="flex-1 h-px bg-white/10" />
               </div>
 
               {/* Custom textarea */}
@@ -297,8 +297,8 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
                   onFocus={() => setEditingCustom(true)}
                   placeholder={`Reply to ${matchedProfile?.name}...`}
                   rows={editingCustom ? 3 : 2}
-                  className={`w-full bg-secondary border rounded-2xl px-4 py-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none transition-all ${
-                    custom.trim() && !selected ? "border-primary/50" : "border-border/40"
+                  className={`w-full bg-secondary border rounded-2xl px-4 py-3 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-gold resize-none transition-all ${
+                    custom.trim() && !selected ? "border-gold/50" : "border-white/10"
                   }`}
                 />
                 {custom.trim().length > 0 && (
@@ -313,11 +313,12 @@ export default function OpeningMoveComposer({ matchedProfile, isVerified = true,
 
         {/* Send button — fixed at bottom */}
         {!sent && (
-          <div className="px-5 py-4 border-t border-border/30 flex-shrink-0">
+          <div className="px-5 py-4 border-t border-white/5 flex-shrink-0">
             <button
               onClick={handleSend}
               disabled={!canSend}
-              className="w-full py-3.5 rounded-full bg-primary text-primary-foreground font-heading font-bold text-sm glow-orange disabled:opacity-35 disabled:cursor-not-allowed hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full h-12 rounded-2xl bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-bold text-sm disabled:opacity-35 disabled:cursor-not-allowed hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              style={{ boxShadow: canSend ? "0 8px 24px -8px rgba(212,165,74,0.5)" : undefined }}
             >
               <Send className="w-4 h-4" />
               {selected ? "Send This Move 🔥" : custom.trim() ? "Send Your Move 🔥" : "Choose or Write a Reply"}

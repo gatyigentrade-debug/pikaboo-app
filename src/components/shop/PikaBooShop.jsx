@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Zap, Eye, Wine, Star, Crown, Check, Heart, Sparkles, Loader2 } from "lucide-react";
 import { triggerPurchase, BILLING_PRODUCTS } from "@/utils/billing";
@@ -43,15 +42,14 @@ const GOLD_PERKS = [
 ];
 
 const POWER_UPS = [
-  { id: "boost", icon: Zap, name: "Friday Night Boost ⚡", tag: "WEEKEND ONLY", tagColor: "text-gold border-gold/40", desc: "Hyper-boost your profile in a category between 6 PM–midnight tonight", price: "R19", productId: BILLING_PRODUCTS.BOOST, iconBg: "bg-gold/15", iconColor: "text-gold" },
-  { id: "unblur", icon: Eye, name: "Instant Unblur 👁️", desc: "Reveal a blurred profile without a match — one use", price: "R9", productId: BILLING_PRODUCTS.UNBLUR, iconBg: "bg-teal-500/15", iconColor: "text-teal-400" },
-  { id: "super5", icon: Heart, name: "5 Super Likes", desc: "Stand out and triple your chances of matching", price: "R29", productId: BILLING_PRODUCTS.SUPER_LIKES_5, iconBg: "bg-pink-500/15", iconColor: "text-pink-400" },
-  { id: "super20", icon: Heart, name: "20 Super Likes", tag: "BEST VALUE", tagColor: "text-amber border-amber/40", desc: "Bulk super likes for the serious swiper", price: "R99", productId: BILLING_PRODUCTS.SUPER_LIKES_20, iconBg: "bg-amber/15", iconColor: "text-amber" },
-  { id: "spotlight", icon: Sparkles, name: "Profile Spotlight (24h)", desc: "Be one of the top profiles in your area for 24 hours", price: "R49", productId: BILLING_PRODUCTS.SPOTLIGHT, iconBg: "bg-yellow-400/15", iconColor: "text-yellow-400" },
+  { id: "boost", icon: Zap, name: "Friday Night Boost ⚡", tag: "WEEKEND ONLY", desc: "Hyper-boost your profile in a category between 6 PM–midnight tonight", price: "R19", productId: BILLING_PRODUCTS.BOOST },
+  { id: "unblur", icon: Eye, name: "Instant Unblur 👁️", desc: "Reveal a blurred profile without a match — one use", price: "R9", productId: BILLING_PRODUCTS.UNBLUR },
+  { id: "super5", icon: Heart, name: "5 Super Likes", desc: "Stand out and triple your chances of matching", price: "R29", productId: BILLING_PRODUCTS.SUPER_LIKES_5 },
+  { id: "super20", icon: Heart, name: "20 Super Likes", tag: "BEST VALUE", desc: "Bulk super likes for the serious swiper", price: "R99", productId: BILLING_PRODUCTS.SUPER_LIKES_20 },
+  { id: "spotlight", icon: Sparkles, name: "Profile Spotlight (24h)", desc: "Be one of the top profiles in your area for 24 hours", price: "R49", productId: BILLING_PRODUCTS.SPOTLIGHT },
 ];
 
 export default function PikaBooShop({ isOpen, onClose }) {
-  const navigate = useNavigate();
   const [plusCycle, setPlusCycle] = useState("week"); // "week" | "month"
   const [passClaimed, setPassClaimed] = useState(() => {
     try { return localStorage.getItem(FREE_PASS_KEY) === "true"; } catch { return false; }
@@ -99,11 +97,11 @@ export default function PikaBooShop({ isOpen, onClose }) {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[90vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[90vh] overflow-y-auto border-t border-gold/20"
           >
             {/* Header */}
-            <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-border/30">
-              <button onClick={onClose} className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform">
+            <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-white/5">
+              <button onClick={onClose} className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center active:scale-95 transition-transform">
                 <X className="w-5 h-5 text-foreground" />
               </button>
               <h2 className="text-lg font-heading font-bold text-foreground">PikaBoo Shop</h2>
@@ -112,17 +110,18 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
             <div className="px-4 py-5 space-y-6">
               {/* Section A: Free VIP Pass */}
-              <div className="rounded-2xl border border-gold/30 bg-secondary/30 p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-sm font-heading font-bold">VIP</span>
+              <div className="rounded-2xl border border-gold/30 bg-secondary/40 p-4 space-y-3 relative overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 80% 0%, rgba(212,165,74,0.12), transparent 60%)" }} />
+                <div className="relative flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full bg-gold/20 text-gold text-xs font-heading font-bold border border-gold/30">VIP</span>
                   <h3 className="text-sm font-heading font-bold text-foreground">Free 24-Hour VIP Pass 🎁</h3>
                 </div>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                <p className="relative text-sm text-muted-foreground font-body leading-relaxed">
                   Unlock all VIP perks for free — Line Jumping, 4 Unblurs, partner venue vouchers — for exactly 24 hours. One-time offer.
                 </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="relative flex gap-2 flex-wrap">
                   {["⚡ Line Jump", "👁 4 Unblurs", "🥂 Date Guarantee"].map((chip) => (
-                    <span key={chip} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-sm font-body">
+                    <span key={chip} className="px-2.5 py-1 rounded-full border border-gold/30 bg-gold/5 text-gold text-xs font-body">
                       {chip}
                     </span>
                   ))}
@@ -130,11 +129,12 @@ export default function PikaBooShop({ isOpen, onClose }) {
                 <button
                   onClick={handleClaimPass}
                   disabled={passClaimed || claiming}
-                  className={`w-full h-11 rounded-full font-heading font-bold flex items-center justify-center gap-2 transition-colors ${
+                  className={`relative w-full h-12 rounded-2xl font-heading font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
                     passClaimed
-                      ? "bg-secondary text-muted-foreground"
-                      : "bg-gold text-black active:scale-95"
+                      ? "bg-secondary text-muted-foreground border border-white/5"
+                      : "bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717]"
                   }`}
+                  style={!passClaimed ? { boxShadow: "0 8px 24px -8px rgba(212,165,74,0.5)" } : undefined}
                 >
                   {passClaimed
                     ? "✓ VIP Pass Claimed"
@@ -146,7 +146,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
               {/* Current plan badge */}
               <div className="flex justify-center">
-                <span className="px-3 py-1 rounded-full bg-secondary text-sm font-body text-muted-foreground">
+                <span className="px-3 py-1 rounded-full bg-secondary border border-white/5 text-sm font-body text-muted-foreground">
                   Current plan: <span className="text-gold font-bold">Free</span>
                 </span>
               </div>
@@ -158,7 +158,7 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
                 <div className="space-y-3">
                   {/* Free Tier */}
-                  <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
+                  <div className="rounded-2xl bg-secondary/40 border border-white/5 p-4">
                     <div className="flex items-baseline justify-between mb-3">
                       <div>
                         <p className="text-sm font-heading font-bold text-muted-foreground">Free</p>
@@ -176,35 +176,36 @@ export default function PikaBooShop({ isOpen, onClose }) {
                   </div>
 
                   {/* Pikaboo Plus Tier */}
-                  <div className="rounded-2xl bg-secondary/30 border border-gold/40 p-4 relative">
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gold text-black text-sm font-heading font-bold">POPULAR</span>
-                    <div className="flex items-center gap-2 mb-1">
+                  <div className="rounded-2xl bg-secondary/40 border border-gold/40 p-4 relative overflow-hidden">
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 100% 0%, rgba(212,165,74,0.1), transparent 55%)" }} />
+                    <span className="relative absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gold text-[#171717] text-xs font-heading font-bold">POPULAR</span>
+                    <div className="relative flex items-center gap-2 mb-1">
                       <Star className="w-4 h-4 text-gold" fill="currentColor" />
                       <p className="text-sm font-heading font-bold text-gold">Pikaboo Plus</p>
                     </div>
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-gold/15 text-gold text-sm font-heading font-bold mb-3">
+                    <span className="relative inline-block px-2 py-0.5 rounded-full bg-gold/15 text-gold text-xs font-heading font-bold mb-3 border border-gold/30">
                       3-Day FREE Trial
                     </span>
                     {/* Cycle toggle */}
-                    <div className="flex gap-2 mb-3">
+                    <div className="relative flex gap-2 mb-3">
                       <button
                         onClick={() => setPlusCycle("week")}
-                        className={`flex-1 py-3 min-h-[44px] rounded-full text-sm font-heading font-bold transition-colors ${
-                          plusCycle === "week" ? "bg-gold text-black" : "border border-gold/30 text-gold"
+                        className={`flex-1 py-3 min-h-[44px] rounded-xl text-sm font-heading font-bold transition-all ${
+                          plusCycle === "week" ? "bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717]" : "border border-gold/30 text-gold bg-transparent"
                         }`}
                       >
                         R39/week
                       </button>
                       <button
                         onClick={() => setPlusCycle("month")}
-                        className={`flex-1 py-3 min-h-[44px] rounded-full text-sm font-heading font-bold transition-colors ${
-                          plusCycle === "month" ? "bg-gold text-black" : "border border-gold/30 text-gold"
+                        className={`flex-1 py-3 min-h-[44px] rounded-xl text-sm font-heading font-bold transition-all ${
+                          plusCycle === "month" ? "bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717]" : "border border-gold/30 text-gold bg-transparent"
                         }`}
                       >
                         R99/month
                       </button>
                     </div>
-                    <ul className="space-y-1.5 mb-4">
+                    <ul className="relative space-y-1.5 mb-4">
                       {PLUS_PERKS.map((p) => (
                         <li key={p} className="flex items-center gap-2 text-sm text-foreground font-body">
                           <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />
@@ -214,32 +215,35 @@ export default function PikaBooShop({ isOpen, onClose }) {
                     </ul>
                     <button
                       onClick={() => triggerPurchase(plusProductId)}
-                      className="w-full h-11 rounded-full bg-gold text-black font-heading font-bold"
+                      className="relative w-full h-12 rounded-2xl bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-bold active:scale-[0.98] transition-transform"
+                      style={{ boxShadow: "0 8px 24px -8px rgba(212,165,74,0.5)" }}
                     >
                       Upgrade to Plus — {plusPrice}
                     </button>
                   </div>
 
                   {/* Pikaboo Gold Tier */}
-                  <div className="rounded-2xl bg-secondary/30 border-2 border-amber/50 p-4 relative">
-                    <span className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-amber text-black text-sm font-heading font-bold">GOLD</span>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Crown className="w-4 h-4 text-amber" fill="currentColor" />
-                      <p className="text-sm font-heading font-bold text-amber">Pikaboo Gold</p>
+                  <div className="rounded-2xl bg-secondary/40 border-2 border-gold/50 p-4 relative overflow-hidden">
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 0% 100%, rgba(212,165,74,0.12), transparent 55%)" }} />
+                    <span className="relative absolute top-3 right-3 px-2 py-0.5 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] text-xs font-heading font-bold">GOLD</span>
+                    <div className="relative flex items-center gap-2 mb-1">
+                      <Crown className="w-4 h-4 text-gold" fill="currentColor" />
+                      <p className="text-sm font-heading font-bold text-gold">Pikaboo Gold</p>
                     </div>
-                    <p className="text-lg font-heading font-bold text-foreground mb-1">R199 <span className="text-sm text-muted-foreground font-body font-normal">/ per month</span></p>
-                    <p className="text-sm text-amber/80 font-body font-semibold mb-3">Includes everything in Plus, plus:</p>
-                    <ul className="space-y-1.5 mb-4">
+                    <p className="relative text-lg font-heading font-bold text-gradient-gold mb-1">R199 <span className="text-sm text-muted-foreground font-body font-normal">/ per month</span></p>
+                    <p className="relative text-sm text-gold/80 font-body font-semibold mb-3">Includes everything in Plus, plus:</p>
+                    <ul className="relative space-y-1.5 mb-4">
                       {GOLD_PERKS.map((p) => (
                         <li key={p} className="flex items-center gap-2 text-sm text-foreground font-body">
-                          <Check className="w-3.5 h-3.5 text-amber flex-shrink-0" />
+                          <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />
                           {p}
                         </li>
                       ))}
                     </ul>
                     <button
                       onClick={() => triggerPurchase(BILLING_PRODUCTS.GOLD_MONTHLY)}
-                      className="w-full h-11 rounded-full bg-amber text-black font-heading font-bold"
+                      className="relative w-full h-12 rounded-2xl bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-bold active:scale-[0.98] transition-transform"
+                      style={{ boxShadow: "0 8px 24px -8px rgba(212,165,74,0.5)" }}
                     >
                       Upgrade to Gold — R199/month
                     </button>
@@ -256,24 +260,24 @@ export default function PikaBooShop({ isOpen, onClose }) {
                   {POWER_UPS.map((item) => {
                     const Icon = item.icon;
                     return (
-                      <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-secondary/30 border border-border/40 p-3">
-                        <div className={`w-11 h-11 rounded-full ${item.iconBg} flex items-center justify-center flex-shrink-0`}>
-                          <Icon className={`w-5 h-5 ${item.iconColor}`} />
+                      <div key={item.id} className="flex items-center gap-3 rounded-2xl bg-secondary/40 border border-white/5 p-3">
+                        <div className="w-11 h-11 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-5 h-5 text-gold" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="text-sm font-heading font-bold text-foreground">{item.name}</p>
                             {item.tag && (
-                              <span className={`px-1.5 py-0.5 rounded-full border text-sm font-heading font-bold whitespace-nowrap flex-shrink-0 ${item.tagColor}`}>
+                              <span className="px-1.5 py-0.5 rounded-full border border-gold/40 bg-gold/10 text-gold text-xs font-heading font-bold whitespace-nowrap flex-shrink-0">
                                 {item.tag}
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground font-body mt-0.5 line-clamp-2">{item.desc}</p>
+                          <p className="text-xs text-muted-foreground font-body mt-0.5 line-clamp-2">{item.desc}</p>
                         </div>
                         <button
                           onClick={() => triggerPurchase(item.productId)}
-                          className="flex-shrink-0 min-h-[44px] px-4 py-2 rounded-full border border-gold/40 text-gold text-sm font-heading font-bold hover:bg-gold/10 transition-colors"
+                          className="flex-shrink-0 min-h-[40px] px-4 py-2 rounded-xl border border-gold/40 text-gold text-sm font-heading font-bold hover:bg-gold/10 transition-colors"
                         >
                           {item.price}
                         </button>
@@ -285,8 +289,9 @@ export default function PikaBooShop({ isOpen, onClose }) {
 
               {/* Section D: Date Guarantee */}
               <section>
-                <div className="rounded-2xl border border-gold/30 bg-secondary/30 p-4 space-y-3">
-                  <div className="flex items-center justify-between">
+                <div className="rounded-2xl border border-gold/30 bg-secondary/40 p-4 space-y-3 relative overflow-hidden">
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(212,165,74,0.1), transparent 60%)" }} />
+                  <div className="relative flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Wine className="w-5 h-5 text-gold" />
                       <div>
@@ -294,21 +299,21 @@ export default function PikaBooShop({ isOpen, onClose }) {
                         <p className="text-sm text-muted-foreground font-body">Gold exclusive</p>
                       </div>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full bg-amber text-black text-sm font-heading font-bold">GOLD EXCLUSIVE</span>
+                    <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] text-xs font-heading font-bold">GOLD EXCLUSIVE</span>
                   </div>
-                  <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  <p className="relative text-sm text-muted-foreground font-body leading-relaxed">
                     Once you and a match hit a 10-message streak and you fully unblur their profile, PikaBoo automatically drops a voucher for a partner venue — Marble, Shimmy Beach Club, The Rooftop Lounge, and more.
                   </p>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="relative flex gap-2 flex-wrap">
                     {VENUES.map((v) => (
-                      <span key={v} className="px-2.5 py-1 rounded-full border border-gold/30 text-gold text-sm font-body">
+                      <span key={v} className="px-2.5 py-1 rounded-full border border-gold/30 bg-gold/5 text-gold text-xs font-body">
                         {v}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center gap-2 pt-1">
+                  <div className="relative flex items-center gap-2 pt-1">
                     <Check className="w-4 h-4 text-gold" />
-                    <span className="text-sm font-body text-gold font-semibold">You're earning Date Guarantee vouchers</span>
+                    <span className="text-sm text-gold font-semibold">You're earning Date Guarantee vouchers</span>
                   </div>
                 </div>
               </section>

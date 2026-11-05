@@ -18,7 +18,7 @@ function AgeDrawer({ label, value, onChange, min = 18 }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="w-full h-11 rounded-xl bg-secondary border border-border/40 px-3 text-sm font-body text-foreground flex items-center justify-between"
+        className="w-full h-11 rounded-xl bg-secondary border border-white/10 px-3 text-sm font-body text-foreground flex items-center justify-between"
       >
         <span className="text-xs text-muted-foreground">{label}</span>
         <span className="font-heading font-bold text-foreground">{value}</span>
@@ -37,7 +37,7 @@ function AgeDrawer({ label, value, onChange, min = 18 }) {
               onChange={(e) => onChange(Number(e.target.value))}
               className="w-full accent-gold"
             />
-            <div className="text-center mt-3 text-2xl font-heading font-bold text-foreground">{value}</div>
+            <div className="text-center mt-3 text-2xl font-heading font-bold text-gradient-gold">{value}</div>
           </div>
         </DrawerContent>
       </Drawer>
@@ -101,11 +101,11 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[88vh] flex flex-col overflow-hidden"
+            className="fixed bottom-0 left-0 right-0 z-50 bg-background rounded-t-3xl max-h-[88vh] flex flex-col overflow-hidden border-t border-gold/20"
           >
             {/* Header */}
-            <div className="shrink-0 bg-background/95 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-border/30">
-              <button onClick={onClose} className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center active:scale-95 transition-transform">
+            <div className="shrink-0 bg-background/95 backdrop-blur-xl flex items-center justify-between px-4 py-4 border-b border-white/5">
+              <button onClick={onClose} className="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center active:scale-95 transition-transform">
                 <X className="w-5 h-5 text-foreground" />
               </button>
               <h2 className="text-lg font-heading font-bold text-foreground">Filters</h2>
@@ -174,10 +174,10 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
                     <button
                       key={interest}
                       onClick={() => toggleInterest(interest)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-body font-semibold transition-all ${
                         localFilters.interests.includes(interest)
-                          ? "bg-gold text-black border border-gold"
-                          : "bg-secondary text-muted-foreground border border-border/40"
+                          ? "bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] border border-gold"
+                          : "bg-secondary text-muted-foreground border border-white/10"
                       }`}
                     >
                       {interest}
@@ -189,12 +189,12 @@ export default function ExploreFilterSheet({ isOpen, onClose, filters, onApply }
 
             {/* Apply button — pinned below the scrollable body, clear of the bottom nav */}
             <div
-              className="shrink-0 bg-background/95 backdrop-blur-xl px-4 border-t border-border/30"
+              className="shrink-0 bg-background/95 backdrop-blur-xl px-4 border-t border-white/5"
               style={{ paddingTop: "12px", paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
             >
               <button
                 onClick={handleApply}
-                className="w-full h-12 rounded-[14px] bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37] text-black font-heading font-semibold text-[15px] active:scale-[0.98] transition-transform"
+                className="w-full h-12 rounded-[14px] bg-gradient-to-r from-[#F3E5AB] to-[#D4A54A] text-[#171717] font-heading font-semibold text-[15px] active:scale-[0.98] transition-transform"
                 style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.18)" }}
               >
                 Apply filters
