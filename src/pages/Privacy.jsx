@@ -1,4 +1,6 @@
 import { Shield } from "lucide-react";
+import ScreenHeader from "@/components/pika/ScreenHeader";
+import PikaCard from "@/components/pika/PikaCard";
 
 const SECTIONS = [
   {
@@ -80,38 +82,36 @@ const SECTIONS = [
 export default function Privacy() {
   return (
     <div className="min-h-screen pb-16" style={{ textShadow: "none" }}>
-      {/* Header */}
-      <div className="px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-4">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center">
-            <Shield className="w-5 h-5 text-gold" />
+      <ScreenHeader title="Privacy Policy" subtitle="Last updated: September 2026" icon={Shield} />
+
+      <div className="px-4">
+        <PikaCard className="p-4 mb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-11 h-11 rounded-2xl bg-gold/12 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-gold" />
+            </div>
+            <p className="text-sm text-foreground/85 font-body leading-relaxed">
+              At PikaBoo, your privacy matters. This policy explains what information we collect, how we
+              use it, and the choices you have.
+            </p>
           </div>
-          <div>
-            <h1 className="text-lg font-heading font-bold text-foreground">Privacy Policy</h1>
-            <p className="text-sm text-muted-foreground font-body">Last updated: September 2026</p>
-          </div>
+        </PikaCard>
+
+        <div className="space-y-3">
+          {SECTIONS.map((s) => (
+            <PikaCard key={s.title} className="p-4">
+              <h2 className="text-sm font-heading font-bold text-gradient-gold mb-2.5">{s.title}</h2>
+              <ul className="space-y-2">
+                {s.body.map((line, i) => (
+                  <li key={i} className="text-sm text-foreground/80 font-body leading-relaxed flex gap-2">
+                    <span className="text-gold/70 flex-shrink-0 mt-1.5">•</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </PikaCard>
+          ))}
         </div>
-
-        <p className="text-sm text-foreground/80 font-body leading-relaxed">
-          At PikaBoo, your privacy matters. This policy explains what information we collect, how we use it, and the choices you have. By using PikaBoo, you agree to the practices described here.
-        </p>
-      </div>
-
-      {/* Sections */}
-      <div className="px-4 space-y-4">
-        {SECTIONS.map((s) => (
-          <div key={s.title} className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-            <h2 className="text-sm font-heading font-bold text-gold mb-2">{s.title}</h2>
-            <ul className="space-y-1.5">
-              {s.body.map((line, i) => (
-                <li key={i} className="text-sm text-foreground/80 font-body leading-relaxed flex gap-2">
-                  <span className="text-gold/60 flex-shrink-0">•</span>
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
       </div>
     </div>
   );

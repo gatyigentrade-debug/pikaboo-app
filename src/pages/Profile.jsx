@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert, Loader2, BadgeCheck, Shield, UserRound } from "lucide-react";
+import {
+  MapPin, Camera, Pencil, ShoppingBag, ChevronRight, Trash2, ShieldAlert,
+  Loader2, BadgeCheck, Shield, UserRound, Settings as SettingsIcon, Sparkles,
+  HeartHandshake, Globe, UtensilsCrossed, Trophy, Compass, Heart,
+} from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
 import { useMyProfile } from "@/hooks/useMyProfile";
@@ -10,8 +14,58 @@ import VerificationSection from "@/components/profile/VerificationSection";
 import EditProfileDialog from "@/components/profile/EditProfileDialog";
 import InterestsEditorDialog from "@/components/profile/InterestsEditorDialog";
 import ProfilePhoto from "@/components/common/ProfilePhoto";
+import PikaCard from "@/components/pika/PikaCard";
+import PikaButton from "@/components/pika/PikaButton";
+import PikaBadge from "@/components/pika/PikaBadge";
 import { useAuth } from "@/lib/AuthContext";
 import { ageFromDob, firstName, isVerifiedProfile } from "@/utils/profile";
+
+const INTENTION_LABELS = {
+  relationship: "A relationship",
+  friendship: "Friendship",
+  casual: "Something casual",
+  not_sure: "Seeing what's out there",
+};
+
+const LIFESTYLE_FIELDS = [
+  { key: "home_language", label: "Home language", icon: Globe },
+  { key: "sports_team", label: "Sports team", icon: Trophy },
+  { key: "favorite_kota_spot", label: "Favourite Kota spot", icon: UtensilsCrossed },
+  { key: "braai_role", label: "Braai role", icon: Sparkles },
+  { key: "dream_date_location", label: "Dream date spot", icon: Heart },
+  { key: "cant_live_without", label: "Can't live without", icon: HeartHandshake },
+  { key: "spirit_animal", label: "Spirit animal", icon: Compass },
+  { key: "braai_starter", label: "Braai starter", icon: Sparkles },
+];
+
+function SectionTitle({ children, action }) {
+  return (
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="text-[11px] font-heading font-bold text-muted-foreground uppercase tracking-[0.14em]">
+        {children}
+      </h3>
+      {action}
+    </div>
+  );
+}
+
+function SettingsRow({ icon: Icon, title, subtitle, onClick, to, danger, accent = "gold" }) {
+  const content = (
+    <div className="flex items-center gap-3 w-full">
+      <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${danger ? "bg-destructive/12" : accent === "gold" ? "bg-gold/12" : "bg-white/5"}`}>
+        <Icon className={`w-[18px] h-[18px] ${danger ? "text-destructive" : "text-gold"}`} />
+      </div>
+      <div className="flex-1 min-w-0 text-left">
+        <p className={`text-sm font-heading font-bold ${danger ? "text-destructive" : "text-foreground"}`}>{title}</p>
+        {subtitle && <p className="text-xs text-muted-foreground font-body truncate">{subtitle}</p>}
+      </div>
+      <ChevronRight className="w-4 h-4 text-muted-foreground/70 flex-shrink-0" />
+    </div>
+  );
+  const cls = `w-full flex items-center p-3 rounded-2xl transition-colors ${danger ? "hover:bg-destructive/10" : "hover:bg-white/5"}`;
+  if (to) return <Link to={to} className={cls}>{content}</Link>;
+  return <button onClick={onClick} className={cls}>{content}</button>;
+}
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +75,7 @@ export default function Profile() {
   const { profile, isLoading, refetch } = useMyProfile();
   const age = ageFromDob(profile?.date_of_birth);
   const showVerified = isVerifiedProfile(profile);
+  const photos = profile?.photos || [];
 
   const showShop = searchParams.get("shop") === "open";
   const showDeleteDialog = searchParams.get("delete_confirm") === "open";
@@ -43,11 +98,7 @@ export default function Profile() {
     try {
       const me = await base44.auth.me();
       const myId = me?.id;
-
-      // Remove the user's dating profile
       await base44.entities.DatingProfile.deleteMany({ created_by_id: myId });
-
-      // Remove all data the user created across the app
       await Promise.all([
         base44.entities.SwipeLike.deleteMany({ created_by_id: myId }),
         base44.entities.SwipeAction.deleteMany({ created_by_id: myId }),
@@ -55,10 +106,7 @@ export default function Profile() {
         base44.entities.ProfileView.deleteMany({ created_by_id: myId }),
         base44.entities.BraaiMeetup.deleteMany({ created_by_id: myId }),
       ]);
-
-      toast.success("Account deleted", {
-        description: "Your PikaBoo profile and data have been removed.",
-      });
+      toast.success("Account deleted", { description: "Your PikaBoo profile and data have been removed." });
       closeSheet("delete_confirm");
       await base44.auth.logout("/login");
     } catch (error) {
@@ -76,7 +124,6 @@ export default function Profile() {
     );
   }
 
-  // Fallback: signed in, but there is no profile record to render yet.
   if (!profile) {
     return (
       <div className="pb-28">
@@ -84,7 +131,7 @@ export default function Profile() {
           <h1 className="text-xl font-heading font-bold text-foreground">My Profile</h1>
         </div>
         <div className="px-4 mt-6">
-          <div className="rounded-2xl bg-secondary/30 border border-border/40 p-6 text-center">
+          <PikaCard className="p-6 text-center">
             <div className="w-14 h-14 rounded-full bg-gold/15 flex items-center justify-center mx-auto mb-3">
               <UserRound className="w-6 h-6 text-gold" />
             </div>
@@ -92,198 +139,181 @@ export default function Profile() {
             <p className="text-sm text-muted-foreground font-body mt-1 mb-5">
               Add your name, a photo and a few details so other Boos can find you.
             </p>
-            <button
-              onClick={() => openSheet("edit")}
-              className="w-full min-h-[44px] rounded-full bg-gold text-black font-heading font-bold text-sm"
-            >
+            <PikaButton className="w-full" onClick={() => openSheet("edit")}>
               Create my profile
-            </button>
-          </div>
+            </PikaButton>
+          </PikaCard>
         </div>
-        <EditProfileDialog
-          isOpen={showEdit}
-          profile={profile}
-          onClose={() => closeSheet("edit")}
-          onSaved={() => refetch()}
-        />
+        <EditProfileDialog isOpen={showEdit} profile={profile} onClose={() => closeSheet("edit")} onSaved={() => refetch()} />
       </div>
     );
   }
 
+  const lifestyleValues = LIFESTYLE_FIELDS.filter((f) => {
+    const v = profile?.[f.key];
+    return v !== undefined && v !== null && String(v).trim() !== "";
+  });
+
   return (
     <div className="pb-28">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-[calc(1.25rem+env(safe-area-inset-top))]">
+      <div className="flex items-center justify-between px-4 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-2">
         <h1 className="text-xl font-heading font-bold text-foreground">My Profile</h1>
-        <button onClick={() => openSheet("edit")} className="flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full border border-gold/40 text-gold text-sm font-heading font-bold">
-          <Pencil className="w-3 h-3" />
-          Edit
-        </button>
+        <PikaButton variant="outline" size="sm" onClick={() => openSheet("edit")}>
+          <Pencil className="w-3.5 h-3.5" /> Edit
+        </PikaButton>
       </div>
 
-      {/* Hero */}
-      <div className="flex flex-col items-center pt-6 pb-5">
-        <div className="relative">
-          <div className="w-28 h-28 rounded-full border-4 border-gold overflow-hidden glow-gold">
-            <ProfilePhoto src={profile?.photos?.[0]} alt={profile?.name || "Your profile"} className="w-full h-full object-cover" iconClassName="w-10 h-10" />
+      {/* Photo gallery at top */}
+      <div className="px-4 mt-3">
+        <PikaCard className="p-3">
+          <div className="flex items-center justify-between mb-2.5 px-1">
+            <h3 className="text-[11px] font-heading font-bold text-muted-foreground uppercase tracking-[0.14em]">
+              Photos ({photos.length}/6)
+            </h3>
+            <button onClick={() => openSheet("edit")} className="text-[11px] font-heading font-bold text-gold">Manage</button>
           </div>
-          <button onClick={() => openSheet("edit")} className="absolute bottom-0 right-0 w-11 h-11 rounded-full bg-gold flex items-center justify-center border-2 border-background">
-            <Camera className="w-4 h-4 text-black" />
-          </button>
-        </div>
-        <h2 className="text-xl font-heading font-bold text-foreground mt-3 flex items-center gap-1.5">
-          {firstName(profile?.name) || "Your name"}{age ? `, ${age}` : ""}
-          {showVerified && <BadgeCheck className="w-5 h-5 text-primary" />}
-        </h2>
-        <div className="flex items-center gap-1 text-muted-foreground text-sm font-body mt-0.5">
-          <MapPin className="w-3.5 h-3.5" />
-          {profile?.city || "Add your city"}
-        </div>
-      </div>
-
-      {/* Cards */}
-      <div className="px-4 space-y-3">
-        {/* Photos */}
-        <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
-            Photos ({profile?.photos?.length || 0}/6)
-          </h3>
-          <div className="grid grid-cols-3 gap-2">
-            {(profile?.photos || []).map((photo, i) => (
-              <div key={i} className="aspect-square rounded-xl overflow-hidden">
-                <img src={photo} alt="" className="w-full h-full object-cover" />
+          {photos.length > 0 ? (
+            <>
+              <div className="rounded-2xl overflow-hidden aspect-[4/3] mb-2">
+                <img src={photos[0]} alt={profile?.name || "Your photo"} className="w-full h-full object-cover" />
               </div>
-            ))}
-            {Array.from({ length: Math.max(0, 6 - (profile?.photos?.length || 0)) }).map((_, i) => (
-              <button key={`empty-${i}`} onClick={() => openSheet("edit")} className="aspect-square rounded-xl border-2 border-dashed border-border/40 flex items-center justify-center">
-                <Camera className="w-5 h-5 text-muted-foreground/40" />
-              </button>
-            ))}
-          </div>
-        </div>
+              <div className="grid grid-cols-4 gap-2">
+                {photos.slice(1).map((photo, i) => (
+                  <div key={i + 1} className="aspect-square rounded-xl overflow-hidden">
+                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+                {Array.from({ length: Math.max(0, 5 - (photos.length - 1)) }).map((_, i) => (
+                  <button key={`empty-${i}`} onClick={() => openSheet("edit")} className="aspect-square rounded-xl border border-dashed border-white/12 flex items-center justify-center">
+                    <Camera className="w-4 h-4 text-muted-foreground/40" />
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <button onClick={() => openSheet("edit")} className="w-full aspect-[4/3] rounded-2xl border border-dashed border-white/12 flex flex-col items-center justify-center gap-2">
+              <div className="w-12 h-12 rounded-full bg-gold/12 flex items-center justify-center">
+                <Camera className="w-5 h-5 text-gold" />
+              </div>
+              <span className="text-sm text-muted-foreground font-body">Add your first photo</span>
+            </button>
+          )}
+        </PikaCard>
+      </div>
 
-        {/* About Me */}
-        <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-2">
-            About Me
-          </h3>
-          <p className="text-sm text-foreground/80 font-body">{profile?.bio || "Add a bio to let people know about you..."}</p>
+      {/* Identity */}
+      <div className="px-4 mt-4 text-center">
+        <h2 className="text-2xl font-heading font-bold flex items-center justify-center gap-2">
+          <span className="text-gradient-gold">{firstName(profile?.name) || "Your name"}</span>
+          {age ? <span className="text-foreground/80 text-xl font-body font-normal">, {age}</span> : null}
+        </h2>
+        <div className="flex items-center justify-center gap-2 mt-1.5 flex-wrap">
+          {showVerified ? (
+            <PikaBadge variant="gold"><BadgeCheck className="w-3.5 h-3.5" /> Verified</PikaBadge>
+          ) : (
+            <PikaBadge variant="muted"><Shield className="w-3.5 h-3.5" /> Unverified</PikaBadge>
+          )}
+          {profile?.city && (
+            <PikaBadge variant="muted"><MapPin className="w-3.5 h-3.5" /> {profile.city}</PikaBadge>
+          )}
+          {profile?.looking_for && (
+            <PikaBadge variant="coral"><Heart className="w-3.5 h-3.5" /> {INTENTION_LABELS[profile.looking_for] || profile.looking_for}</PikaBadge>
+          )}
         </div>
+      </div>
+
+      {/* Sections */}
+      <div className="px-4 mt-4 space-y-3">
+        {/* About */}
+        <PikaCard className="p-4">
+          <SectionTitle>About Me</SectionTitle>
+          <p className="text-sm text-foreground/85 font-body leading-relaxed">
+            {profile?.bio || <span className="text-muted-foreground">Add a bio to let people know about you...</span>}
+          </p>
+        </PikaCard>
 
         {/* Interests */}
-        <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider">
-              Interests
-            </h3>
-            <button
-              onClick={() => openSheet("interests")}
-              className="flex items-center gap-1 px-3 min-h-[44px] rounded-full border border-gold/40 text-gold text-xs font-heading font-bold"
-            >
-              <Pencil className="w-3 h-3" />
-              Edit
-            </button>
-          </div>
+        <PikaCard className="p-4">
+          <SectionTitle
+            action={
+              <PikaButton variant="outline" size="sm" className="!h-8 !px-3" onClick={() => openSheet("interests")}>
+                <Pencil className="w-3 h-3" /> Edit
+              </PikaButton>
+            }
+          >
+            Interests
+          </SectionTitle>
           {profile?.interests?.length ? (
             <div className="flex flex-wrap gap-2">
               {profile.interests.map((interest) => (
-                <span key={interest} className="px-3 py-1.5 rounded-full border border-gold/30 text-gold text-sm font-body">
-                  {interest}
-                </span>
+                <PikaBadge key={interest} variant="gold">{interest}</PikaBadge>
               ))}
             </div>
           ) : (
-            <button
-              onClick={() => openSheet("interests")}
-              className="w-full py-3 rounded-xl border border-dashed border-border/50 text-sm font-body text-muted-foreground"
-            >
+            <button onClick={() => openSheet("interests")} className="w-full py-3 rounded-xl border border-dashed border-white/12 text-sm font-body text-muted-foreground">
               Tap to add your interests
             </button>
           )}
-        </div>
+        </PikaCard>
+
+        {/* Lifestyle details */}
+        {lifestyleValues.length > 0 && (
+          <PikaCard className="p-4">
+            <SectionTitle>Lifestyle & Vibes</SectionTitle>
+            <div className="space-y-2.5">
+              {lifestyleValues.map(({ key, label, icon: Icon }) => (
+                <div key={key} className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-4 h-4 text-gold" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[11px] text-muted-foreground font-body uppercase tracking-wide">{label}</p>
+                    <p className="text-sm font-body text-foreground/90 truncate">{profile[key]}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </PikaCard>
+        )}
 
         {/* Verification */}
         <VerificationSection />
 
-        {/* PikaBoo Shop */}
-        <button
-          onClick={() => openSheet("shop")}
-          className="w-full rounded-2xl border border-gold/30 bg-secondary/30 p-4 flex items-center gap-3 hover:bg-secondary/50 transition-colors"
-        >
-          <div className="w-10 h-10 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
-            <ShoppingBag className="w-5 h-5 text-gold" />
-          </div>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-heading font-bold text-foreground">PikaBoo Shop 🛍️</p>
-            <p className="text-sm text-muted-foreground font-body">Plus · Gold · Boosts · Drink Tokens</p>
-          </div>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
-        </button>
+        {/* Shop */}
+        <PikaCard className="p-0 overflow-hidden">
+          <button onClick={() => openSheet("shop")} className="w-full flex items-center gap-3 p-4 hover:bg-white/5 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gold/12 flex items-center justify-center flex-shrink-0">
+              <ShoppingBag className="w-[18px] h-[18px] text-gold" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-sm font-heading font-bold text-foreground">PikaBoo Shop</p>
+              <p className="text-xs text-muted-foreground font-body">Plus · Gold · Boosts · Drink Tokens</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
+          </button>
+        </PikaCard>
 
         {/* Safety & Settings */}
-        <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-          <h3 className="text-sm font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
-            Safety & Settings
-          </h3>
-          <a
-            href="/privacy"
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors mb-1"
-          >
-            <div className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
-              <Shield className="w-4 h-4 text-gold" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-heading font-bold text-foreground">Privacy Policy</p>
-              <p className="text-sm text-muted-foreground font-body">How we handle your data</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </a>
-          {user?.role === "admin" && (
-            <Link
-              to="/admin/data-quality"
-              className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors mb-1"
-            >
-              <div className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center flex-shrink-0">
-                <ShieldAlert className="w-4 h-4 text-gold" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-heading font-bold text-foreground">Data quality review</p>
-                <p className="text-sm text-muted-foreground font-body">Profiles missing details, admins only</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-            </Link>
-          )}
-          <button
-            onClick={() => openSheet("delete_confirm")}
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-destructive/10 transition-colors text-left"
-          >
-            <div className="w-9 h-9 rounded-full bg-destructive/15 flex items-center justify-center flex-shrink-0">
-              <Trash2 className="w-4 h-4 text-destructive" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-heading font-bold text-destructive">Delete Account</p>
-              <p className="text-sm text-muted-foreground font-body">Permanently remove your account and data</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
+        <PikaCard className="p-4">
+          <SectionTitle>Safety & Settings</SectionTitle>
+          <div className="space-y-1">
+            <SettingsRow icon={SettingsIcon} title="Settings" subtitle="Account, notifications & preferences" to="/settings" />
+            <SettingsRow icon={Shield} title="Privacy & Safety" subtitle="Controls, reporting & block list" to="/safety" />
+            <SettingsRow icon={Globe} title="Privacy Policy" subtitle="How we handle your data" to="/privacy" />
+            {user?.role === "admin" && (
+              <SettingsRow icon={ShieldAlert} title="Data quality review" subtitle="Profiles missing details, admins only" to="/admin/data-quality" />
+            )}
+            <SettingsRow icon={Trash2} title="Delete Account" subtitle="Permanently remove your account and data" onClick={() => openSheet("delete_confirm")} danger />
+          </div>
+        </PikaCard>
       </div>
 
       {/* Edit Profile Dialog */}
-      <EditProfileDialog
-        isOpen={showEdit}
-        profile={profile}
-        onClose={() => closeSheet("edit")}
-        onSaved={() => refetch()}
-      />
+      <EditProfileDialog isOpen={showEdit} profile={profile} onClose={() => closeSheet("edit")} onSaved={() => refetch()} />
 
       {/* Interests Editor */}
-      <InterestsEditorDialog
-        isOpen={showInterests}
-        profile={profile}
-        onClose={() => closeSheet("interests")}
-        onSaved={() => refetch()}
-      />
+      <InterestsEditorDialog isOpen={showInterests} profile={profile} onClose={() => closeSheet("interests")} onSaved={() => refetch()} />
 
       {/* Shop Modal */}
       <PikaBooShop isOpen={showShop} onClose={() => closeSheet("shop")} />
@@ -302,10 +332,7 @@ export default function Profile() {
           </DialogHeader>
           <DialogFooter className="flex-row gap-2 sm:justify-center">
             <DialogClose asChild>
-              <button
-                className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors"
-                disabled={deleting}
-              >
+              <button className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors" disabled={deleting}>
                 Cancel
               </button>
             </DialogClose>

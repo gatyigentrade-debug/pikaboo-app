@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { ensureMyProfile } from "@/hooks/useMyProfile";
+import PikaButton from "@/components/pika/PikaButton";
 
 const INTEREST_OPTIONS = [
   "Amapiano", "Soccer", "Braai", "Road Trips", "Foodie",
@@ -75,7 +76,7 @@ export default function InterestsEditorDialog({ isOpen, profile, onClose, onSave
                 className={`min-h-[44px] px-3.5 py-2 rounded-full border text-sm font-body transition-colors flex items-center gap-1.5 ${
                   active
                     ? "border-gold/60 bg-gold/15 text-gold font-heading font-bold"
-                    : "border-border text-muted-foreground"
+                    : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10"
                 }`}
               >
                 {active && <Check className="w-3.5 h-3.5" />}
@@ -87,21 +88,12 @@ export default function InterestsEditorDialog({ isOpen, profile, onClose, onSave
 
         <DialogFooter className="flex-row gap-2 sm:justify-center">
           <DialogClose asChild>
-            <button
-              className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors"
-              disabled={saving}
-            >
-              Cancel
-            </button>
+            <PikaButton variant="outline" className="flex-1" disabled={saving}>Cancel</PikaButton>
           </DialogClose>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex-1 h-11 rounded-full bg-primary text-primary-foreground font-heading font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-          >
+          <PikaButton className="flex-1" onClick={handleSave} disabled={saving}>
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             {saving ? "Saving..." : "Save"}
-          </button>
+          </PikaButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

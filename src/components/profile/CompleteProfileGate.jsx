@@ -1,4 +1,6 @@
 import { BadgeCheck } from "lucide-react";
+import PikaCard from "@/components/pika/PikaCard";
+import PikaButton from "@/components/pika/PikaButton";
 import { ISSUE_LABELS } from "@/utils/profile";
 
 export default function CompleteProfileGate({ issues, onComplete }) {
@@ -14,21 +16,20 @@ export default function CompleteProfileGate({ issues, onComplete }) {
         </p>
       </div>
 
-      <ul className="mt-6 space-y-2">
-        {issues.map((issue) => (
-          <li key={issue} className="flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 border border-border/40">
-            <span className="w-2 h-2 rounded-full bg-gold flex-shrink-0" />
-            <span className="text-sm font-body text-foreground">Add {ISSUE_LABELS[issue] || issue}</span>
-          </li>
-        ))}
-      </ul>
+      <PikaCard className="p-4 mt-6">
+        <ul className="space-y-2.5">
+          {issues.map((issue) => (
+            <li key={issue} className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/5">
+              <span className="w-2 h-2 rounded-full bg-gold flex-shrink-0" />
+              <span className="text-sm font-body text-foreground">Add {ISSUE_LABELS[issue] || issue}</span>
+            </li>
+          ))}
+        </ul>
+      </PikaCard>
 
-      <button
-        onClick={onComplete}
-        className="w-full mt-6 min-h-[48px] rounded-full bg-gold text-black font-heading font-bold text-sm active:scale-95 transition-transform"
-      >
+      <PikaButton size="lg" className="w-full mt-6" onClick={onComplete}>
         Complete my profile
-      </button>
+      </PikaButton>
     </div>
   );
 }

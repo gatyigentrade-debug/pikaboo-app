@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Camera, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import PikaButton from "@/components/pika/PikaButton";
 import { ageFromDob, MIN_AGE } from "@/utils/profile";
+
+const inputCls =
+  "w-full h-12 rounded-xl border border-white/10 bg-white/5 px-4 text-[15px] text-foreground placeholder:text-muted-foreground/70 backdrop-blur-sm transition-colors focus:border-gold/60 focus:bg-white/[0.07] focus:outline-none";
+const labelCls = "text-[11px] font-heading font-bold text-muted-foreground uppercase tracking-[0.14em] mb-1.5 block";
 
 const maxDateOfBirth = () => {
   const d = new Date();
@@ -15,7 +19,7 @@ const maxDateOfBirth = () => {
 
 export default function EditProfileDialog({ isOpen, profile, onClose, onSaved }) {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState({ name: "", date_of_birth: "", gender: "", bio: "", city: "" });
+  const [form, setForm] = useState({ name: "", date_of_birth: "", gender: "", bio: "", city: "", looking_for: "" });
   const [photos, setPhotos] = useState([]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -28,10 +32,11 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
         gender: profile.gender || "",
         bio: profile.bio || "",
         city: profile.city || "",
+        looking_for: profile.looking_for || "",
       });
       setPhotos(profile.photos || []);
     } else if (isOpen && !profile) {
-      setForm({ name: "", date_of_birth: "", gender: "", bio: "", city: "" });
+      setForm({ name: "", date_of_birth: "", gender: "", bio: "", city: "", looking_for: "" });
       setPhotos([]);
     }
   }, [isOpen, profile]);
@@ -99,12 +104,12 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
         photos,
       };
       if (form.gender) data.gender = form.gender;
+      if (form.looking_for) data.looking_for = form.looking_for;
       if (profile?.id) {
         await base44.entities.DatingProfile.update(profile.id, data);
       } else {
         await base44.entities.DatingProfile.create(data);
       }
-      // Refresh the profile and every feed built from it
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["myProfile"] }),
         queryClient.invalidateQueries({ queryKey: ["allProfiles"] }),
@@ -125,10 +130,10 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
         <DialogHeader>
           <DialogTitle className="text-center text-foreground">Edit Profile</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3 py-2">
+        <div className="space-y-4 py-2">
           {/* Photo Management */}
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-2 block">Photos ({photos.length}/6)</label>
+            <label className={labelCls}>Photos ({photos.length}/6)</label>
             <div className="grid grid-cols-3 gap-2">
               {photos.map((photo, i) => (
                 <div key={i} className="relative aspect-square rounded-xl overflow-hidden group">
@@ -141,7 +146,7 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
                     <X className="w-3.5 h-3.5 text-white" />
                   </button>
                   {i === 0 && (
-                    <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-full bg-gold text-black text-xs font-heading font-bold">
+                    <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded-full bg-gold text-black text-[10px] font-heading font-bold">
                       Avatar
                     </span>
                   )}
@@ -149,17 +154,14 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
               ))}
               {photos.length < 6 && (
                 <label
-                  className={`aspect-square rounded-xl border-2 border-dashed border-border/40 flex flex-col items-center justify-center gap-1 hover:bg-secondary/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
+                  className={`aspect-square rounded-xl border border-dashed border-white/15 flex flex-col items-center justify-center gap-1 hover:bg-white/5 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
                 >
-                  {uploading ? <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" /> : (
+                  {uploading ? <Loader2 className="w-5 h-5 text-gold animate-spin" /> : (
                     <>
-                      <Camera className="w-5 h-5 text-muted-foreground/60" />
+                      <Camera className="w-5 h-5 text-gold/70" />
                       <span className="text-xs text-muted-foreground font-body">Add</span>
                     </>
                   )}
-                  {/* Nested inside <label> so the native click forwards to the input
-                      without JavaScript .click() — Android WebView treats label clicks
-                      as trusted user gestures and reliably fires onShowFileChooser. */}
                   <input
                     type="file"
                     accept="image/*"
@@ -173,66 +175,78 @@ export default function EditProfileDialog({ isOpen, profile, onClose, onSaved })
                 </label>
               )}
             </div>
+            <p className="text-[10px] text-muted-foreground/70 font-body mt-1.5">Photos are stored publicly so they load fast for everyone.</p>
           </div>
 
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">Name</label>
-            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" />
+            <label className={labelCls}>Name</label>
+            <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" className={inputCls} />
           </div>
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">Date of birth</label>
-            <Input
+            <label className={labelCls}>Date of birth</label>
+            <input
               type="date"
               value={form.date_of_birth}
               max={maxDateOfBirth()}
               onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
+              className={inputCls}
             />
             {form.date_of_birth && (
-              <p className="text-xs text-muted-foreground font-body mt-1">Age: {ageFromDob(form.date_of_birth) ?? "—"}</p>
+              <p className="text-xs text-muted-foreground font-body mt-1.5">Age: {ageFromDob(form.date_of_birth) ?? "—"}</p>
             )}
           </div>
-          <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">Gender</label>
-            <select
-              value={form.gender}
-              onChange={(e) => setForm({ ...form, gender: e.target.value })}
-              className="w-full h-9 rounded-md bg-secondary border border-border/40 px-3 text-sm font-body text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-            >
-              <option value="">Select</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="non-binary">Non-binary</option>
-            </select>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Gender</label>
+              <select
+                value={form.gender}
+                onChange={(e) => setForm({ ...form, gender: e.target.value })}
+                className={inputCls}
+              >
+                <option value="">Select</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="non-binary">Non-binary</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelCls}>Looking for</label>
+              <select
+                value={form.looking_for}
+                onChange={(e) => setForm({ ...form, looking_for: e.target.value })}
+                className={inputCls}
+              >
+                <option value="">Select</option>
+                <option value="relationship">A relationship</option>
+                <option value="friendship">Friendship</option>
+                <option value="casual">Something casual</option>
+                <option value="not_sure">Seeing what's out there</option>
+              </select>
+            </div>
           </div>
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">City</label>
-            <Input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Your city" />
+            <label className={labelCls}>City</label>
+            <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Your city" className={inputCls} />
           </div>
           <div>
-            <label className="text-sm font-body text-muted-foreground mb-1 block">Bio</label>
+            <label className={labelCls}>Bio</label>
             <textarea
               value={form.bio}
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
               placeholder="Tell us about yourself..."
               rows={3}
-              className="w-full bg-secondary border border-border/40 rounded-xl px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[15px] text-foreground placeholder:text-muted-foreground/70 backdrop-blur-sm transition-colors focus:border-gold/60 focus:bg-white/[0.07] focus:outline-none resize-none font-body"
             />
           </div>
         </div>
         <DialogFooter className="flex-row gap-2 sm:justify-center">
           <DialogClose asChild>
-            <button className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors" disabled={saving}>
-              Cancel
-            </button>
+            <PikaButton variant="outline" className="flex-1" disabled={saving}>Cancel</PikaButton>
           </DialogClose>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex-1 h-11 rounded-full bg-primary text-primary-foreground font-heading font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-          >
+          <PikaButton className="flex-1" onClick={handleSave} disabled={saving}>
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
             {saving ? "Saving..." : "Save"}
-          </button>
+          </PikaButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

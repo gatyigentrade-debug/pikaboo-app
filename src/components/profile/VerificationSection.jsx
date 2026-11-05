@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { ensureMyProfile } from "@/hooks/useMyProfile";
+import PikaButton from "@/components/pika/PikaButton";
+import PikaCard from "@/components/pika/PikaCard";
 
 export default function VerificationSection({ onVerified }) {
   const [profile, setProfile] = useState(null);
@@ -48,7 +50,6 @@ export default function VerificationSection({ onVerified }) {
 
   const handleSubmit = async () => {
     if (!selectedFile) return;
-    // Optimistically toggle to pending immediately for smooth UX
     const previousProfile = profile;
     setProfile(prev => prev ? { ...prev, verification_status: "pending" } : prev);
     handleClose();
@@ -62,7 +63,6 @@ export default function VerificationSection({ onVerified }) {
           verification_photo: file_url,
         });
       } else {
-        // No profile record yet — create the real one for this user, never a placeholder person
         const created = await ensureMyProfile();
         if (created?.id) {
           await base44.entities.DatingProfile.update(created.id, {
@@ -77,7 +77,6 @@ export default function VerificationSection({ onVerified }) {
       });
       loadProfile();
     } catch (error) {
-      // Revert optimistic update on failure
       setProfile(previousProfile);
       toast.error("Failed to submit", { description: error.message });
     } finally {
@@ -95,53 +94,53 @@ export default function VerificationSection({ onVerified }) {
 
   return (
     <>
-      <div className="rounded-2xl bg-secondary/30 border border-border/40 p-4">
-        <h3 className="text-xs font-heading font-bold text-muted-foreground uppercase tracking-wider mb-3">
+      <PikaCard className="p-4">
+        <h3 className="text-[11px] font-heading font-bold text-muted-foreground uppercase tracking-[0.14em] mb-3">
           Verification
         </h3>
 
         {status === "verified" ? (
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10">
-            <div className="w-9 h-9 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-green-500/10 border border-green-500/20">
+            <div className="w-10 h-10 rounded-2xl bg-green-500/20 flex items-center justify-center flex-shrink-0">
               <BadgeCheck className="w-5 h-5 text-green-500" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-heading font-bold text-green-500">Verified</p>
-              <p className="text-[11px] text-muted-foreground font-body">Your profile is verified</p>
+              <p className="text-xs text-muted-foreground font-body">Your profile is verified</p>
             </div>
           </div>
         ) : status === "pending" ? (
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10">
-            <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
               <Clock className="w-5 h-5 text-amber-500" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-heading font-bold text-amber-500">Pending Review</p>
-              <p className="text-[11px] text-muted-foreground font-body">We're reviewing your photo</p>
+              <p className="text-xs text-muted-foreground font-body">We're reviewing your photo</p>
             </div>
           </div>
         ) : (
           <button
             onClick={() => setShowDialog(true)}
-            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/50 transition-colors text-left"
+            className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 transition-colors text-left"
           >
-            <div className="w-9 h-9 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
-              <ShieldCheck className="w-5 h-5 text-primary" />
+            <div className="w-10 h-10 rounded-2xl bg-gold/12 flex items-center justify-center flex-shrink-0">
+              <ShieldCheck className="w-5 h-5 text-gold" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-heading font-bold text-foreground">Get Verified</p>
-              <p className="text-[11px] text-muted-foreground font-body">Submit a photo to earn a verified badge</p>
+              <p className="text-xs text-muted-foreground font-body">Submit a photo to earn a verified badge</p>
             </div>
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            <ChevronRight className="w-4 h-4 text-muted-foreground/70" />
           </button>
         )}
-      </div>
+      </PikaCard>
 
       <Dialog open={showDialog} onOpenChange={(open) => !open && handleClose()}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center mx-auto mb-2">
-              <ShieldCheck className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-full bg-gold/12 flex items-center justify-center mx-auto mb-2">
+              <ShieldCheck className="w-6 h-6 text-gold" />
             </div>
             <DialogTitle className="text-center text-foreground">Get Verified</DialogTitle>
             <DialogDescription className="text-center">
@@ -172,9 +171,11 @@ export default function VerificationSection({ onVerified }) {
             ) : (
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-48 rounded-xl border-2 border-dashed border-border/40 flex flex-col items-center justify-center gap-2 hover:bg-secondary/30 transition-colors"
+                className="w-full h-48 rounded-xl border border-dashed border-white/15 flex flex-col items-center justify-center gap-2 hover:bg-white/5 transition-colors"
               >
-                <Camera className="w-8 h-8 text-muted-foreground/60" />
+                <div className="w-12 h-12 rounded-full bg-gold/12 flex items-center justify-center">
+                  <Camera className="w-6 h-6 text-gold" />
+                </div>
                 <span className="text-sm text-muted-foreground font-body">Tap to take or upload a photo</span>
               </button>
             )}
@@ -182,21 +183,12 @@ export default function VerificationSection({ onVerified }) {
 
           <DialogFooter className="flex-row gap-2 sm:justify-center">
             <DialogClose asChild>
-              <button
-                className="flex-1 h-11 rounded-full border border-border text-foreground font-heading font-bold text-sm hover:bg-secondary transition-colors"
-                disabled={submitting}
-              >
-                Cancel
-              </button>
+              <PikaButton variant="outline" className="flex-1" disabled={submitting}>Cancel</PikaButton>
             </DialogClose>
-            <button
-              onClick={handleSubmit}
-              disabled={!selectedFile || submitting}
-              className="flex-1 h-11 rounded-full bg-primary text-primary-foreground font-heading font-bold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-            >
+            <PikaButton className="flex-1" onClick={handleSubmit} disabled={!selectedFile || submitting}>
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
               {submitting ? "Submitting..." : "Submit"}
-            </button>
+            </PikaButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

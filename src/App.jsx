@@ -22,6 +22,8 @@ const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const ProfileDetail = lazy(() => import('@/pages/ProfileDetail'));
 const Subscriptions = lazy(() => import('@/pages/Subscriptions'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
+const Settings = lazy(() => import('@/pages/Settings'));
+const Safety = lazy(() => import('@/pages/Safety'));
 const AdminDataQuality = lazy(() => import('@/pages/AdminDataQuality'));
 
 const PageLoader = () => (
@@ -121,6 +123,8 @@ const AuthenticatedApp = () => {
         <Route path="/chat/:id" element={<AppLayout />} />
         <Route path="/likes" element={<AppLayout />} />
         <Route path="/subscriptions" element={<Suspense fallback={<PageLoader />}><Subscriptions /></Suspense>} />
+        <Route path="/settings" element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
+        <Route path="/safety" element={<Suspense fallback={<PageLoader />}><Safety /></Suspense>} />
         <Route path="/profile/:id" element={<Suspense fallback={<PageLoader />}><ProfileDetail /></Suspense>} />
         <Route path="/admin/data-quality" element={<Suspense fallback={<PageLoader />}><AdminDataQuality /></Suspense>} />
       </Route>
